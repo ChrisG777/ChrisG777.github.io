@@ -1,0 +1,1051 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> reading notes | Chris Ge </title> <meta name="author" content="Chris Ge"> <meta name="description" content="CS student at MIT researching mechanistic interpretability. "> <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website"> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <link rel="stylesheet" href="/assets/css/bootstrap.min.css?v=a4b3f509e79c54a512b890d73235ef04"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="/assets/css/academicons.min.css?v=f0b7046b84e425c55f3463ac249818f5"> <link defer rel="stylesheet" href="/assets/css/scholar-icons.css?v=62b2ac103a88034e6882a5be5f3e2772"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://chrisg777.github.io/reading-notes/"> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> <span class="font-weight-bold">Chris Ge </span> </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">home </a> </li> <li class="nav-item active"> <a class="nav-link" href="/reading-notes/">reading notes <span class="sr-only">(current)</span> </a> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <style>.rn-controls{display:flex;gap:1rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}.rn-search{flex:1;min-width:200px;padding:.5rem .75rem;border:1px solid var(--global-divider-color);border-radius:6px;font-size:.9rem;font-family:inherit;background:var(--global-bg-color);color:var(--global-text-color);outline:0;transition:border-color .15s ease}.rn-search:focus{border-color:var(--global-theme-color)}.rn-sort{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--global-text-color-light)}.rn-sort select{padding:.4rem .6rem;border:1px solid var(--global-divider-color);border-radius:6px;font-size:.85rem;font-family:inherit;background:var(--global-bg-color);color:var(--global-text-color);cursor:pointer}.rn-count{font-size:.85rem;color:var(--global-text-color-light);margin:0 0 1rem}.rn-list{display:flex;flex-direction:column;gap:.75rem}.rn-card{display:block;padding:1rem 1.25rem;background:var(--global-bg-color);border:1px solid var(--global-divider-color);border-radius:8px;color:inherit;transition:border-color .15s ease}.rn-card:hover{border-color:var(--global-theme-color)}.rn-card a{color:var(--global-theme-color);text-decoration:none}.rn-card a:hover{text-decoration:underline}.rn-card-header{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}.rn-card-title{margin:0;font-size:1rem;font-weight:600;color:var(--global-text-color);line-height:1.4}.rn-card-year{font-size:.8rem;color:var(--global-text-color-light);white-space:nowrap}.rn-card-subtitle{display:block;margin-top:.15rem;font-size:.85rem;color:var(--global-text-color-light);font-style:italic}.rn-card-institutions{display:block;margin-top:.25rem;font-size:.85rem;color:var(--global-text-color-light)}.rn-card-tags{display:flex;gap:.35rem;margin-top:.5rem;flex-wrap:wrap}.rn-tag{font-size:.75rem;padding:.15rem .5rem;background:var(--global-divider-color);color:var(--global-text-color-light);border-radius:4px}.rn-tag-partial{background:#fef3c7;color:#92400e}.rn-card-meta{display:flex;gap:1rem;margin-top:.35rem;font-size:.8rem;color:var(--global-text-color-light)}</style> <div class="post"> <header class="post-header"> <h1 class="post-title">Reading Notes</h1> <p class="post-description">Notes and summaries from reading ML/AI papers (and some blog posts). All credit to the content in the papers and blog posts goes to the original authors.</p> </header> <div class="rn-controls"> <input type="text" class="rn-search" id="rn-search" placeholder="Search papers..."> <div class="rn-sort"> <label>Filter by:</label> <select id="rn-filter"> <option value="">All</option> </select> </div> <div class="rn-sort"> <label>Sort by:</label> <select id="rn-sort"> <option value="dateRead">Date Read</option> <option value="paperDate">Paper Date</option> <option value="title">Title</option> </select> </div> </div> <p class="rn-count" id="rn-count"></p> <div class="rn-list" id="rn-list"></div> </div> <script>
+(function() {
+  var posts = [
+    
+      
+      {
+        title: "Circuit Mechanisms for Spatial Relation Generation in Diffusion Transformers",
+        subtitle: "Circuits in DiTs",
+        url: "/blog/2026/circuits-in-dits/",
+        dateRead: "2026-03-22",
+        paperDate: "2026-01-09",
+        paperUrl: "https://arxiv.org/pdf/2601.06338",
+        institutions: ["Harvard"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms in VLMs",
+        subtitle: "modality specific circuits",
+        url: "/blog/2026/modality-specific-circuits/",
+        dateRead: "2026-03-21",
+        paperDate: "2025-06-10",
+        paperUrl: "https://arxiv.org/pdf/2506.09047",
+        institutions: ["Technion"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Position-aware Automatic Circuit Discovery",
+        subtitle: "position aware circuits",
+        url: "/blog/2026/position-aware-circuit-discovery/",
+        dateRead: "2026-03-20",
+        paperDate: "2025-02-07",
+        paperUrl: "https://arxiv.org/pdf/2502.04577",
+        institutions: ["Technion"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Arithmetic Without Algorithms: Language Models Solve Math With a Bag of Heuristics",
+        subtitle: "arithmetic heuristics",
+        url: "/blog/2026/arithmetic-heuristics/",
+        dateRead: "2026-03-19",
+        paperDate: "2024-10-28",
+        paperUrl: "https://arxiv.org/pdf/2410.21272",
+        institutions: ["Technion"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Neural Thickets: Diverse Task Experts Are Dense Around Pretrained Weights",
+        subtitle: "neural thickets",
+        url: "/blog/2026/neural-thickets/",
+        dateRead: "2026-03-18",
+        paperDate: "2026-03-12",
+        paperUrl: "https://arxiv.org/pdf/2603.12228",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Attention Residuals",
+        subtitle: "attention residuals",
+        url: "/blog/2026/attention-residuals/",
+        dateRead: "2026-03-17",
+        paperDate: "2026-03-16",
+        paperUrl: "https://arxiv.org/pdf/2603.15031",
+        institutions: "",
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Fine-Tuning Enhances Existing Mechanisms: A Case Study on Entity Tracking",
+        subtitle: "circuits in fine-tunes",
+        url: "/blog/2026/nikhil-circuits-in-fine-tunes/",
+        dateRead: "2026-03-16",
+        paperDate: "2024-02-22",
+        paperUrl: "https://arxiv.org/pdf/2402.14811v1",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Causal Abstractions of Neural Networks",
+        subtitle: "Causal abstractions",
+        url: "/blog/2026/stanford-atticus-geiger-causal-abstractions/",
+        dateRead: "2026-03-15",
+        paperDate: "2021-10-27",
+        paperUrl: "https://arxiv.org/pdf/2106.02997",
+        institutions: ["Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "End-to-End Test-Time Training for Long Context",
+        subtitle: "TTT-E2E",
+        url: "/blog/2026/stanford-nlp-ttt-e2e/",
+        dateRead: "2026-02-26",
+        paperDate: "2025-12-29",
+        paperUrl: "https://arxiv.org/pdf/2512.23675",
+        institutions: ["Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Interpreting Physics in Video World Models",
+        subtitle: "physics in video models \\+ V-JEPA background",
+        url: "/blog/2026/meta-interpreting-physics-in-video-world-models/",
+        dateRead: "2026-02-26",
+        paperDate: "2026-02-04",
+        paperUrl: "https://arxiv.org/pdf/2602.07050",
+        institutions: ["Meta"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Language Models use Lookbacks to Track Beliefs",
+        subtitle: "lookback mechanisms",
+        url: "/blog/2026/tamar-lookback-mechanisms/",
+        dateRead: "2026-02-21",
+        paperDate: "2025-05-20",
+        paperUrl: "https://arxiv.org/pdf/2505.14685",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Fast KV Compaction via Attention Matching",
+        subtitle: "Zweiger KV compaction",
+        url: "/blog/2026/zweiger-kv-compaction/",
+        dateRead: "2026-02-20",
+        paperDate: "2026-02-18",
+        paperUrl: "https://arxiv.org/pdf/2602.16284",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "BRIDGE: Predicting Human Task Completion Time From Model Performance",
+        subtitle: "Predicting Human Time from IRT difficulty",
+        url: "/blog/2026/predicting-human-time-from-irt-difficulty/",
+        dateRead: "2026-02-17",
+        paperDate: "2026-02-06",
+        paperUrl: "https://arxiv.org/pdf/2602.07267",
+        institutions: ["Mila"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "HunyuanVideo: A Systematic Framework For Large Video Generative Models",
+        subtitle: "Hunyuan video",
+        url: "/blog/2026/hunyuan-video/",
+        dateRead: "2026-02-16",
+        paperDate: "2024-12-03",
+        paperUrl: "https://arxiv.org/pdf/2412.03603",
+        institutions: ["Tencent"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Exploring Multimodal Diffusion Transformers for Enhanced Prompt-based Image Editing",
+        subtitle: "activation patching and attention maps in MM-DiTs",
+        url: "/blog/2026/exploring-attention-for-mm-dit-image-editing/",
+        dateRead: "2026-02-14",
+        paperDate: "2025-08-11",
+        paperUrl: "https://arxiv.org/pdf/2508.07519",
+        institutions: ["SNU"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Unraveling MMDiT Blocks: Training-free Analysis and Enhancement of Text-conditioned Diffusion",
+        subtitle: "scaling text embeddings for Image Editing",
+        url: "/blog/2026/analyzing-mmdit-blocks-scaling-text-embeddings-for-image-editing/",
+        dateRead: "2026-02-14",
+        paperDate: "2026-01-05",
+        paperUrl: "https://arxiv.org/pdf/2601.02211v1",
+        institutions: ["Fudan"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Stable Flow: Vital Layers for Training-Free Image Editing",
+        subtitle: "Vital Layers for Image Editing",
+        url: "/blog/2026/vital-layers-for-image-editing/",
+        dateRead: "2026-02-13",
+        paperDate: "2024-11-21",
+        paperUrl: "https://arxiv.org/pdf/2411.14430",
+        institutions: ["Snap Research"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Localizing Knowledge in Diffusion Transformers",
+        subtitle: "Localizing Knowledge in DiTs",
+        url: "/blog/2026/localizing-knowledge-in-dit-s/",
+        dateRead: "2026-02-13",
+        paperDate: "2025-05-24",
+        paperUrl: "https://arxiv.org/pdf/2505.18832",
+        institutions: ["UMD"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Tutorial on Diffusion Models for Imaging and Vision",
+        subtitle: "Tutorial on diffusion models",
+        url: "/blog/2026/tutorial-on-diffusion-models/",
+        dateRead: "2026-02-12",
+        paperDate: "2025-01-08",
+        paperUrl: "https://arxiv.org/pdf/2403.18103",
+        institutions: ["Purdue"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Learning to Discover at Test Time",
+        subtitle: "TTT-Discover",
+        url: "/blog/2026/ttt-discover-test-time-training-discover/",
+        dateRead: "2026-02-11",
+        paperDate: "2025-02-05",
+        paperUrl: "https://arxiv.org/pdf/2601.16175",
+        institutions: ["Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "ConceptAttention: Diffusion Transformers Learn Highly Interpretable Features",
+        subtitle: "ConceptAttention",
+        url: "/blog/2026/conceptattention-diffusion-interp/",
+        dateRead: "2026-02-10",
+        paperDate: "2025-02-06",
+        paperUrl: "https://arxiv.org/pdf/2502.04320v2",
+        institutions: ["Georgia Tech"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Recursive Language Models",
+        subtitle: "RLMs",
+        url: "/blog/2026/mit-alex-zhang-recursive-language-models/",
+        dateRead: "2026-02-09",
+        paperDate: "2026-01-28",
+        paperUrl: "https://arxiv.org/pdf/2512.24601",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "FLUX.2: Analyzing and Enhancing the Latent Space of FLUX – Representation Comparison",
+        subtitle: "Flux 2 technical reports",
+        url: "/blog/2026/flux-2-technical-reports/",
+        dateRead: "2026-02-09",
+        paperDate: "2025-11-24",
+        paperUrl: "https://bfl.ai/research/representation-comparison",
+        institutions: ["Black Forest Labs"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Scaling Rectified Flow Transformers for High-Resolution Image Synthesis",
+        subtitle: "MM-DiTs",
+        url: "/blog/2026/scaling-rectified-flow/",
+        dateRead: "2026-02-08",
+        paperDate: "2024-03-05",
+        paperUrl: "https://arxiv.org/pdf/2403.03206",
+        institutions: ["Stability AI"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Scalable Diffusion Models with Transformers",
+        subtitle: "Diffusion Transformers",
+        url: "/blog/2026/diffusion-transformer/",
+        dateRead: "2026-02-08",
+        paperDate: "2023-03-02",
+        paperUrl: "https://arxiv.org/pdf/2212.09748",
+        institutions: ["UC Berkeley"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow",
+        subtitle: "Rectified Flow",
+        url: "/blog/2026/rectified-flow/",
+        dateRead: "2026-02-07",
+        paperDate: "2022-09-07",
+        paperUrl: "https://arxiv.org/pdf/2209.03003",
+        institutions: ["UT Austin"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "The Adolescence of Technology",
+        subtitle: "Dario Amodei risks essay",
+        url: "/blog/2026/dario-amodei-the-adolescence-of-technology/",
+        dateRead: "2026-01-24",
+        paperDate: "2026-01-15",
+        paperUrl: "https://www.darioamodei.com/essay/the-adolescence-of-technology\\#fnref:18",
+        institutions: ["Anthropic"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Diffusion Meets Flow Matching: Two Sides of the Same Coin",
+        subtitle: "Diffusion equals Flow Matching",
+        url: "/blog/2026/gdm-diffusion-meets-flow-matching/",
+        dateRead: "2026-01-20",
+        paperDate: "2024-12-02",
+        paperUrl: "https://diffusionflow.github.io/",
+        institutions: ["Google DeepMind"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "mHC: Manifold-Constrained Hyper-Connections",
+        subtitle: "DeepSeek manifold constrained hyper connections",
+        url: "/blog/2026/deepseek-manifold-constrained-hyper-connections/",
+        dateRead: "2026-01-12",
+        paperDate: "2025-12-31",
+        paperUrl: "https://www.arxiv.org/pdf/2512.24880",
+        institutions: ["DeepSeek"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "A Rosetta Stone for AI Benchmarks",
+        subtitle: "Epoch AI Rosetta Stone for AI benchmarks",
+        url: "/blog/2026/epoch-ai-rosetta-stone-for-ai-benchmarks/",
+        dateRead: "2026-01-10",
+        paperDate: "2025-11-28",
+        paperUrl: "https://arxiv.org/pdf/2512.00193",
+        institutions: ["Epoch AI"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Measuring AI Ability to Complete Long Software Tasks",
+        subtitle: "METR Long Tasks AI",
+        url: "/blog/2026/metr-long-tasks-ai/",
+        dateRead: "2026-01-06",
+        paperDate: "2025-03-18",
+        paperUrl: "https://arxiv.org/pdf/2503.14499",
+        institutions: ["METR"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "On scalable oversight with weak LLMs judging strong LLMs",
+        subtitle: "GDM scalable oversight",
+        url: "/blog/2026/gdm-scalable-oversight-with-weak-llms-judging-strong-llms/",
+        dateRead: "2026-01-06",
+        paperDate: "2024-07-05",
+        paperUrl: "https://arxiv.org/pdf/2407.04622",
+        institutions: ["Google DeepMind"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Reliable and Efficient Amortized Model-based Evaluation",
+        subtitle: "IRT difficulty prediction",
+        url: "/blog/2026/irt-amortized-calibrator/",
+        dateRead: "2026-01-05",
+        paperDate: "2025-03-17",
+        paperUrl: "https://arxiv.org/pdf/2503.13335v1",
+        institutions: ["Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "SliderSpace: Decomposing the Visual Capabilities of Diffusion Models",
+        subtitle: "Sliderspace",
+        url: "/blog/2025/david-bau-sliderspace/",
+        dateRead: "2025-12-26",
+        paperDate: "2025-02-03",
+        paperUrl: "https://arxiv.org/pdf/2502.01639",
+        institutions: ["Northeastern"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "SliderSpace: Decomposing the Visual Capabilities of Diffusion Models",
+        subtitle: "concept sliders",
+        url: "/blog/2025/david-bau-sliders/",
+        dateRead: "2025-12-26",
+        paperDate: "2023-11-27",
+        paperUrl: "https://arxiv.org/pdf/2311.12092",
+        institutions: ["Northeastern"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Generative Modeling by Estimating Gradients of the Data Distribution",
+        subtitle: "score function generative modeling",
+        url: "/blog/2025/yang-song-score-based-generative-modeling/",
+        dateRead: "2025-12-25",
+        paperDate: "2021-05-21",
+        paperUrl: "https://yang-song.net/blog/2021/score/",
+        institutions: ["Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "What are Diffusion Models?",
+        subtitle: "Lilian Weng Diffusion Blog Post (Discrete)",
+        url: "/blog/2025/lilian-weng-diffusion-blog-post-discrete/",
+        dateRead: "2025-12-25",
+        paperDate: "2024-04-13",
+        paperUrl: "https://lilianweng.github.io/posts/2021-07-11-diffusion-models/",
+        institutions: ["Thinking Machines Lab"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Building Diffusion Model's theory from ground up",
+        subtitle: "ICLR Diffusion explained blogpost",
+        url: "/blog/2025/iclr-diffusion-explained-blogpost/",
+        dateRead: "2025-12-24",
+        paperDate: "2024-05-07",
+        paperUrl: "https://iclr-blogposts.github.io/2024/blog/diffusion-theory-from-scratch/",
+        institutions: ["Surrey"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Weight-sparse transformers have interpretable circuits",
+        subtitle: "Leo Gao OpenAI sparse circuits",
+        url: "/blog/2025/leo-gao-openai-sparse-circuits/",
+        dateRead: "2025-12-07",
+        paperDate: "2025-11-17",
+        paperUrl: "https://arxiv.org/pdf/2511.13653",
+        institutions: ["OpenAI"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Between the Bars: Gradient-based Jailbreaks are Bugs that induce Features",
+        subtitle: "Gradient Based Jailbreaking",
+        url: "/blog/2025/fulcrum-mit-gradient-based-jailbreaking/",
+        dateRead: "2025-12-07",
+        paperDate: "2024-10-09",
+        paperUrl: "https://openreview.net/pdf?id=i0tMl7ECsW",
+        institutions: ["MIT","Fulcrum"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Breakpoint: Scalable evaluation of system-level reasoning in LLM code agents",
+        subtitle: "Breakpoint",
+        url: "/blog/2025/fulcrum-mit-breakpoint-scalable-system-level-coding-evals/",
+        dateRead: "2025-12-07",
+        paperDate: "2025-05-30",
+        paperUrl: "https://arxiv.org/pdf/2506.00172",
+        institutions: ["MIT","Fulcrum"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Fluid Language Model Benchmarking",
+        subtitle: "Fluid model benchmarking",
+        url: "/blog/2025/allen-institute-fluid-model-benchmarking/",
+        dateRead: "2025-12-06",
+        paperDate: "2025-09-14",
+        paperUrl: "https://arxiv.org/pdf/2509.11106",
+        institutions: ["Allen Institute"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Auditing language models for hidden objectives",
+        subtitle: "auditing model internals",
+        url: "/blog/2025/anthropic-auditing-model-internals/",
+        dateRead: "2025-12-05",
+        paperDate: "2025-03-14",
+        paperUrl: "https://arxiv.org/pdf/2503.10965",
+        institutions: ["Anthropic"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "DeepSeekMath-V2: Towards Self-Verifiable Mathematical Reasoning",
+        subtitle: "DeepseekMath2",
+        url: "/blog/2025/deepseekmath2/",
+        dateRead: "2025-12-04",
+        paperDate: "2025-11-27",
+        paperUrl: "https://arxiv.org/pdf/2511.22570v1",
+        institutions: ["DeepSeek"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+        subtitle: "Deepseek V3.2",
+        url: "/blog/2025/deepseek-v3.2/",
+        dateRead: "2025-12-03",
+        paperDate: "2025-12-02",
+        paperUrl: "https://arxiv.org/pdf/2512.02556",
+        institutions: ["DeepSeek"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Multiagent Finetuning: Self Improvement with Diverse Reasoning Chains",
+        subtitle: "Multiagent Fine Tunes",
+        url: "/blog/2025/mit-multiagent-fine-tunes/",
+        dateRead: "2025-11-30",
+        paperDate: "2025-01-10",
+        paperUrl: "https://arxiv.org/pdf/2501.05707",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "ML Tea: Planning and Problem-Solving with General, Scalable Neuro-Symbolic Models",
+        subtitle: "ML Tea LLMs \\+ symbolic computing",
+        url: "/blog/2025/ml-tea-llms-symbolic-computing/",
+        dateRead: "2025-11-24",
+        paperDate: "2025-11-24",
+        paperUrl: "https://www.csail.mit.edu/event/ml-tea-planning-and-problem-solving-general-scalable-neuro-symbolic-models",
+        institutions: ["MIT"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Automated Detection of Visual Attribute Reliance with a Self-Reflective Agent",
+        subtitle: "SAIA",
+        url: "/blog/2025/christy-li-saia-vision-spurious-correlations/",
+        dateRead: "2025-11-24",
+        paperDate: "2025-10-24",
+        paperUrl: "https://arxiv.org/pdf/2510.21704",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Continuous Language Model Interpolation yields Dynamic and Controllable Text Generation",
+        subtitle: "continuous model interpolation with lora",
+        url: "/blog/2025/harvard-continuous-model-interpolation/",
+        dateRead: "2025-11-23",
+        paperDate: "2025-08-28",
+        paperUrl: "https://arxiv.org/pdf/2404.07117",
+        institutions: ["Harvard"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Natural Emergent Misalignment from Reward Hacking in Production RL",
+        subtitle: "Anthropic emergent misalignment",
+        url: "/blog/2025/anthropic-emergent-misalignment/",
+        dateRead: "2025-11-23",
+        paperDate: "2025-11-23",
+        paperUrl: "https://arxiv.org/pdf/2511.18397",
+        institutions: ["Anthropic"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "A Mathematical Framework for Transformer Circuits",
+        subtitle: "Transformer Circuits Framework",
+        url: "/blog/2025/anthropic-transformer-mathematical-circuits/",
+        dateRead: "2025-11-22",
+        paperDate: "2021-12-22",
+        paperUrl: "https://transformer-circuits.pub/2021/framework/index.html",
+        institutions: ["Anthropic"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Value Augmented Sampling for Language Model Alignment and Personalization",
+        subtitle: "Value Augmented Sampling",
+        url: "/blog/2025/mit-value-augmented-sampling/",
+        dateRead: "2025-11-19",
+        paperDate: "2024-05-10",
+        paperUrl: "https://arxiv.org/pdf/2405.06639",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Deriving Muon",
+        subtitle: "Muon",
+        url: "/blog/2025/muon/",
+        dateRead: "2025-11-18",
+        paperDate: "2025-03-07",
+        paperUrl: "https://jeremybernste.in/writing/deriving-muon",
+        institutions: ["Thinking Machines Lab"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Curiosity-driven Red-teaming for Large Language Models",
+        subtitle: "Curiosity Driven Red Teaming",
+        url: "/blog/2025/mit-curiosity-driven-red-teaming/",
+        dateRead: "2025-11-18",
+        paperDate: "2024-02-29",
+        paperUrl: "https://arxiv.org/pdf/2402.19464",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Guided Speculative Inference for Efficient Test-Time Alignment of LLMs",
+        subtitle: "Harvard Guided speculative decoding",
+        url: "/blog/2025/harvard-guided-speculative-decoding/",
+        dateRead: "2025-11-18",
+        paperDate: "2025-06-04",
+        paperUrl: "https://arxiv.org/pdf/2506.04118",
+        institutions: ["Harvard"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Superhuman AI for Stratego Using Self-Play Reinforcement Learning and Test-Time Search",
+        subtitle: "Stratego",
+        url: "/blog/2025/cmu-stratego/",
+        dateRead: "2025-11-18",
+        paperDate: "2025-11-10",
+        paperUrl: "https://arxiv.org/pdf/2511.07312",
+        institutions: ["CMU"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Domain-Aware Scaling Laws Uncover Data Synergy",
+        subtitle: "Data domain synergy in scaling laws",
+        url: "/blog/2025/domain-aware-scaling-laws-uncover-data-synergy/",
+        dateRead: "2025-11-17",
+        paperDate: "2025",
+        paperUrl: "https://openreview.net/pdf?id=FndNAs9s0d",
+        institutions: ["MIT","Harvard"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Data Debiasing with Datamodels (D3M): Improving Subgroup Robustness via Data Selection",
+        subtitle: "Debiasing data using TRAK",
+        url: "/blog/2025/data-debiasing-with-datamodels-d3m-improving-subgroup-robustness-via-data-select/",
+        dateRead: "2025-11-17",
+        paperDate: "2024-06-24",
+        paperUrl: "https://arxiv.org/pdf/2406.16846",
+        institutions: ["MIT"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Ambient Diffusion Omni: Training Good Models with Bad Data",
+        subtitle: "diffusion using low quality data",
+        url: "/blog/2025/ambient-diffusion-omni-training-good-models-with-bad-data/",
+        dateRead: "2025-11-17",
+        paperDate: "2025-06-10",
+        paperUrl: "https://arxiv.org/pdf/2506.10038",
+        institutions: ["MIT"],
+        tags: ["partial-read"]
+      },
+      
+    
+      
+      {
+        title: "Boomerang Distillation Enables Zero-Shot Model Size Interpolation",
+        subtitle: "Boomerang Distillation",
+        url: "/blog/2025/harvard-boomerang-distillation/",
+        dateRead: "2025-11-16",
+        paperDate: "2025-10-06",
+        paperUrl: "https://arxiv.org/pdf/2510.05064",
+        institutions: ["Harvard"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "To Backtrack or Not to Backtrack: When Sequential Search Limits Model Reasoning",
+        subtitle: "Backtracking vs Best of n",
+        url: "/blog/2025/harvard-backtracking-vs-best-of-n/",
+        dateRead: "2025-11-15",
+        paperDate: "2025-04-09",
+        paperUrl: "https://arxiv.org/pdf/2504.07052",
+        institutions: ["Harvard"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Training Language Models to Self-Correct via Reinforcement Learning",
+        subtitle: "Aviral Kumar self-correcting LLMs",
+        url: "/blog/2025/deepmind-self-correcting-llms/",
+        dateRead: "2025-11-15",
+        paperDate: "2024-09-19",
+        paperUrl: "https://arxiv.org/pdf/2409.12917",
+        institutions: ["Google DeepMind"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+        subtitle: "MIT ColBERT",
+        url: "/blog/2025/mit-colbert/",
+        dateRead: "2025-11-14",
+        paperDate: "2020-06-04",
+        paperUrl: "https://arxiv.org/pdf/2004.12832",
+        institutions: ["MIT","Stanford"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Large Language Diffusion Models",
+        subtitle: "LLaDA",
+        url: "/blog/2025/llada/",
+        dateRead: "2025-11-13",
+        paperDate: "2025-02-14",
+        paperUrl: "https://arxiv.org/abs/2502.09992",
+        institutions: ["Renmin"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Teaching AI to see the world more like we do",
+        subtitle: "Deepmind Align Vision Representations",
+        url: "/blog/2025/deepmind-align-vision-representations/",
+        dateRead: "2025-11-12",
+        paperDate: "2025-11-11",
+        paperUrl: "https://deepmind.google/blog/teaching-ai-to-see-the-world-more-like-we-do/",
+        institutions: ["Google DeepMind"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Self-Adapting Language Models",
+        subtitle: "Zweiger et al SEAL continual learning",
+        url: "/blog/2025/mit-zweiger-et-al-seal/",
+        dateRead: "2025-11-11",
+        paperDate: "2025-06-12",
+        paperUrl: "https://arxiv.org/pdf/2506.10943",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "The Surprising Effectiveness of Test-Time Training for Few-Shot Learning",
+        subtitle: "TTT for ARC and BBH",
+        url: "/blog/2025/mit-ttt-for-arc-and-bbh/",
+        dateRead: "2025-11-11",
+        paperDate: "2024-11-11",
+        paperUrl: "https://arxiv.org/pdf/2411.07279",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Reasoning or reciting? Exploring the capabilities and limitations of language models through counterfactual tasks",
+        subtitle: "Reasoning or Reciting",
+        url: "/blog/2025/mit-reasoning-or-reciting/",
+        dateRead: "2025-11-11",
+        paperDate: "2024-03-28",
+        paperUrl: "https://arxiv.org/pdf/2307.02477",
+        institutions: ["MIT"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "Nested Learning: The Illusion of Deep Learning Architecture",
+        subtitle: "Deepmind Nested Learning short paper",
+        url: "/blog/2025/deepmind-nested-learning/",
+        dateRead: "2025-11-08",
+        paperDate: "2025-11-07",
+        paperUrl: "https://abehrouz.github.io/files/NL.pdf",
+        institutions: ["Google DeepMind"],
+        tags: ""
+      },
+      
+    
+      
+      {
+        title: "LoRA Without Regret",
+        subtitle: "LoRA blogpost",
+        url: "/blog/2025/thinky-lora-without-regret/",
+        dateRead: "2025-11-04",
+        paperDate: "2025-09-29",
+        paperUrl: "https://thinkingmachines.ai/blog/lora/",
+        institutions: ["Thinking Machines Lab"],
+        tags: ""
+      }
+      
+    
+  ];
+
+  var total = posts.length;
+
+  // Collect unique institutions and tags
+  var instSet = {};
+  var tagSet = {};
+  posts.forEach(function(p) {
+    if (p.institutions) p.institutions.forEach(function(i) { instSet[i] = true; });
+    if (p.tags) p.tags.forEach(function(t) { tagSet[t] = true; });
+  });
+  var allInstitutions = Object.keys(instSet).sort();
+  var allTags = Object.keys(tagSet).sort();
+
+  // Build filter dropdown with optgroups
+  var filterEl = document.getElementById('rn-filter');
+
+  // Read status group
+  var statusGroup = document.createElement('optgroup');
+  statusGroup.label = 'Read status';
+  var fullOpt = document.createElement('option');
+  fullOpt.value = 'status:full';
+  fullOpt.textContent = 'Fully read';
+  statusGroup.appendChild(fullOpt);
+  filterEl.appendChild(statusGroup);
+
+  if (allInstitutions.length > 0) {
+    var instGroup = document.createElement('optgroup');
+    instGroup.label = 'Institution';
+    allInstitutions.forEach(function(inst) {
+      var opt = document.createElement('option');
+      opt.value = 'inst:' + inst;
+      opt.textContent = inst;
+      instGroup.appendChild(opt);
+    });
+    filterEl.appendChild(instGroup);
+  }
+
+  // Filter out "partial-read" from displayed tags
+  var displayTags = allTags.filter(function(t) { return t !== 'partial-read'; });
+  if (displayTags.length > 0) {
+    var tagGroup = document.createElement('optgroup');
+    tagGroup.label = 'Tag';
+    displayTags.forEach(function(tag) {
+      var opt = document.createElement('option');
+      opt.value = 'tag:' + tag;
+      opt.textContent = tag;
+      tagGroup.appendChild(opt);
+    });
+    filterEl.appendChild(tagGroup);
+  }
+
+  document.getElementById('rn-search').addEventListener('input', render);
+  document.getElementById('rn-sort').addEventListener('change', render);
+  document.getElementById('rn-filter').addEventListener('change', render);
+
+  function formatDate(d) {
+    if (!d) return '';
+    var parts = d.split('-');
+    if (parts.length === 1) return parts[0];
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
+  }
+
+  function render() {
+    var q = document.getElementById('rn-search').value.toLowerCase().trim();
+    var sortBy = document.getElementById('rn-sort').value;
+
+    var filterVal = document.getElementById('rn-filter').value;
+
+    var filtered = posts.filter(function(p) {
+      if (q) {
+        var haystack = (p.title + ' ' + p.subtitle + ' ' + (p.institutions || []).join(' ') + ' ' + (p.tags || []).join(' ')).toLowerCase();
+        if (haystack.indexOf(q) === -1) return false;
+      }
+      if (filterVal) {
+        var parts = filterVal.split(':');
+        var type = parts[0];
+        var value = parts.slice(1).join(':');
+        if (type === 'inst') {
+          if (!p.institutions || p.institutions.indexOf(value) === -1) return false;
+        } else if (type === 'tag') {
+          if (!p.tags || p.tags.indexOf(value) === -1) return false;
+        } else if (type === 'status' && value === 'full') {
+          if (p.tags && p.tags.indexOf('partial-read') !== -1) return false;
+        }
+      }
+      return true;
+    });
+
+    filtered.sort(function(a, b) {
+      if (sortBy === 'dateRead') return (b.dateRead || '').localeCompare(a.dateRead || '');
+      if (sortBy === 'paperDate') return (b.paperDate || '').localeCompare(a.paperDate || '');
+      if (sortBy === 'title') return a.title.localeCompare(b.title);
+      return 0;
+    });
+
+    document.getElementById('rn-count').textContent = 'Showing ' + filtered.length + ' of ' + total + ' papers';
+
+    var html = '';
+    filtered.forEach(function(p) {
+      html += '<div class="rn-card" onclick="window.location.href=\'' + p.url + '\'" style="cursor:pointer;">';
+      html += '<div class="rn-card-header">';
+      html += '<h3 class="rn-card-title">' + p.title + '</h3>';
+      if (p.paperDate) html += '<span class="rn-card-year">Published ' + formatDate(p.paperDate) + '</span>';
+      html += '</div>';
+      if (p.subtitle && p.subtitle !== p.title) {
+        html += '<span class="rn-card-subtitle">' + p.subtitle + '</span>';
+      }
+      if (p.institutions && p.institutions.length > 0) {
+        html += '<span class="rn-card-institutions">' + p.institutions.join(', ') + '</span>';
+      }
+      html += '<div class="rn-card-meta">';
+      if (p.dateRead) html += '<span>Read: ' + p.dateRead + '</span>';
+      if (p.paperUrl) html += '<span><a href="' + p.paperUrl + '" onclick="event.stopPropagation();" target="_blank">Paper ↗</a></span>';
+      html += '</div>';
+      var displayTags = (p.tags || []).filter(function(t) { return t !== 'partial-read'; });
+      var isPartial = p.tags && p.tags.indexOf('partial-read') !== -1;
+      if (displayTags.length > 0 || isPartial) {
+        html += '<div class="rn-card-tags">';
+        if (isPartial) html += '<span class="rn-tag rn-tag-partial">Partial read</span>';
+        displayTags.forEach(function(t) {
+          html += '<span class="rn-tag">' + t + '</span>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+
+    document.getElementById('rn-list').innerHTML = html;
+  }
+
+  render();
+})();
+</script> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Chris Ge. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="external nofollow noopener">Unsplash</a>. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/js/zoom.js?v=85ddb88934d28b74e78031fd54cf8308"></script> <script src="/assets/js/no_defer.js?v=2781658a0a2b13ed609542042a859126"></script> <script defer src="/assets/js/common.js?v=c15de51d4bb57887caa2c21988d97279"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/js/mathjax-setup.js?v=a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script defer src="/assets/js/progress-bar.js?v=2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/assets/js/vanilla-back-to-top.min.js?v=f40d453793ff4f64e238e420181a1d17"></script> <script>
+    addBackToTop();
+  </script> </body> </html>

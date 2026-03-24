@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Recursive Language Models
-date: '2026-02-09'
+date: "2026-02-09"
 description: RLMs
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2512.24601
 institutions:
-- MIT
-paper_date: '2026-01-28'
+  - MIT
+paper_date: "2026-01-28"
 ---
 
 Motivation: Context rot sucks, and compaction does not solve the problem.
@@ -19,7 +19,7 @@ Motivation: Context rot sucks, and compaction does not solve the problem.
 The main idea is to use a REPL environment to keep state. Make the prompt a variable in that state, and make the output a variable in that state (so that your input and output are not limited by context length). Have the base LLM output code that runs in the REPL, including code that can call the LLM. This way, it can break down the prompt, and make as many subcalls as it would like.
 
 - The only thing that gets put into the context of the base LLM is just a little bit of metadata about the state, like the length so far or something.
-- It also needs to be able to look at parts of the prompt, and context about what it's trying to do, in order to understand how to slice up the prompt. 
+- It also needs to be able to look at parts of the prompt, and context about what it's trying to do, in order to understand how to slice up the prompt.
 
 ![](/assets/img/distillations/mit-alex-zhang-recursive-language-models/img-1774309844299.png)
 Algorithm 2 shows how Algorithm 1 improves on prior approaches
@@ -33,7 +33,7 @@ More illustration of the RLM process
 
 - I think the base LLM itself generates the In[X] code
 - In[2] includes recursive calls to the RLM each with their own starting prompt.
-- the final answer is stored in the variable FINAL\_ANSWER
+- the final answer is stored in the variable FINAL_ANSWER
 
 **Finetuning**: they used RLM(Qwen3-Coder-480B-A35B) on unrelated long context tasks in LongBenchPro, collected a bunch of root level trajectories, filtered them, and then used SFT on Qwen3-8B. The idea is that through the fine-tune, they want to encourage the base model to do a better job of recursively sub-calling the base LLM.
 

@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Auditing language models for hidden objectives
-date: '2025-12-05'
+date: "2025-12-05"
 description: auditing model internals
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2503.10965
 institutions:
-- Anthropic
-paper_date: '2025-03-14'
+  - Anthropic
+paper_date: "2025-03-14"
 ---
 
 goal: figure out if a model has a hidden objective that’s different from what the developers intended

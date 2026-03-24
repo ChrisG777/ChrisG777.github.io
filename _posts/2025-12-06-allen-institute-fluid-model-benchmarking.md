@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Fluid Language Model Benchmarking
-date: '2025-12-06'
+date: "2025-12-06"
 description: Fluid model benchmarking
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2509.11106
 institutions:
-- Allen Institute
-paper_date: '2025-09-14'
+  - Allen Institute
+paper_date: "2025-09-14"
 ---
 
 main novelty: putting together IRT (judge models based on the types of questions they get right (difficulty, discriminativeness)) AND dynamic question selection (choose the questions that are most helpful in evaluating the model like in standardized tests)
@@ -27,10 +27,10 @@ Evaluation: taking scores on particular items as given. Flexibility in how you S
 
 Modifying AGGREGATE using Itemized Response Theory:
 
-- two params per question: a\_j is how well the question discriminates model types (low discrimination might just be a wrong answer), b\_j is how hard the question is
+- two params per question: a_j is how well the question discriminates model types (low discrimination might just be a wrong answer), b_j is how hard the question is
 
 ![](/assets/img/distillations/allen-institute-fluid-model-benchmarking/img-1774302374639.png)
-And then to actually get the score, just collect the u\_ij’s, and then do a maximum a posteriori estimate of theta for AGGREGATE to figure out the ABILITY of the model
+And then to actually get the score, just collect the u_ij’s, and then do a maximum a posteriori estimate of theta for AGGREGATE to figure out the ABILITY of the model
 
 Modifying SELECT using IRT
 

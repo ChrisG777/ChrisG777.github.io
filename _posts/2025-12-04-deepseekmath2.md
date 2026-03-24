@@ -1,17 +1,17 @@
 ---
 layout: post
-title: 'DeepSeekMath-V2: Towards Self-Verifiable Mathematical Reasoning'
-date: '2025-12-04'
+title: "DeepSeekMath-V2: Towards Self-Verifiable Mathematical Reasoning"
+date: "2025-12-04"
 description: DeepseekMath2
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2511.22570v1
 institutions:
-- DeepSeek
-paper_date: '2025-11-27'
+  - DeepSeek
+paper_date: "2025-11-27"
 ---
 
 novelty: training a good verifier and meta-verifier on the proof/reasoning steps
@@ -19,7 +19,7 @@ novelty: training a good verifier and meta-verifier on the proof/reasoning steps
 
 problem: training on just answer for math isn’t sufficient. Want to get correct reasoning to get there too.
 
-### *Training the proof verifier*
+### _Training the proof verifier_
 
 Motivation: humans can tell if a proof is wrong without a solution handy.
 
@@ -39,7 +39,7 @@ solution: include a meta-verifier, trained the same way, except the meta-verifie
 
 - also need human data for how good the verifiers are
 
-### *Training the proof generator*
+### _Training the proof generator_
 
 - format reward
 - reward from the verifier

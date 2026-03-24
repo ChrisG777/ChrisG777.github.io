@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Automated Detection of Visual Attribute Reliance with a Self-Reflective Agent
-date: '2025-11-24'
+date: "2025-11-24"
 description: SAIA
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2510.21704
 institutions:
-- MIT
-paper_date: '2025-10-24'
+  - MIT
+paper_date: "2025-10-24"
 ---
 
 Problem: vision models often use unrelated spurious correlations (color, demographic details, setting etc) to do image classification.

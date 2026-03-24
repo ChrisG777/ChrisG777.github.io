@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Scaling Rectified Flow Transformers for High-Resolution Image Synthesis
-date: '2026-02-08'
+date: "2026-02-08"
 description: MM-DiTs
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2403.03206
 institutions:
-- Stability AI
-paper_date: '2024-03-05'
+  - Stability AI
+paper_date: "2024-03-05"
 ---
 
 Section 1: a new architecture for rectified flow that allows it to scale for problems that are not class-conditioned generation
@@ -22,16 +22,16 @@ Section 1: a new architecture for rectified flow that allows it to scale for pro
 
 coming up with a unifying formula for the training objective of ODE-based flow models (like rectified flow) and diffusion models. I swear I've seen like a bajillion of these, and it seems the general idea is that they're all predicting some kind of noise or equivalently, velocity
 
-Based on a schedule for flowing from x\_0 in p\_0 to p\_1
+Based on a schedule for flowing from x_0 in p_0 to p_1
 ![](/assets/img/distillations/scaling-rectified-flow/image186.png)
 
-You can derive the marginal vector field u\_t(z), which is what you’re trying to get your vector field network output to predict
+You can derive the marginal vector field u_t(z), which is what you’re trying to get your vector field network output to predict
 ![](/assets/img/distillations/scaling-rectified-flow/image187.png)
 
 But the marginalization makes it intractable, so, it's actually equivalent to use the conditional flow matching objective
 ![](/assets/img/distillations/scaling-rectified-flow/image188.png)
 
-plug back in the conditional vector field expression u\_t(z|epsilon), reparameterize using the SNR
+plug back in the conditional vector field expression u_t(z|epsilon), reparameterize using the SNR
 ![](/assets/img/distillations/scaling-rectified-flow/image189.png)
 
 and make the network output predict epsilon instead of v
@@ -40,24 +40,25 @@ and make the network output predict epsilon instead of v
 Finally, introducing a weighting term by time leaves the optimum the same but changes some of the optimization dynamics, but allows us to unify different perspectives.
 ![](/assets/img/distillations/scaling-rectified-flow/image191.png)
 
-where L\_CFM corresponds to a particular choice of w\_t
+where L_CFM corresponds to a particular choice of w_t
 
-Section 3: How different flow variants fall under this formalism, with different a\_t and b\_t defining the forward path, different network output, results in a setting for w\_t
-in general: changing the forward path changes which noise scales (what SNR level?) the model learns most strongly based on the resulting w\_t
+Section 3: How different flow variants fall under this formalism, with different a_t and b_t defining the forward path, different network output, results in a setting for w_t
+in general: changing the forward path changes which noise scales (what SNR level?) the model learns most strongly based on the resulting w_t
 
-**Rectified Flow:** ![](/assets/img/distillations/scaling-rectified-flow/image192.png), so a\_t \= 1-t, b\_t \= t
-+ network output parameterizes velocity, not noise
-trained using L\_CFM ⇔ w\_t \= t/(1-t)
+**Rectified Flow:** ![](/assets/img/distillations/scaling-rectified-flow/image192.png), so a_t \= 1-t, b_t \= t
 
-**EDM**: ![](/assets/img/distillations/scaling-rectified-flow/image193.png) (adding different noise levels on top of the data), a\_t \= 1, ![](/assets/img/distillations/scaling-rectified-flow/image194.png),
+- network output parameterizes velocity, not noise
+  trained using L_CFM ⇔ w_t \= t/(1-t)
+
+**EDM**: ![](/assets/img/distillations/scaling-rectified-flow/image193.png) (adding different noise levels on top of the data), a_t \= 1, ![](/assets/img/distillations/scaling-rectified-flow/image194.png),
 ![](/assets/img/distillations/scaling-rectified-flow/image195.png)
 network output is the noise
 
-**Cosine**: ![](/assets/img/distillations/scaling-rectified-flow/image196.png), variance preserving: a\_t^2 + b\_t^2 \= 1
+**Cosine**: ![](/assets/img/distillations/scaling-rectified-flow/image196.png), variance preserving: a_t^2 + b_t^2 \= 1
 network output is the noise
 ![](/assets/img/distillations/scaling-rectified-flow/image197.png)
 
-Section 3.1: the velocity is a lot easier to learn at t=0 and t=1 than in the middle (since you’re calculating E[v \= eps - x\_0], but at t=0 you know x\_0, and at t=1 you know eps . Want to reweight the RF weighting term to favor the middle, using a distribution π(t) that’s not the uniform
+Section 3.1: the velocity is a lot easier to learn at t=0 and t=1 than in the middle (since you’re calculating E[v \= eps - x\_0], but at t=0 you know x_0, and at t=1 you know eps . Want to reweight the RF weighting term to favor the middle, using a distribution π(t) that’s not the uniform
 ![](/assets/img/distillations/scaling-rectified-flow/image198.png)
 
 They try three different densities:
@@ -68,16 +69,16 @@ They try three different densities:
 
 ### Section 4 Architecture
 
-get coarse grained global view of the text input through c\_vec, from concatenating CLIP-L/14 and CLIP-G/14 encodings. This gets fed into the layer modulation (the Ada-LN-Zero weights)
+get coarse grained global view of the text input through c_vec, from concatenating CLIP-L/14 and CLIP-G/14 encodings. This gets fed into the layer modulation (the Ada-LN-Zero weights)
 
-c\_ctxt is the fine grained sequence representation of the text, from concatenating CLIP-L/14 and T5 XXL encodings. This is fed into the attention blocks together with the image patch sequence (but with a different set of weights, so that only the attention part is combined)
+c_ctxt is the fine grained sequence representation of the text, from concatenating CLIP-L/14 and T5 XXL encodings. This is fed into the attention blocks together with the image patch sequence (but with a different set of weights, so that only the attention part is combined)
 ![](/assets/img/distillations/scaling-rectified-flow/img-1774308916052.png)
 
 - red are the different inputs (and the output). Going one by one through how these are processed:
 - noised latent: patched + embedded, positional embeddings added to the sequence, and just fed into the attention blocks as a sequence.
 - caption: used for both the modulation and the sequence attention like we mentioned above.
   - the big rectangle is showing that in order to concatenate the 77 token length sequence from T5 XXL, with each token being 4096 dimensional, with the 77 token length sequence from CLIP-G/14 and CLIP-L/14, which are lower dimensional. You need to pad the remaining dimensions with the gray 0’s block
-- timestep: time is encoded using sinusoidal encoding, added together with the CLIP c\_vec to get the modulation input y
+- timestep: time is encoded using sinusoidal encoding, added together with the CLIP c_vec to get the modulation input y
 
 ![](/assets/img/distillations/scaling-rectified-flow/img-1774308938123.png)
 dual streams to process the text and the noised image by attention
@@ -93,7 +94,7 @@ Ablate the inclusion of T5 as well (Or rather during inference time, I think, be
 
 ### Section 5 Experiments
 
-comparing different training methods (holding the architecture and optimization)  constant on COCO-2014 validation split
+comparing different training methods (holding the architecture and optimization) constant on COCO-2014 validation split
 Metrics
 
 - CLIP-FID (normal FID uses inception v3). CLIP-FID is more accurate for text to image generation

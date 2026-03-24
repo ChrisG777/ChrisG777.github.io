@@ -1,17 +1,17 @@
 ---
 layout: post
-title: 'SliderSpace: Decomposing the Visual Capabilities of Diffusion Models'
-date: '2025-12-26'
+title: "SliderSpace: Decomposing the Visual Capabilities of Diffusion Models"
+date: "2025-12-26"
 description: Sliderspace
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2502.01639
 institutions:
-- Northeastern
-paper_date: '2025-02-03'
+  - Northeastern
+paper_date: "2025-02-03"
 ---
 
 Half of the captions on the blogpost are wrong and are the same exact caption about 1 erasure
@@ -28,17 +28,17 @@ More specifically, we want these controllable directions to
 
 observation: for the predicted denoised samples, they do 5000 trajectories, but they actually take the intermediate predicted denoised samples from each timestep in each trajectory
 
-- (recall that you can do this because the reverse process of diffusion has many equivalent parameterizations: epsilon\_t, **x\_0**, x\_{t-1}, score, etc)
+- (recall that you can do this because the reverse process of diffusion has many equivalent parameterizations: epsilon_t, **x_0**, x\_{t-1}, score, etc)
   - ![](/assets/img/distillations/david-bau-sliderspace/image121.png)
 - ![](/assets/img/distillations/david-bau-sliderspace/image122.png)
   - so the final set of embeddings that they end up doing PCA on is much larger (j is the index of the trajectory, t is the timestep in that trajectory that you’re predicting the final image from)
-- Why do they do this? (from Gemini, not from the paper)  Reason \#1 is that you want to find directions that are consistently semantically meaningful throughout the entire generation process. Reason \#2 is that this just gives you more data
+- Why do they do this? (from Gemini, not from the paper) Reason \#1 is that you want to find directions that are consistently semantically meaningful throughout the entire generation process. Reason \#2 is that this just gives you more data
 
 For the training of the slider, it’s a completely different slider from their concept sliders training method
 ![](/assets/img/distillations/david-bau-sliderspace/image123.png)
 
 1. Sample a data point and a time t
-2. (conditioned) predict x\_0 with the slider (lora) and without the slider. Run both of the predictions through the CLIP embedding; the difference in embeddings is ∆phi\_i
+2. (conditioned) predict x_0 with the slider (lora) and without the slider. Run both of the predictions through the CLIP embedding; the difference in embeddings is ∆phi_i
 3. Compute the cosine loss as above
    1. this incentivizes the slider to get the embeddings perfectly along the direction of that principle component
 
@@ -66,7 +66,6 @@ Baselines used:
 **Application \#3: Reinjecting diversity back into the distilled model SDXL-DMD**
 
 Ran sliderspace on a ton of COCO-30k prompts, the resulting sliderspace on SDXL-DMD has much improved FID (measuring diversity)
-
 
 **Bonus application: sliders learned for one concept are sometimes transferable to other concepts**
 

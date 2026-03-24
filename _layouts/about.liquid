@@ -5,8 +5,11 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {% if site.title == 'blank' %}
-        <span class="font-weight-bold">{{ site.first_name }} {{ site.middle_name }}
-        {{ site.last_name }}</span>
+        <span class="font-weight-bold">
+          {{- site.first_name }}
+          {{ site.middle_name }}
+          {{ site.last_name -}}
+        </span>
       {% else %}
         {{ site.title }}
       {% endif %}
@@ -76,7 +79,7 @@ layout: default
     {% endif %}
 
     <!-- Projects -->
-    {% assign sorted_projects = site.projects | sort: "importance" %}
+    {% assign sorted_projects = site.projects | sort: 'importance' %}
     {% if sorted_projects.size > 0 %}
       <div style="margin-top: 2rem;">
         <h2>other projects</h2>

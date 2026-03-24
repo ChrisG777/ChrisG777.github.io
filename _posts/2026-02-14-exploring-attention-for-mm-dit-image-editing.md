@@ -2,20 +2,20 @@
 layout: post
 title: Exploring Multimodal Diffusion Transformers for Enhanced Prompt-based Image
   Editing
-date: '2026-02-14'
+date: "2026-02-14"
 description: activation patching and attention maps in MM-DiTs
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2508.07519
 institutions:
-- SNU
-paper_date: '2025-08-11'
+  - SNU
+paper_date: "2025-08-11"
 ---
 
-*Study attention maps within MM-DiT’s, in particular, text-to-image cross-attention. Use activation patching for image features and blending source and target generations at each time step to edit images.*
+_Study attention maps within MM-DiT’s, in particular, text-to-image cross-attention. Use activation patching for image features and blending source and target generations at each time step to edit images._
 
 project site: [https://github.com/SNU-VGILab/exploring-mmdit](https://github.com/SNU-VGILab/exploring-mmdit)
 
@@ -39,14 +39,14 @@ They find that as you scale up DiTs, the attention maps get noisier. They have t
 Two major methods used in conjunction to do image editing given a source generation and a target generation
 ![](/assets/img/distillations/exploring-attention-for-mm-dit-image-editing/img-1774310570484.png)
 
-1. activation injection (applied to every block*): They find that replacing both the image and text attention inputs q and k causes misalignment with the text. For the target generation, **they only replace q\_i and k\_i (the image features)**
+1. activation injection (applied to every block\*): They find that replacing both the image and text attention inputs q and k causes misalignment with the text. For the target generation, **they only replace q_i and k_i (the image features)**
    - If you try to replace the attention values themselves, you lose out on some optimized performance SDPA kernels
    - Allows you to do image editing when the target and source prompts are very different.
-   - *For Flux and other short-time step models, they don't apply to every layer since they find that that forces it to stay too close to the source.
-2. local blending (applied only once per timestep): use the top 5 attention layers’ generated T2I attention map average and union them to get a mask about where the edited concept lies. Then use the source output for everything except that mask and the target output (which already uses q\_i and k\_i from the source) for everything in that mask.
+   - \*For Flux and other short-time step models, they don't apply to every layer since they find that that forces it to stay too close to the source.
+2. local blending (applied only once per timestep): use the top 5 attention layers’ generated T2I attention map average and union them to get a mask about where the edited concept lies. Then use the source output for everything except that mask and the target output (which already uses q_i and k_i from the source) for everything in that mask.
 
 - They only do the Q and K replacements for early steps, so that it properly does the finer details later.
--  They also only do local blending for earlier steps (with a different parameter)
+- They also only do local blending for earlier steps (with a different parameter)
 
 Editing real images: their approach is compatible with the standard method of reverse engineering the latent for the real image and then using the edited prompt to generate from that latent
 

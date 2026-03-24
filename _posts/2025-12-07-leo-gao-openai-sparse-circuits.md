@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Weight-sparse transformers have interpretable circuits
-date: '2025-12-07'
+date: "2025-12-07"
 description: Leo Gao OpenAI sparse circuits
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2511.13653
 institutions:
-- OpenAI
-paper_date: '2025-11-17'
+  - OpenAI
+paper_date: "2025-11-17"
 ---
 
 **Below notes are taken from his ML Perf reading group talk, not my own notes on his paper**

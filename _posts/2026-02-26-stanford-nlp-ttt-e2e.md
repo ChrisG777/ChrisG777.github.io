@@ -1,17 +1,17 @@
 ---
 layout: post
 title: End-to-End Test-Time Training for Long Context
-date: '2026-02-26'
+date: "2026-02-26"
 description: TTT-E2E
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2512.23675
 institutions:
-- Stanford
-paper_date: '2025-12-29'
+  - Stanford
+paper_date: "2025-12-29"
 ---
 
 Goal: O(1) inference latency per token (Standard attention is O(T), Where T is the length of the sequence), while not dropping performance compared to standard attention like Mamba does
@@ -79,7 +79,6 @@ Scaling experiments (figure 5)
 Scaling with context length
 
 Surprise (Figure 6 / section 3.4.1): TTT E2E actually gets most of its performance improvement over full attention in the first 1K tokens, before it has done any update step and while sliding window attention is still full attention. Why? They conjecture this is because TTT E2E can be more specialized for the present instead of trying to be somewhat good at any possible scenario.
-
 
 ![](/assets/img/distillations/stanford-nlp-ttt-e2e/img-1774378684227.png)
 

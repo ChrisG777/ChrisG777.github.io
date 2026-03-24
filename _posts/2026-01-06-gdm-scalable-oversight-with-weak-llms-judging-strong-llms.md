@@ -1,18 +1,18 @@
 ---
 layout: post
 title: On scalable oversight with weak LLMs judging strong LLMs
-date: '2026-01-06'
+date: "2026-01-06"
 description: GDM scalable oversight
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2407.04622
 institutions:
-- Google DeepMind
-paper_date: '2024-07-05'
+  - Google DeepMind
+paper_date: "2024-07-05"
 ---
 
 I did not actually finish reading this paper, but the idea was that we’re trying to figure out how a dumb human can get an answer from a possibly lying superhuman AI. Except for now, we’re simulating the dumb human (“judge”) with a weak LM, and the superhuman AI with a stronger LM

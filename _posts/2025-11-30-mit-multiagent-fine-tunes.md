@@ -1,17 +1,17 @@
 ---
 layout: post
-title: 'Multiagent Finetuning: Self Improvement with Diverse Reasoning Chains'
-date: '2025-11-30'
+title: "Multiagent Finetuning: Self Improvement with Diverse Reasoning Chains"
+date: "2025-11-30"
 description: Multiagent Fine Tunes
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2501.05707
 institutions:
-- MIT
-paper_date: '2025-01-10'
+  - MIT
+paper_date: "2025-01-10"
 ---
 
 ![](/assets/img/distillations/mit-multiagent-fine-tunes/img-1774300860984.png)
@@ -27,5 +27,5 @@ key to keeping diversity: train each model on only its own correct outputs (corr
 
 Results:
 
-- do better than majority  vote baselines / STaR / single model fine tunes
+- do better than majority vote baselines / STaR / single model fine tunes
 - have higher diversity, which is measured by each model’s NLL of the other models’ outputs

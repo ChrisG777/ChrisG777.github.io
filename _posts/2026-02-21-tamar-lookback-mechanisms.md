@@ -1,22 +1,22 @@
 ---
 layout: post
 title: Language Models use Lookbacks to Track Beliefs
-date: '2026-02-21'
+date: "2026-02-21"
 description: lookback mechanisms
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2505.14685
 institutions:
-- MIT
-paper_date: '2025-05-20'
+  - MIT
+paper_date: "2025-05-20"
 ---
 
 Goal: Understand how LLMs represent theory of mind (What does each character know?)
 
-*As you progress through the layers of computation, what is the residual stream of each token actually storing?*
+_As you progress through the layers of computation, what is the residual stream of each token actually storing?_
 
 pervasive mechanism: the lookback mechanism. Some tokens act as source references, meaning that the question at the end of the day asks about these tokens, so these source references create IDs, and then these IDs (in later layers) get copied into both
 
@@ -84,7 +84,7 @@ This is the abstract causal model of what's going on.
   - key part: According to their causal model, this patches over the address and payload values for each state token. So now in the original prompt, the beer token actually contains OI2 for character, object and state, and still has the state value “beer”
   - The pointer for the last token still looks for OI 2 for character and object, so it uses the binding lookback and finds in the beer token residual stream that it should be looking for the state OI 2\. And then when it dereferences that, it gets back “beer”
 - The mistake was already mostly done by the time the last token paid attention to the beer token instead of to the coffee token.
-- *What is this proving?* Somehow the patching made it so that instead of Carla and Cup getting you to the coffee token, it gets you to the beer token instead. So
+- _What is this proving?_ Somehow the patching made it so that instead of Carla and Cup getting you to the coffee token, it gets you to the beer token instead. So
   - the **state (beer) token contains information about the character and object.**
   - Furthermore, this information is **generic, e.g. about order ID,** instead of specific to Carla and Cup, since otherwise, it should have contained Bob and Bottle.
 - layers 33-38 of the state token encode this
@@ -102,7 +102,7 @@ This is the abstract causal model of what's going on.
 - Why do they have to swap the beverages out completely?
   - Suppose that they kept tea instead of beer. The answer would have been tea. But now it's not totally clear if by patching in Bob and Bottle, they somehow brought in information about tea.
   - With beer, It must be the case that “Carla” and “Cup” in the last sentence read from the patched Carla and Cup in the second-to-last sentence, and that this patched Carla and Cup provided the location information about how to find the beer token
-- *What is this proving?* **The character and object tokens are the source of the OI that's later found in the state token.**
+- _What is this proving?_ **The character and object tokens are the source of the OI that's later found in the state token.**
 - layers 20-34 do this
 
 “In summary, belief tracking begins in
@@ -141,6 +141,7 @@ Figure 8
 
 **their original motivation causal intervention (out of chronological order)**
 ![](/assets/img/distillations/tamar-lookback-mechanisms/img-1774313430664.png)
+
 - it took me so long to figure out what’s happening in this figure
 - ![](/assets/img/distillations/tamar-lookback-mechanisms/img-1774313562707.png)
 - They have three counterfactual prompts. Essentially, they should not be able to answer the question correctly with the original prompt but with a counterfactual prompt which either has the correct character, object, or state substituted in, they should be able to. What they do is:

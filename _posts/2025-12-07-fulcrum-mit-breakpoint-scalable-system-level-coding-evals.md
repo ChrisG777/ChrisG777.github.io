@@ -1,18 +1,18 @@
 ---
 layout: post
-title: 'Breakpoint: Scalable evaluation of system-level reasoning in LLM code agents'
-date: '2025-12-07'
+title: "Breakpoint: Scalable evaluation of system-level reasoning in LLM code agents"
+date: "2025-12-07"
 description: Breakpoint
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2506.00172
 institutions:
-- MIT
-- Fulcrum
-paper_date: '2025-05-30'
+  - MIT
+  - Fulcrum
+paper_date: "2025-05-30"
 ---
 
 Goal: automated way to create a benchmark where you get to tune the difficulty of the long-term system-level coding

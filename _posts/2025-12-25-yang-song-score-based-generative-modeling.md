@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Generative Modeling by Estimating Gradients of the Data Distribution
-date: '2025-12-25'
+date: "2025-12-25"
 description: score function generative modeling
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://yang-song.net/blog/2021/score/
 institutions:
-- Stanford
-paper_date: '2021-05-21'
+  - Stanford
+paper_date: "2021-05-21"
 ---
 
 I’ll refer to the ICLR Diffusion explained blogpost for the motivations of score based modeling
@@ -37,10 +37,10 @@ then to actually sample, use annealed Langevin dynamics: basically do the revers
 
 ### SDEs
 
-Idea: take the number of noise scales to go to infinity, so that you have the pdfs p\_t(x) for t \\in [0, T] continuously
+Idea: take the number of noise scales to go to infinity, so that you have the pdfs p_t(x) for t \\in [0, T] continuously
 
-- p\_0(x) \= p(x) is the data distribution
-- p\_T(x) is pure noise
+- p_0(x) \= p(x) is the data distribution
+- p_T(x) is pure noise
 
 ![](/assets/img/distillations/yang-song-score-based-generative-modeling/image100.png)
 general form of an SDE
@@ -56,18 +56,18 @@ Any SDE has a reverse SDE
 
 once again, we train a time dependent score function based on a weighted fisher divergence
 ![](/assets/img/distillations/yang-song-score-based-generative-modeling/image103.png)
-When you choose lambda(t) \= g^2(t), you actually get that this is an upper bound to the KL divergence between p\_0(x) and p\_theta(x)\!
+When you choose lambda(t) \= g^2(t), you actually get that this is an upper bound to the KL divergence between p_0(x) and p_theta(x)\!
 
 use numerical solvers to solve the reverse SDE for sampling.
 
 ### Probability Flow ODE
 
-Problem: with SDEs, we can’t compute the exact log likelihood of an x\_0
+Problem: with SDEs, we can’t compute the exact log likelihood of an x_0
 
 You can convert any SDE into an ODE (difference is an ODE is deterministic) that has the same marginals ![](/assets/img/distillations/yang-song-score-based-generative-modeling/image104.png)(no guarantees about the trajectories, i.e. as you vary t continuously, but same marginals yes).
 ![](/assets/img/distillations/yang-song-score-based-generative-modeling/image105.png)
 ![](/assets/img/distillations/yang-song-score-based-generative-modeling/image106.png)
-And then since this becomes a neural ODE / continuous normalizing flow when you plug in the approximation s\_theta(x, t), you can use numerical ODE solvers to compute the p\_0 likelihoods.
+And then since this becomes a neural ODE / continuous normalizing flow when you plug in the approximation s_theta(x, t), you can use numerical ODE solvers to compute the p_0 likelihoods.
 
 ### Controllable generation
 

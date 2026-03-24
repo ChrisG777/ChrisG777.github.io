@@ -1,20 +1,20 @@
 ---
 layout: post
-title: 'Nested Learning: The Illusion of Deep Learning Architecture'
-date: '2025-11-08'
+title: "Nested Learning: The Illusion of Deep Learning Architecture"
+date: "2025-11-08"
 description: Deepmind Nested Learning short paper
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://abehrouz.github.io/files/NL.pdf
 institutions:
-- Google DeepMind
-paper_date: '2025-11-07'
+  - Google DeepMind
+paper_date: "2025-11-07"
 ---
 
-warning: these are notes from the short paper before they released the full 52-page version. 
+warning: these are notes from the short paper before they released the full 52-page version.
 
 as far as I could tell, there were two main novel ideas
 

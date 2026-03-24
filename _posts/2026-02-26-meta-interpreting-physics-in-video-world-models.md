@@ -1,18 +1,18 @@
 ---
 layout: post
 title: Interpreting Physics in Video World Models
-date: '2026-02-26'
+date: "2026-02-26"
 description: physics in video models \+ V-JEPA background
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2602.07050
 institutions:
-- Meta
-paper_date: '2026-02-04'
+  - Meta
+paper_date: "2026-02-04"
 ---
 
 **V-JEPA 2 background [https://arxiv.org/pdf/2506.09985](https://arxiv.org/pdf/2506.09985) :**

@@ -1,18 +1,18 @@
 ---
 layout: post
-title: 'Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms
-  in VLMs'
-date: '2026-03-21'
+title: "Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms
+  in VLMs"
+date: "2026-03-21"
 description: modality specific circuits
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2506.09047
 institutions:
-- Technion
-paper_date: '2025-06-10'
+  - Technion
+paper_date: "2025-06-10"
 ---
 
 Trying to understand why tasks are easier in language than in vision.

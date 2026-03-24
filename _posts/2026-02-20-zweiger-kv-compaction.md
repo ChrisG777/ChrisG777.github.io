@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Fast KV Compaction via Attention Matching
-date: '2026-02-20'
+date: "2026-02-20"
 description: Zweiger KV compaction
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2602.16284
 institutions:
-- MIT
-paper_date: '2026-02-18'
+  - MIT
+paper_date: "2026-02-18"
 ---
 
 ### goal
@@ -24,8 +24,8 @@ You're hoping that the attention output for an arbitrary query, and with any new
 
 - both numerator and denominator are scalars
 - q is 1xd (d is the attention dimension)
-- The numerator can be rewritten as sum\_{j=1}^(T+S) exp(q\_j K\_j) V\_j
-- Hence, you can actually write this as a weighted combination of local *attention outputs* (the numerator looking thing) and local *attention masses* (the denominator looking thing)
+- The numerator can be rewritten as sum\_{j=1}^(T+S) exp(q_j K_j) V_j
+- Hence, you can actually write this as a weighted combination of local _attention outputs_ (the numerator looking thing) and local _attention masses_ (the denominator looking thing)
 - ![](/assets/img/distillations/zweiger-kv-compaction/image221.png)
 
 Except you can't hope to match the local original attention output and attention masses exactly. E.g., if you get a query of zero, you're screwed. So they add one more bias term:
@@ -44,20 +44,21 @@ Need to construct a “training set” of queries
 - Somehow the model is paying attention to the context, so this is representative of the type of queries you're going to get.
 
 **Self-study**:
+
 - Ask questions about the context.
 - Takes longer.
 
 Do compaction and construction of reference queries layer by layer so that your queries stay “on policy”.
 
-#### Given C\_k, finding beta and C\_v
+#### Given C_k, finding beta and C_v
 
-**beta:** Take equation (2) from above, and reparameterize w\_j \= exp(beta\_j), and since you know everything else in the equation, it just becomes a simple linear system which you solve by nonnegative least squares
+**beta:** Take equation (2) from above, and reparameterize w_j \= exp(beta_j), and since you know everything else in the equation, it just becomes a simple linear system which you solve by nonnegative least squares
 ![](/assets/img/distillations/zweiger-kv-compaction/image223.png)
-**C\_v**:
+**C_v**:
 
 ![](/assets/img/distillations/zweiger-kv-compaction/image224.png)
 
-**Finding C\_k**
+**Finding C_k**
 
 restrict to taking a subset of the existing keys
 
@@ -80,7 +81,7 @@ two methods:
 
 ### Experiments
 
-Vary using OMP vs highest attention value and NNLS to select C\_k and beta
+Vary using OMP vs highest attention value and NNLS to select C_k and beta
 Vary speedups to OMP
 Vary reference queries used
 

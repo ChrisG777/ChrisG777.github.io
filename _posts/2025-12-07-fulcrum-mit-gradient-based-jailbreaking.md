@@ -1,21 +1,21 @@
 ---
 layout: post
-title: 'Between the Bars: Gradient-based Jailbreaks are Bugs that induce Features'
-date: '2025-12-07'
+title: "Between the Bars: Gradient-based Jailbreaks are Bugs that induce Features"
+date: "2025-12-07"
 description: Gradient Based Jailbreaking
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://openreview.net/pdf?id=i0tMl7ECsW
 institutions:
-- MIT
-- Fulcrum
-paper_date: '2024-10-09'
+  - MIT
+  - Fulcrum
+paper_date: "2024-10-09"
 ---
 
-Apparently, this paper was written in the matter of three days, and is complete noise. 
+Apparently, this paper was written in the matter of three days, and is complete noise.
 
 Analyzing gradient based jailbreaking attacks (nanoGCG), where you append a suffix to the prompt and then optimize it to make the model do bad things when it generates later. Claim is that they’re bugs but they reveal actual features representing harmful responses in activations.
 

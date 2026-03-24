@@ -1,23 +1,23 @@
 ---
 layout: post
-title: 'BRIDGE: Predicting Human Task Completion Time From Model Performance'
-date: '2026-02-17'
+title: "BRIDGE: Predicting Human Task Completion Time From Model Performance"
+date: "2026-02-17"
 description: Predicting Human Time from IRT difficulty
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2602.07267
 institutions:
-- Mila
-paper_date: '2026-02-06'
+  - Mila
+paper_date: "2026-02-06"
 ---
 
-*Fit IRT model, regress log of human completion time against IRT ability*
+_Fit IRT model, regress log of human completion time against IRT ability_
 
-Was reading this because it's a related work to our agent psychometrics paper. Skimmed through it so that's why the notes are sparse. 
+Was reading this because it's a related work to our agent psychometrics paper. Skimmed through it so that's why the notes are sparse.
 
 all benchmarks are agentic
 

@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Scalable Diffusion Models with Transformers
-date: '2026-02-08'
+date: "2026-02-08"
 description: Diffusion Transformers
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2212.09748
 institutions:
-- UC Berkeley
-paper_date: '2023-03-02'
+  - UC Berkeley
+paper_date: "2023-03-02"
 ---
 
 Preliminaries: the VAE ELBO loss approach to diffusion, [classifier-free guidance](#conditional-diffusion) , latent diffusion models (used to save flops)
@@ -23,6 +23,7 @@ Section 3 the architecture
 ![](/assets/img/distillations/diffusion-transformer/img-1774308531377.png)
 
 the outputs of the transformer are the predicted noise, and a covariance matrix
+
 - Usually, diffusion assumes fixed covariance, but they actually learn it here for some reason.
 
 Choices:
@@ -39,7 +40,6 @@ Section 4 Experiments
   - Inception Score [51], sFID [34] and Precision/Recall [32] as secondary metrics.
 - Used a lot of hyperparams from ADM without tuning
 - used off the shelf VAE from stable diffusion
-
 
 Section 5 Experiments
 

@@ -2,17 +2,17 @@
 layout: post
 title: Continuous Language Model Interpolation yields Dynamic and Controllable Text
   Generation
-date: '2025-11-23'
+date: "2025-11-23"
 description: continuous model interpolation with lora
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2404.07117
 institutions:
-- Harvard
-paper_date: '2025-08-28'
+  - Harvard
+paper_date: "2025-08-28"
 ---
 
 Goal: want to be able to customize a model for different styles / output traits at inference time without retraining / doing multiple rounds of inference

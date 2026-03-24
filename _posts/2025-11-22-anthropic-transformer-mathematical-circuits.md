@@ -1,17 +1,17 @@
 ---
 layout: post
 title: A Mathematical Framework for Transformer Circuits
-date: '2025-11-22'
+date: "2025-11-22"
 description: Transformer Circuits Framework
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://transformer-circuits.pub/2021/framework/index.html
 institutions:
-- Anthropic
-paper_date: '2021-12-22'
+  - Anthropic
+paper_date: "2021-12-22"
 ---
 
 Only working with \<= 2 layer transformers, ignoring MLP’s, layernorm
@@ -24,7 +24,7 @@ the residual stream is how each token’s vector gets passed through, and attent
 - each attention head is low rank → reading and writing to a small part of the residual stream
 - residual stream functions as a “memory,” you even have some operations learn to delete stuff from memory
 
-But the MLP’s have 4 * d\_model neurons, how to store all that in residual stream?
+But the MLP’s have 4 \* d_model neurons, how to store all that in residual stream?
 
 - superposition (neel nanda references the toy model paper)
   - most of the features are sparse, so even if there’s 10000 features, only 100 of them occur at a time
@@ -37,21 +37,21 @@ but this does make the residual stream **really hard to interpret** (it also doe
 
 Two actually mostly independent parts
 
-QK-circuit: A \= softmax(x^T W\_Q^T W\_K x)
+QK-circuit: A \= softmax(x^T W_Q^T W_K x)
 
-- W\_Q^T W\_K acts together as a low rank matrix, W\_QK
+- W_Q^T W_K acts together as a low rank matrix, W_QK
 - bilinear operation, determines how information is moved between tokens
 
-OV-circuit: Ax W\_v^T W\_o^T
+OV-circuit: Ax W_v^T W_o^T
 
-- W\_oW\_v acts together: W\_ov
+- W_oW_v acts together: W_ov
 - linear operation on the residual stream
 
 (tensor product A \\otimes W applied to x just means AxW^T)
 
 ### Zero Layer Transformers
 
-No information movement, so just W\_UW\_E (unembedding and embedding), learns to predict next token from current token → bigram model
+No information movement, so just W_UW_E (unembedding and embedding), learns to predict next token from current token → bigram model
 
 ### One layer Transformers
 
@@ -82,7 +82,7 @@ Three types of composition: Q, K, V composition, depending on which inputs of at
 - ![](/assets/img/distillations/anthropic-transformer-mathematical-circuits/img-1774299469925.png)
   - For instance, for Q-composition, an earlier head and an earlier layer of the same token wrote to the residual stream, and that right gets picked up by the later head when it's calculating the query.
   - For K composition and V composition, it's a head operating on a different token position whose output affects the key or value in that token position, which then goes on to affect the current token position's attention output
-- use the virtual weights interpretation to quantify communication between attention heads from different layers: for Q and K composition, it’s like W\_QK of our new head (or that transposed) * W\_ov of old head, while for V composition it’s W\_v * W\_ov of old head
+- use the virtual weights interpretation to quantify communication between attention heads from different layers: for Q and K composition, it’s like W*QK of our new head (or that transposed) * W*ov of old head, while for V composition it’s W_v * W_ov of old head
   - see which one is a large interaction term using this weird cosine similarity esque thing for matrices
   - what they found is that only K composition really happens
 
@@ -99,7 +99,7 @@ So how do induction heads work?
 
 - the OV circuit really wants to just copy over [B], so that part is simple
 - What does the query at [A] look for? Needs a **contextualized key** at first [B]
-  - this contextualized key at first [B]: first [B] pays attention to first [A], and that W\_ov for the first layer encodes a special encoding of this first [A], which the inductive head query recognizes
+  - this contextualized key at first [B]: first [B] pays attention to first [A], and that W_ov for the first layer encodes a special encoding of this first [A], which the inductive head query recognizes
 - Once query at [A] knows to pay attention to first [B], just extracts the part of the first attention head’s output corresponding to [B] token (and not the specially encrypted first [A])
 
 ![](/assets/img/distillations/anthropic-transformer-mathematical-circuits/image6.png)
@@ -123,4 +123,4 @@ second layer of attention
 - one big residual stream, linear operations done on it
 - QK circuit being moving information, and OV circuit being encoding things
 - one layer transformers and the skip trigram bug showing the structural limitation of attention, in that once you’ve decided to pay attention to a token, you can’t then condition what its effect on the output should be based on the current token
-- induction heads being an example of compositionality, which using the path perspective is a path through two attention heads, where the virtual weight matrix W\_qk W\_ov determines how information is passed from one head subspace to the other
+- induction heads being an example of compositionality, which using the path perspective is a path through two attention heads, where the virtual weight matrix W_qk W_ov determines how information is passed from one head subspace to the other

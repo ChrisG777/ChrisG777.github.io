@@ -1,15 +1,15 @@
 ---
 layout: post
 title: Attention Residuals
-date: '2026-03-17'
+date: "2026-03-17"
 description: attention residuals
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2603.15031
-paper_date: '2026-03-16'
+paper_date: "2026-03-16"
 ---
 
 ![](/assets/img/distillations/attention-residuals/image263.png)

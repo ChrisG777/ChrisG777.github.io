@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Reliable and Efficient Amortized Model-based Evaluation
-date: '2026-01-05'
+date: "2026-01-05"
 description: IRT difficulty prediction
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2503.13335v1
 institutions:
-- Stanford
-paper_date: '2025-03-17'
+  - Stanford
+paper_date: "2025-03-17"
 ---
 
 In particular, the Fluid benchmarking modeling paper came in september 2025, after this one.
@@ -54,7 +54,7 @@ trained an LLM using SFT and PPO, with the reward being the negative distance be
 22 NLP datasets, 172 LLMs, binary responses, masked 20% of data for testing
 For numerical stability, they don’t include any test takers who have exactly the same responses as each other (section 5)
 
-*First, only using IRT, not using their difficulty estimates or question generator*
+_First, only using IRT, not using their difficulty estimates or question generator_
 ![](/assets/img/distillations/irt-amortized-calibrator/img-1774304904217.png)
 
 Use different response models, train on agent x task pairs, and then see how well they predict how the model is going to do on a held out set of agent x task pairs (but where no agent or task is new)

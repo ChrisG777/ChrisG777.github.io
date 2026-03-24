@@ -1,24 +1,25 @@
 ---
 layout: post
-title: 'ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction
-  over BERT'
-date: '2025-11-14'
+title: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction
+  over BERT"
+date: "2025-11-14"
 description: MIT ColBERT
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2004.12832
 institutions:
-- MIT
-- Stanford
-paper_date: '2020-06-04'
+  - MIT
+  - Stanford
+paper_date: "2020-06-04"
 ---
 
 Information retrieval: given a query, find a relevant document from a big database.
 
 prior works: Either
+
 1. Generate one vector for each query and one vector for each document, and use some kind of vector similarity. Not expressive enough.
 2. Have some kind of matrix of query x document. No precomputation, query x document is big. Also not great performance.
 3. Use BERT to on each [query, document] to get an interaction score. Again, way too slow, but very performant.
@@ -26,6 +27,7 @@ prior works: Either
 ColBERT: late-interaction. Uses BERT to get vectors for each query token and each document token. Then (parallel-y) for each query token, gets the max cosine similarity with a document token, and sums over query tokens to get the score. Retains most of the expressivity while allowing for precomputing ("indexing")
 
 Two parts of the IR task:
+
 1. Retrieving top k. This is usually done with some kind of bag of words thing like BM25. ColBERT can do this part by for each query token's embedding, looking in the bucketed/partitioned document embeddings (using indexing algorithm like faiss) for similar vectors.
 2. Reranking top k, to get more fine-grained ranking. This is the process discussed earlier, using each individual document's embeddings.
 

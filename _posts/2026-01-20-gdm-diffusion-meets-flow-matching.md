@@ -1,18 +1,18 @@
 ---
 layout: post
-title: 'Diffusion Meets Flow Matching: Two Sides of the Same Coin'
-date: '2026-01-20'
+title: "Diffusion Meets Flow Matching: Two Sides of the Same Coin"
+date: "2026-01-20"
 description: Diffusion equals Flow Matching
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://diffusionflow.github.io/
 institutions:
-- Google DeepMind
-paper_date: '2024-12-02'
+  - Google DeepMind
+paper_date: "2024-12-02"
 ---
 
 Diffusion forward process
@@ -31,10 +31,10 @@ Flow matching forward process
 
 Flow matching reverse process
 
-* u \= epsilon - x is the velocity
-* ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image168.png)
-* estimate u, then use this to reverse to get z\_s
-* if u \= epsilon - x is the network output, then
+- u \= epsilon - x is the velocity
+- ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image168.png)
+- estimate u, then use this to reverse to get z_s
+- if u \= epsilon - x is the network output, then
 
 **I don’t understand the next part very well**
 

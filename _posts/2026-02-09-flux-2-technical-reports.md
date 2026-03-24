@@ -1,18 +1,18 @@
 ---
 layout: post
-title: 'FLUX.2: Analyzing and Enhancing the Latent Space of FLUX – Representation
-  Comparison'
-date: '2026-02-09'
+title: "FLUX.2: Analyzing and Enhancing the Latent Space of FLUX – Representation
+  Comparison"
+date: "2026-02-09"
 description: Flux 2 technical reports
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://bfl.ai/research/representation-comparison
 institutions:
-- Black Forest Labs
-paper_date: '2025-11-24'
+  - Black Forest Labs
+paper_date: "2025-11-24"
 ---
 
 (a little out of order from the blog post itself)
@@ -56,7 +56,7 @@ uses “a more compute-efficient global modulation mechanism ([Chen et al. 2025]
 ![](/assets/img/distillations/flux-2-technical-reports/img-1774309119756.png)
 sota at these image generation tasks
 
-*Text Encoder*
+_Text Encoder_
 
 - uses Mistral small for everything instead of having two different encoders
 - stacks output from intermediate layers instead of just taking one output layer representation, because [https://www.arxiv.org/abs/2505.10046](https://www.arxiv.org/abs/2505.10046) these guys found it to be better

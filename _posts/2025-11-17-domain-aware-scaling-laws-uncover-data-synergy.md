@@ -1,19 +1,19 @@
 ---
 layout: post
 title: Domain-Aware Scaling Laws Uncover Data Synergy
-date: '2025-11-17'
+date: "2025-11-17"
 description: Data domain synergy in scaling laws
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://openreview.net/pdf?id=FndNAs9s0d
 institutions:
-- MIT
-- Harvard
-paper_date: '2025'
+  - MIT
+  - Harvard
+paper_date: "2025"
 ---
 
 - data from different domain has synergy (e.g. math and code work well together)

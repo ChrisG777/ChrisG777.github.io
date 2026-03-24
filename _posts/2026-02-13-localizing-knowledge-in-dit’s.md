@@ -1,20 +1,20 @@
 ---
 layout: post
 title: Localizing Knowledge in Diffusion Transformers
-date: '2026-02-13'
+date: "2026-02-13"
 description: Localizing Knowledge in DiTs
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2505.18832
 institutions:
-- UMD
-paper_date: '2025-05-24'
+  - UMD
+paper_date: "2025-05-24"
 ---
 
-*Use attention scores to find the most important layers for different concepts, and then activation patch only those layers with an ablated prompt*
+_Use attention scores to find the most important layers for different concepts, and then activation patch only those layers with an ablated prompt_
 
 project site: [https://armanzarei.github.io/Localizing-Knowledge-in-DiTs/](https://armanzarei.github.io/Localizing-Knowledge-in-DiTs/)
 

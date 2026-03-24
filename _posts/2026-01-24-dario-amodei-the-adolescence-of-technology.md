@@ -1,18 +1,18 @@
 ---
 layout: post
 title: The Adolescence of Technology
-date: '2026-01-24'
+date: "2026-01-24"
 description: Dario Amodei risks essay
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://www.darioamodei.com/essay/the-adolescence-of-technology\#fnref:18
 institutions:
-- Anthropic
-paper_date: '2026-01-15'
+  - Anthropic
+paper_date: "2026-01-15"
 ---
 
 In general, he gave quite a few realistic-seeming examples of how AI can be used to accomplish a lot of bad things. If I were a terrorist, I'd read this as a script.

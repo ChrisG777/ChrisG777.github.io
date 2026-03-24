@@ -1,17 +1,17 @@
 ---
 layout: post
 title: What are Diffusion Models?
-date: '2025-12-25'
+date: "2025-12-25"
 description: Lilian Weng Diffusion Blog Post (Discrete)
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://lilianweng.github.io/posts/2021-07-11-diffusion-models/
 institutions:
-- Thinking Machines Lab
-paper_date: '2024-04-13'
+  - Thinking Machines Lab
+paper_date: "2024-04-13"
 ---
 
 many many different sources cited this blog post. From what I can tell, it is actually quite comprehensive for the evolution of diffusion pre like 2024
@@ -23,60 +23,59 @@ many many different sources cited this blog post. From what I can tell, it is ac
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image56.png)
 can jump many steps forward at once
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image57.png)
-reframed as the key nice property, a relationship between x\_0, x\_t, and epsilon\_t
+reframed as the key nice property, a relationship between x_0, x_t, and epsilon_t
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image58.png)
 
 ### reverse process intuition
 
-Goal is to approximate q(x\_{t-1} | x\_t). Can’t calculate that directly since it involves an integral over the entire dataset, so do that using a neural network: ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/img-1774303821367.png)
+Goal is to approximate q(x\_{t-1} | x_t). Can’t calculate that directly since it involves an integral over the entire dataset, so do that using a neural network: ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/img-1774303821367.png)
 
-
-But how are we going to train this neural network, if we can’t accurately calculate q(x\_{t-1} | x\_t)?
+But how are we going to train this neural network, if we can’t accurately calculate q(x\_{t-1} | x_t)?
 
 You can interpret what we’re doing with the forward and backwards process as the standard VAE architecture, with time 0 as the observed, and times 1:T as the latent.
 
-Then the ELBO Loss includes terms that look like KL(q(x\_{t-1} | x\_t, x\_0) || p\_theta(x\_{t-1} | x\_t) ), i.e. we’ll instead be able to train the reverse process predictor neural net against the conditional reverse process knowing x\_0. And it won’t be biased because when we minimize the expectation of this KL over x\_0 and x\_t drawn from the forward process, you actually get p\_theta(x\_{t-1} | x\_t) to equal to the marginal q(x\_{t-1} | x\_t).
+Then the ELBO Loss includes terms that look like KL(q(x\_{t-1} | x_t, x_0) || p_theta(x\_{t-1} | x_t) ), i.e. we’ll instead be able to train the reverse process predictor neural net against the conditional reverse process knowing x_0. And it won’t be biased because when we minimize the expectation of this KL over x_0 and x_t drawn from the forward process, you actually get p_theta(x\_{t-1} | x_t) to equal to the marginal q(x\_{t-1} | x_t).
 
-### Deriving q(x\_{t-1} | x\_t, x\_0) 
+### Deriving q(x\_{t-1} | x_t, x_0)
 
 by Bayes Rule
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image60.png)
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/img-1774303986026.png) ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/img-1774304021314.png)
-(where we’ve expressed the mean in terms of the noise epsilon\_t, back from the forward process)
+(where we’ve expressed the mean in terms of the noise epsilon_t, back from the forward process)
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image65.png)
 
 ### A brief review of VAEs and ELBO from 6.7900
 
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image66.png)
-We would like to train the network by just maximizing the log likelihood log P\_theta (x). For now, just assume that we’re working with a single data point x. You can take an expectation over all the x’s in the dataset later
+We would like to train the network by just maximizing the log likelihood log P_theta (x). For now, just assume that we’re working with a single data point x. You can take an expectation over all the x’s in the dataset later
 
-The problem is that it’s hard to instantiate P\_theta(x), because we only really have nice forms for P\_theta(x | z). The way we get around this is by maximizing the ELBO loss wrt theta instead
+The problem is that it’s hard to instantiate P_theta(x), because we only really have nice forms for P_theta(x | z). The way we get around this is by maximizing the ELBO loss wrt theta instead
 
 **ELBO** \= ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image67.png)
 \= ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image68.png)
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image69.png)
-Note that for a fixed Q(z | x), ELBO is maximized when we optimize theta so that P\_theta(z | x) exactly matches Q(z | x). The EM algorithm now looks like
+Note that for a fixed Q(z | x), ELBO is maximized when we optimize theta so that P_theta(z | x) exactly matches Q(z | x). The EM algorithm now looks like
 
 1. maximize ELBO wrt theta, with Q(z | x) fixed. This pushes the ELBO score up
-2. redefine ELBO by setting Q(z | x) := P\_theta(z | x). This also pushes the ELBO score up because it makes the KL loss smaller. And what we have at this point is exactly the log P\_theta(x), which means that we’ve managed to push that up. Rinse and repeat this process.
+2. redefine ELBO by setting Q(z | x) := P_theta(z | x). This also pushes the ELBO score up because it makes the KL loss smaller. And what we have at this point is exactly the log P_theta(x), which means that we’ve managed to push that up. Rinse and repeat this process.
 
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image70.png)
 At a high level, EM algorithm is just fixing the latent prediction distribution, then using that to optimize the parameters, and then using the resulting parameters to improve the latent prediction, and repeating. ELBO is just rigorizing the fact that this works to actually increase the log likelihood of the data.
 
 ### Applying VAE ELBO loss to diffusion models
 
-Here, the actual data distribution is x\_0, and the latent is x\_{1:T}. So fixing an x\_0, we would get that the (negative) ELBO is
+Here, the actual data distribution is x_0, and the latent is x\_{1:T}. So fixing an x_0, we would get that the (negative) ELBO is
 
-E\_{Q(x\_{1:T} | x\_0} [ log Q(x\_{1:T} | x\_0) / P\_theta(x\_0, x\_{1:T}) ] \>= - log p\_theta(x\_0)
+E\_{Q(x\_{1:T} | x_0} [ log Q(x\_{1:T} | x\_0) / P\_theta(x\_0, x\_{1:T}) ] \>= - log p_theta(x_0)
 
-And then taking expectation over both sides of x\_0 (the dataset distribution), we get the equation from the blogpost
+And then taking expectation over both sides of x_0 (the dataset distribution), we get the equation from the blogpost
 
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image71.png)
 Now using the structure of the forward process being a markov chain, and doing a bunch of logarithm rearrangements, we get that this ELBO loss is equal to
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image72.png)
-This is now trainable, since L\_T is constant, L\_0 we do something about which I’m not totally sure, and L\_t’s are KL’s of gaussians which has a closed form. Let’s dig a little deeper into that L\_t term.
+This is now trainable, since L_T is constant, L_0 we do something about which I’m not totally sure, and L_t’s are KL’s of gaussians which has a closed form. Let’s dig a little deeper into that L_t term.
 
-Note that instead of predicting the mean of x\_{t-1}, we can just aim to predict the noise epsilon\_t that was added to get from x\_0 to x\_t, since we previously derived an expression for the mean using this noise. So we reparameterize from µ\_theta(x\_t, t) to epsilon\_theta(x\_t, t), and then we expand out the closed form formula for the L\_t KL loss, getting us to
+Note that instead of predicting the mean of x\_{t-1}, we can just aim to predict the noise epsilon_t that was added to get from x_0 to x_t, since we previously derived an expression for the mean using this noise. So we reparameterize from µ_theta(x_t, t) to epsilon_theta(x_t, t), and then we expand out the closed form formula for the L_t KL loss, getting us to
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image73.png)
 
 But then empirically, training this just works better (ignoring the weight term at the beginning)
@@ -84,20 +83,20 @@ But then empirically, training this just works better (ignoring the weight term 
 Which results in the following algorithm
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image75.png)
 
-- I think the sigma\_t is just the coefficient of the covariance that we derived when we were doing the p(x\_{t-1} | x\_t, x\_0) calculation
+- I think the sigma_t is just the coefficient of the covariance that we derived when we were doing the p(x\_{t-1} | x_t, x_0) calculation
 
 ### Connection to score-based methods
 
 ignoring lilian weng’s explanation for this part because it’s remarkably useless
 see pages 16-17 of [https://arxiv.org/pdf/2208.11970](https://arxiv.org/pdf/2208.11970) instead
 
-Basically , remember how we had the nice relationship between **x\_t**, **x\_0,** and **epsilon\_t**? Well since x\_t | x\_0 is a Gaussian, we can actually apply **Tweedie’s Formula** to get a relationship between **x\_t**, **x\_0**, and the **score** function:
+Basically , remember how we had the nice relationship between **x_t**, **x_0,** and **epsilon_t**? Well since x_t | x_0 is a Gaussian, we can actually apply **Tweedie’s Formula** to get a relationship between **x_t**, **x_0**, and the **score** function:
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image76.png)
-so applying that to x\_t | x\_0, we get
+so applying that to x_t | x_0, we get
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image77.png)
-plugging in that the mean is sqrt(alpha bar\_t x\_0), we get the relationship
+plugging in that the mean is sqrt(alpha bar_t x_0), we get the relationship
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image78.png)
-We can plug in x\_t in terms of x\_0 and epsilon\_t from the nice property to get a key relation between just the score and epsilon\_t:
+We can plug in x_t in terms of x_0 and epsilon_t from the nice property to get a key relation between just the score and epsilon_t:
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image79.png)
 
 - just a scaled (time-dependent scaling factor) version of the source noise
@@ -106,11 +105,11 @@ We can plug in x\_t in terms of x\_0 and epsilon\_t from the nice property to ge
 
 So we have three equivalent parameterizations of the training:
 
-1. predicting the mean of x\_{t-1} directly given x\_t, t
-2. predicting the source noise epsilon\_t given x\_t, t
-3. predicting the score function s(x\_t, t) given x\_t, t
+1. predicting the mean of x\_{t-1} directly given x_t, t
+2. predicting the source noise epsilon_t given x_t, t
+3. predicting the score function s(x_t, t) given x_t, t
 
-### Conditional Diffusion 
+### Conditional Diffusion
 
 **Classifier-Guided**
 Basically now, we want to generate images conditioned on being from a certain class in the dataset. How can we do that, assuming we have a good classifier for the class?
@@ -120,7 +119,7 @@ Answer: instead of optimizing for the score function of q(x), we optimize for th
 Using the connection to score based methods, this implies using this updated noise for the denoising process instead.
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image81.png)
 **Classifier-Free**
-What if there was a way to train the diffusion model itself to be able to estimate that gradient log f\_phi(y | x\_t) term? Turns out there is: learn one network that learns to predict both unconditional noise e\_theta(x\_t, t), as well as conditional noise e\_theta(x\_t, t, y), by giving it training data of both types.
+What if there was a way to train the diffusion model itself to be able to estimate that gradient log f_phi(y | x_t) term? Turns out there is: learn one network that learns to predict both unconditional noise e_theta(x_t, t), as well as conditional noise e_theta(x_t, t, y), by giving it training data of both types.
 
 Then we can write the gradient term we need as
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image82.png)
@@ -131,14 +130,14 @@ So we can plug that back into the conditional noise equation to get the right ef
 
 **DDIM (denoising diffusion implicit model)**
 
-Earlier, we did an exact calculation for q(x\_{t-1} | x\_t, x\_0). This time, let’s write the reverse update step as
+Earlier, we did an exact calculation for q(x\_{t-1} | x_t, x_0). This time, let’s write the reverse update step as
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image84.png)
 i.e. reparameterize into the deterministic part and the new randomness added in this step.
 
-And then for DDIM, you set sigma\_t \= 0, so the whole reverse process is now deterministic. This corresponds to a different forward process (you’re no longer adding new fresh independent noise at each step), but the marginals still agree, so it’s not actually a problem that we don’t have randomness. Why is this useful? On its own, it allows us to do some step skipping, but it helps with other techniques, such as :
+And then for DDIM, you set sigma_t \= 0, so the whole reverse process is now deterministic. This corresponds to a different forward process (you’re no longer adding new fresh independent noise at each step), but the marginals still agree, so it’s not actually a problem that we don’t have randomness. Why is this useful? On its own, it allows us to do some step skipping, but it helps with other techniques, such as :
 
 **Progressive distillation**
-Given a teacher deterministic sampling model, distill it into a student model which basically learns to do two denoising steps at once (recall that the reverse process is basically just learning what x\_{t-1} | x\_t was), thus halving the number of steps. Repeat this until you get to your desired number of steps in the reverse process.
+Given a teacher deterministic sampling model, distill it into a student model which basically learns to do two denoising steps at once (recall that the reverse process is basically just learning what x\_{t-1} | x_t was), thus halving the number of steps. Repeat this until you get to your desired number of steps in the reverse process.
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image85.png)
 
 **Consistency Models**
@@ -182,7 +181,7 @@ unCLIP also has the upsampling reverse diffusers, but their main innovation is u
 
 **Imagen**
 
-basically polishing the ideas from before: use T5-XXL instead of CLIP as the text encoder, still use cascaded diffusion, tweak the guidance-based conditional diffusion to make sure that the x\_0’s stay within distribution, and make the architecture a little more efficient
+basically polishing the ideas from before: use T5-XXL instead of CLIP as the text encoder, still use cascaded diffusion, tweak the guidance-based conditional diffusion to make sure that the x_0’s stay within distribution, and make the architecture a little more efficient
 
 ### Model Architectures
 
@@ -193,5 +192,5 @@ basically polishing the ideas from before: use T5-XXL instead of CLIP as the tex
 
 ![](/assets/img/distillations/lilian-weng-diffusion-blog-post-discrete/image94.png)
 
-- patchify is literally just split the noised latent input into patches of size p and put them into  a sequence
-- adaLN-Zero just refers to the gamma\_1, beta\_1 etc way of encoding the label y as part of conditional generation. This was just empirically the best method they came up with
+- patchify is literally just split the noised latent input into patches of size p and put them into a sequence
+- adaLN-Zero just refers to the gamma_1, beta_1 etc way of encoding the label y as part of conditional generation. This was just empirically the best method they came up with

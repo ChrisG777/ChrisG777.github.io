@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Position-aware Automatic Circuit Discovery
-date: '2026-03-20'
+date: "2026-03-20"
 description: position aware circuits
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2502.04577
 institutions:
-- Technion
-paper_date: '2025-02-07'
+  - Technion
+paper_date: "2025-02-07"
 ---
 
 Automatically discover circuits Containing token position-specific nodes for prompts of variable length.
@@ -31,7 +31,7 @@ The problem: Existing automated approaches aren't able to find granular edges th
 
 - Existing automated circuit discovery does an aggregation over all token positions.
 - Figure 2: This leads to missing important edges due to cancellation and due to summing many less important edges
-![](/assets/img/distillations/position-aware-circuit-discovery/img-1774380776232.png)
+  ![](/assets/img/distillations/position-aware-circuit-discovery/img-1774380776232.png)
 
 ### Section 3.1 Horizontal and Vertical edges
 
@@ -45,7 +45,7 @@ The Indirect Effect (IE) of an edge is how much it affects the target metric whe
 - This is computationally expensive to do for every edge.
 - People use a first-order approximation instead to be faster: EAP (Edge Attribution Patching)
 - ![](/assets/img/distillations/position-aware-circuit-discovery/image276.png)
-   - people possibly now use attribution patching with integrated gradients instead of just the first order condition? See modality specific circuits
+  - people possibly now use attribution patching with integrated gradients instead of just the first order condition? See modality specific circuits
 
 **horizontal edges:**
 
@@ -55,7 +55,7 @@ Another inherent limitation of the automated methods is that their edges can onl
 
 Can introduce cross-token (horizontal) edges between nodes in the same layer (token position t and token position t’), as a result of attention heads operating across tokens in a layer.
 
-Figure 3: To approximate the impact of patching these edges, we calculate the modified output of the head (based on the three different methods — query, key, and value — that the two token positions could be related),  and then use the linear approximation to get the output on the desired metric.
+Figure 3: To approximate the impact of patching these edges, we calculate the modified output of the head (based on the three different methods — query, key, and value — that the two token positions could be related), and then use the linear approximation to get the output on the desired metric.
 
 ![](/assets/img/distillations/position-aware-circuit-discovery/img-1774380902215.png)
 ![](/assets/img/distillations/position-aware-circuit-discovery/img-1774380913921.png)
@@ -69,6 +69,7 @@ Figure 4: They have an LLM automatically generate schemas for the dataset
 
 Figure 5: Translating between circuits on the schema and circuits on the original prompt is simply just expanding the schema into its constituent tokens and either summing up / including all of the edges
 ![](/assets/img/distillations/position-aware-circuit-discovery/img-1774381017309.png)
+
 - e.g. to find the circuit on the schema, they first find the edge strengths on the full graph, and then the edges corresponding to a single edge in the schema graph, and once they have the effective edge strengths for the schema graph, then they go back and do the greedy circuit selection
 - ![](/assets/img/distillations/position-aware-circuit-discovery/image281.png)
 - For the faithfulness of the full circuit, they expand the schema circuit as in Figure 5 and apply everything not in the expanded version.

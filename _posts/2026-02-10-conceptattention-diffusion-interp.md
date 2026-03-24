@@ -1,17 +1,17 @@
 ---
 layout: post
-title: 'ConceptAttention: Diffusion Transformers Learn Highly Interpretable Features'
-date: '2026-02-10'
+title: "ConceptAttention: Diffusion Transformers Learn Highly Interpretable Features"
+date: "2026-02-10"
 description: ConceptAttention
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2502.04320v2
 institutions:
-- Georgia Tech
-paper_date: '2025-02-06'
+  - Georgia Tech
+paper_date: "2025-02-06"
 ---
 
 Goal: come up with good saliency maps localizing text concepts in produced images, without having to train any models
@@ -20,7 +20,7 @@ Goal: come up with good saliency maps localizing text concepts in produced image
 
 Then motivating why zero-shot image segmentation is historically a good test for these saliency map esque interpretation techniques
 
-**Preliminaries:** Basically they just use the MM-DiT architecture, and note that there are dual stream (residuals for image and text embeddings are separate)  and single stream blocks (combined residuals) within flux
+**Preliminaries:** Basically they just use the MM-DiT architecture, and note that there are dual stream (residuals for image and text embeddings are separate) and single stream blocks (combined residuals) within flux
 
 **ConceptAttention Method**:
 ![](/assets/img/distillations/conceptattention-diffusion-interp/image205.png)
@@ -54,4 +54,4 @@ ablations
 - Deeper layers have richer representations.
 - The middle time step (in diffusion denoising) is the most useful.
 - Concept attention adds more than just cross-validation attention.
-- Maybe I missed this in the paper, but why did they do the weird output dot product as opposed to using the attention scores directly? Would have liked an ablation for that. 
+- Maybe I missed this in the paper, but why did they do the weird output dot product as opposed to using the attention scores directly? Would have liked an ablation for that.

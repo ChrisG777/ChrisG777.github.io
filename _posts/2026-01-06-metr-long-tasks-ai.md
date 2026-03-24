@@ -1,17 +1,17 @@
 ---
 layout: post
 title: Measuring AI Ability to Complete Long Software Tasks
-date: '2026-01-06'
+date: "2026-01-06"
 description: METR Long Tasks AI
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2503.14499
 institutions:
-- METR
-paper_date: '2025-03-18'
+  - METR
+paper_date: "2025-03-18"
 ---
 
 ![](/assets/img/distillations/metr-long-tasks-ai/img-1774305454182.png)
@@ -32,8 +32,8 @@ Section 2.1 Just literally gives an overview of the commonplace agentic benchmar
 
 Section 2.2 Forecasting related works (from METR):
 
-* [https://arxiv.org/pdf/2401.04757](https://arxiv.org/pdf/2401.04757) epoch Forecasting question answer benchmark scores using pre-training compute (really old models)
-* [https://arxiv.org/pdf/2502.15850](https://arxiv.org/pdf/2502.15850) The Apollo research paper that I sent earlier. They use the word backtesting. Also only forecasting aggregate score on benchmarks (though wow, they had a good forecast for Swe Bench Verified). Fit a linear curve of ELO vs. time and a sigmoid curve of benchmark score vs. ELO.
+- [https://arxiv.org/pdf/2401.04757](https://arxiv.org/pdf/2401.04757) epoch Forecasting question answer benchmark scores using pre-training compute (really old models)
+- [https://arxiv.org/pdf/2502.15850](https://arxiv.org/pdf/2502.15850) The Apollo research paper that I sent earlier. They use the word backtesting. Also only forecasting aggregate score on benchmarks (though wow, they had a good forecast for Swe Bench Verified). Fit a linear curve of ELO vs. time and a sigmoid curve of benchmark score vs. ELO.
 
 then some cross-benchmark comparison.
 Section 3.1 Mostly just describing their data, what tasks of different time horizons look like?

@@ -1,17 +1,17 @@
 ---
 layout: post
-title: 'HunyuanVideo: A Systematic Framework For Large Video Generative Models'
-date: '2026-02-16'
+title: "HunyuanVideo: A Systematic Framework For Large Video Generative Models"
+date: "2026-02-16"
 description: Hunyuan video
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2412.03603
 institutions:
-- Tencent
-paper_date: '2024-12-03'
+  - Tencent
+paper_date: "2024-12-03"
 ---
 
 Section 3\. Figure 4, hierarchical data filtering
@@ -32,7 +32,7 @@ Their architecture is actually very similar to Flux, with the dual-stream and si
 ![](/assets/img/distillations/hunyuan-video/img-1774311562910.png)
 
 - 3D RoPE: rotation matrix calculated separately for each of the three dimensions (height, width, and time)
-  - out of the 128 dimensional attention features, first 16 dimensions are time, next 56 are height, last 56 are width (d\_t, d\_h, d\_w)
+  - out of the 128 dimensional attention features, first 16 dimensions are time, next 56 are height, last 56 are width (d_t, d_h, d_w)
   - This seems to be just arbitrarily chosen for only the 3D rope. It's not reflected anywhere else.
 
 for their text encoder, they use CLIP-Large and a multimodal LLM (+ bidirectional)
@@ -64,4 +64,3 @@ tricks:
 
 Human evaluations mainly, against other open-source video models.
 Video-to-Audio (V2A) Generation, Image-to-Video (I2V) Generation, Avatar Animation
-

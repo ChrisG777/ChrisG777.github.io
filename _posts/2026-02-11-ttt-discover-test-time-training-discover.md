@@ -1,23 +1,23 @@
 ---
 layout: post
 title: Learning to Discover at Test Time
-date: '2026-02-11'
+date: "2026-02-11"
 description: TTT-Discover
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2601.16175
 institutions:
-- Stanford
-paper_date: '2025-02-05'
+  - Stanford
+paper_date: "2025-02-05"
 ---
 
 setting:
 
-* continuous optimization discovery (i.e. exhibit some example with highest/lowest number)
-* RL’ing on a single problem, except with the goal of producing a single state, rather than a policy
+- continuous optimization discovery (i.e. exhibit some example with highest/lowest number)
+- RL’ing on a single problem, except with the goal of producing a single state, rather than a policy
 
 Why can you hope to improve here beyond just PPO / GPRO on the reward itself?
 

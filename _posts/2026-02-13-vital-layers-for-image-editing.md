@@ -1,24 +1,24 @@
 ---
 layout: post
-title: 'Stable Flow: Vital Layers for Training-Free Image Editing'
-date: '2026-02-13'
+title: "Stable Flow: Vital Layers for Training-Free Image Editing"
+date: "2026-02-13"
 description: Vital Layers for Image Editing
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2411.14430
 institutions:
-- Snap Research
-paper_date: '2024-11-21'
+  - Snap Research
+paper_date: "2024-11-21"
 ---
 
-*They are the first to do parallel generation for image editing using MM-DiT's. They ablate layers to find the most important layers, patch over the image attention features from the source to the target prompt run, and also introduce a better latent inverse process to be able to edit real images.*
+_They are the first to do parallel generation for image editing using MM-DiT's. They ablate layers to find the most important layers, patch over the image attention features from the source to the target prompt run, and also introduce a better latent inverse process to be able to edit real images._
 
 project site: [https://omriavrahami.com/stable-flow/](https://omriavrahami.com/stable-flow/)
 
-Section 3.1. Vital layers:  They ablate each layer and then calculate the change in DINOv2 score compared to the original
+Section 3.1. Vital layers: They ablate each layer and then calculate the change in DINOv2 score compared to the original
 
 - Layers with the biggest perceptual change are called vital layers. They actually got the same result as me where I qualitatively found that layer 18 is pretty important.
 

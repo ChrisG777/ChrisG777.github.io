@@ -2,18 +2,18 @@
 layout: post
 title: Superhuman AI for Stratego Using Self-Play Reinforcement Learning and Test-Time
   Search
-date: '2025-11-18'
+date: "2025-11-18"
 description: Stratego
 tags:
-- partial-read
+  - partial-read
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://arxiv.org/pdf/2511.07312
 institutions:
-- CMU
-paper_date: '2025-11-10'
+  - CMU
+paper_date: "2025-11-10"
 ---
 
 Guest lecture from sam sokota for multiagent learning 11/18/25
@@ -32,7 +32,9 @@ Had two main modules that were trained simultaneously using RL self-play.
 Something about dynamically dampening, some weird optimizer with multiple reverse KL's, minimizing entropy, etc.
 
 How do they do search during test time? This is what deepmind didn't even try to do.
+
 - from looking at the paper, it seems that they train a belief transformer network which given the state of the board, predicts the posterior distribution of the possible actual pieces (i.e. with no hidden info), and then they let the move policy play out the game from there for \`rollout\` steps, and average the positions of those boards as the estimate of how good the move was. They then do some kind of magnetic mirror descent with some KL regularizer terms using these estimates
 
 Results
+
 - beat the best stratego player 15 / 20 times, drew 4 times, lost 1\.

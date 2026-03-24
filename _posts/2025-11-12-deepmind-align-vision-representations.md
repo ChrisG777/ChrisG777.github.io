@@ -1,22 +1,23 @@
 ---
 layout: post
 title: Teaching AI to see the world more like we do
-date: '2025-11-12'
+date: "2025-11-12"
 description: Deepmind Align Vision Representations
 tags: []
 categories:
-- distillation
+  - distillation
 giscus_comments: false
 related_posts: false
 paper_url: https://deepmind.google/blog/teaching-ai-to-see-the-world-more-like-we-do/
 institutions:
-- Google DeepMind
-paper_date: '2025-11-11'
+  - Google DeepMind
+paper_date: "2025-11-11"
 ---
 
 AI fails to capture hierarchical higher order vision knowledge.
 
 To better align representations with humans, focus on the odd one out task, where humans differ from computers
+
 - problem: not enough labeled human data
 - solution: train a large vision model with an adapter to predict human labels from the limited data. This large vision model won't overfit / forget because it's just an adapter
 - now use the fine tuned large vision model to generate a large amount of labeled image sets, acting as the human labeler.

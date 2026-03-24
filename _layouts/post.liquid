@@ -14,6 +14,27 @@ layout: default
 {% endif %}
 
 <div class="post">
+  {% assign is_distillation = page.categories | where_exp: "c", "c == 'distillation'" %}
+  {% if is_distillation.size > 0 %}
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% if page.description and page.description != page.title %}
+      <p class="post-description">{{ page.description }}</p>
+    {% endif %}
+    <div class="post-meta" style="font-size: 0.9rem; color: var(--global-text-color-light); margin-top: 0.5rem; line-height: 1.8;">
+      {% if page.paper_url %}
+        <div><i class="fa-solid fa-file-pdf fa-sm"></i> <a href="{{ page.paper_url }}" target="_blank">Paper</a></div>
+      {% endif %}
+      {% if page.paper_date %}
+        <div><i class="fa-solid fa-calendar fa-sm"></i> Published: {{ page.paper_date }}</div>
+      {% endif %}
+      {% if page.institutions and page.institutions.size > 0 %}
+        <div><i class="fa-solid fa-building fa-sm"></i> {{ page.institutions | join: ', ' }}</div>
+      {% endif %}
+      <div><i class="fa-solid fa-book-open fa-sm"></i> Read: {{ page.date | date: '%Y-%m-%d' }}</div>
+    </div>
+  </header>
+  {% else %}
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
     <p class="post-meta">
@@ -58,6 +79,7 @@ layout: default
       {% endif %}
     </p>
   </header>
+  {% endif %}
 
   <article class="post-content">
     {% if page.toc and page.toc.beginning %}

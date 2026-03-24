@@ -5,8 +5,8 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {% if site.title == 'blank' %}
-        <span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }}
-        {{ site.last_name }}
+        <span class="font-weight-bold">{{ site.first_name }} {{ site.middle_name }}
+        {{ site.last_name }}</span>
       {% else %}
         {{ site.title }}
       {% endif %}
@@ -38,7 +38,16 @@ layout: default
       </div>
     {% endif %}
 
-    <div class="clearfix">{{ content }}</div>
+    <div class="clearfix">
+      {{ content }}
+
+      <!-- Social -->
+      {% if page.social %}
+        <div class="social" style="text-align: center; margin-top: 1rem;">
+          <div class="contact-icons" style="font-size: 2rem;">{% social_links %}</div>
+        </div>
+      {% endif %}
+    </div>
 
     <!-- News -->
     {% if page.announcements and page.announcements.enabled %}
@@ -58,18 +67,26 @@ layout: default
 
     <!-- Selected papers -->
     {% if page.selected_papers %}
-      <h2>
-        <a href="{{ '/publications/' | relative_url }}" style="color: inherit">selected publications</a>
-      </h2>
-      {% include selected_papers.liquid %}
+      <div style="margin-top: 2rem;">
+        <h2>
+          <a href="{{ '/publications/' | relative_url }}" style="color: inherit">publications</a>
+        </h2>
+        {% include selected_papers.liquid %}
+      </div>
     {% endif %}
 
-    <!-- Social -->
-    {% if page.social %}
-      <div class="social">
-        <div class="contact-icons">{% social_links %}</div>
-
-        <div class="contact-note">{{ site.contact_note }}</div>
+    <!-- Projects -->
+    {% assign sorted_projects = site.projects | sort: "importance" %}
+    {% if sorted_projects.size > 0 %}
+      <div style="margin-top: 2rem;">
+        <h2>other projects</h2>
+        <div class="projects">
+          <div class="row row-cols-1 row-cols-md-2">
+            {% for project in sorted_projects %}
+              {% include projects_custom.liquid %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
     {% endif %}
 

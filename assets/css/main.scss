@@ -37,3 +37,26 @@
 @use "font-awesome/brands";
 @use "font-awesome/solid";
 @use "font-awesome/regular";
+
+// Prevent images from overflowing post content
+article img,
+.post-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Project card image containers
+.project-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 0.5rem;
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}

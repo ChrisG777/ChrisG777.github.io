@@ -1,0 +1,27 @@
+<div class="col">
+  <div class="card h-100 hoverable" onclick="window.location.href='{% if project.redirect %}{{ project.redirect }}{% else %}{{ project.url | relative_url }}{% endif %}'" style="cursor: pointer;">
+    {% if project.img %}
+      {%
+        include figure.liquid
+        loading="eager"
+        path=project.img
+        sizes="250px"
+        alt="project thumbnail"
+        class="card-img-top"
+      %}
+    {% endif %}
+    <div class="card-body">
+      <h2 class="card-title">{{ project.title }}</h2>
+      <p class="card-text">{{ project.description }}</p>
+      {% if project.links %}
+        <div class="project-links" style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem;">
+          {% for link in project.links %}
+            <a href="{{ link.url }}" class="btn btn-sm btn-outline-primary" target="_blank" onclick="event.stopPropagation();" style="font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px;">
+              <i class="{{ link.icon }}"></i> {{ link.name }}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

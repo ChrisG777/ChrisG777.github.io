@@ -1,3 +1,10 @@
+// Fallback if dark mode is disabled and theme.js is not loaded
+if (typeof determineComputedTheme === "undefined") {
+  var determineComputedTheme = function () {
+    return "light";
+  };
+}
+
 $(document).ready(function () {
   // add toggle functionality to abstract, award and bibtex buttons
   $("a.abstract").click(function () {

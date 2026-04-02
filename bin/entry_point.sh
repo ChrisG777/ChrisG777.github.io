@@ -26,6 +26,12 @@ start_jekyll() {
 
 start_jekyll
 
+# Start editor server in development mode
+if [ "$JEKYLL_ENV" = "development" ] && [ -f scripts/editor.py ]; then
+    echo "Starting reading notes editor at http://localhost:5555/editor"
+    python3 scripts/editor.py &
+fi
+
 while true; do
     inotifywait -q -e modify,move,create,delete $CONFIG_FILE
     if [ $? -eq 0 ]; then

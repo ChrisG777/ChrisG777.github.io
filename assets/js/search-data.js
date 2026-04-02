@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-circuit-mechanisms-for-spatial-relation-generation-in-diffusion-transformers",
+        },{id: "post-maxrl-maximum-likelihood-via-reinforcement-learning",
+        
+          title: "MaxRL: Maximum Likelihood via Reinforcement Learning",
+        
+        description: "Maximum likelihood RL",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/maxrl-maximum-likelihood-via-reinforcement-learning/";
+          
+        },
+      },{id: "post-circuit-mechanisms-for-spatial-relation-generation-in-diffusion-transformers",
         
           title: "Circuit Mechanisms for Spatial Relation Generation in Diffusion Transformers",
         

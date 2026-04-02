@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -263,9 +263,7 @@
         <div class="header">
           <h2 id="heading">New Reading Note</h2>
           <div class="actions">
-            <button class="btn save" onclick="save()">
-              Save <span class="kbd">&thinsp;&#8984;S</span>
-            </button>
+            <button class="btn save" onclick="save()">Save <span class="kbd">&thinsp;&#8984;S</span></button>
             <a class="btn" id="previewSiteBtn" href="#" target="_blank" style="display: none">View in Site</a>
             <button class="btn delete" id="deleteBtn" onclick="deletePost()" style="display: none">Delete</button>
           </div>
@@ -323,7 +321,11 @@
           </div>
         </div>
         <div class="editor-area">
-          <textarea id="f-content" placeholder="Write your notes in markdown... (paste images with Ctrl/Cmd+V)" onpaste="handlePaste(event)"></textarea>
+          <textarea
+            id="f-content"
+            placeholder="Write your notes in markdown... (paste images with Ctrl/Cmd+V)"
+            onpaste="handlePaste(event)"
+          ></textarea>
           <div id="preview-pane"></div>
         </div>
       </div>
@@ -369,9 +371,9 @@
               html +=
                 '<div class="' +
                 cls +
-                "\" onclick=\"loadPost('" +
+                '" onclick="loadPost(\'' +
                 p.slug.replace(/'/g, "\\'") +
-                "')\" title=\"" +
+                '\')" title="' +
                 (p.title || "").replace(/"/g, "&quot;") +
                 '">' +
                 (p.summaryTitle || p.title) +

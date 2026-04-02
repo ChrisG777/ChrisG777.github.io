@@ -19,14 +19,51 @@ POSTS_DIR = REPO / "_posts"
 IMG_DIR = REPO / "assets" / "img" / "distillations"
 
 
+def parse_frontmatter(text):
+    """Minimal YAML frontmatter parser (no PyYAML dependency).
+
+    Handles the subset used by reading notes: scalars, lists, booleans.
+    """
+    fm = {}
+    current_key = None
+    for line in text.splitlines():
+        if not line or line.startswith("#"):
+            continue
+        # List item under current key (handles both "- val" and "  - val")
+        stripped = line.lstrip()
+        if stripped.startswith("- ") and current_key is not None:
+            val = stripped[2:].strip().strip("'\"")
+            if not isinstance(fm[current_key], list):
+                fm[current_key] = []
+            fm[current_key].append(val)
+            continue
+        if ":" not in line:
+            continue
+        key, _, val = line.partition(":")
+        key = key.strip()
+        val = val.strip()
+        current_key = key
+        if val == "":
+            fm[key] = []
+        elif val == "true":
+            fm[key] = True
+        elif val == "false":
+            fm[key] = False
+        elif val.startswith("[") and val.endswith("]"):
+            inner = val[1:-1].strip()
+            fm[key] = [v.strip().strip("'\"") for v in inner.split(",") if v.strip()] if inner else []
+        else:
+            fm[key] = val.strip("'\"")
+    return fm
+
+
 def parse_post(filepath):
     """Parse a Jekyll post file into metadata + content."""
     text = filepath.read_text()
     if not text.startswith("---"):
         return None
     end = text.index("---", 3)
-    import yaml
-    fm = yaml.safe_load(text[3:end])
+    fm = parse_frontmatter(text[3:end])
     content = text[end + 3:].strip()
     return fm, content
 
@@ -70,10 +107,39 @@ def list_posts():
     return posts
 
 
+def yaml_value(v):
+    """Format a Python value as a YAML string."""
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, list):
+        if not v:
+            return "[]"
+        return "[" + ", ".join(yaml_value(i) for i in v) + "]"
+    s = str(v)
+    # Quote if the string contains YAML-special characters
+    if any(c in s for c in ":{}[]#&*!|>'\",@`") or s in ("true", "false", "null", ""):
+        return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    return s
+
+
+def build_frontmatter(pairs):
+    """Build YAML frontmatter from a list of (key, value) pairs."""
+    lines = []
+    for key, val in pairs:
+        if isinstance(val, list) and len(val) > 0 and any(
+            any(c in str(i) for c in ":{}[]#&*!|>'\",@`") for i in val
+        ):
+            # Multi-line list for items with special chars
+            lines.append(f"{key}:")
+            for item in val:
+                lines.append(f"  - {yaml_value(item)}")
+        else:
+            lines.append(f"{key}: {yaml_value(val)}")
+    return "\n".join(lines) + "\n"
+
+
 def save_post(data):
     """Save a post (create or update)."""
-    import yaml
-
     slug = data["slug"]
     date_read = data.get("dateRead", "")
     if not date_read:
@@ -84,26 +150,24 @@ def save_post(data):
     if not data.get("readInFull", True) and "partial-read" not in tags:
         tags.append("partial-read")
 
-    fm = {
-        "layout": "post",
-        "title": data["title"],
-        "date": date_read,
-        "description": data.get("summaryTitle", ""),
-        "tags": tags,
-        "categories": ["distillation"],
-        "giscus_comments": False,
-        "related_posts": False,
-    }
+    pairs = [
+        ("layout", "post"),
+        ("title", data["title"]),
+        ("date", date_read),
+        ("description", data.get("summaryTitle", "")),
+        ("tags", tags),
+        ("categories", ["distillation"]),
+        ("giscus_comments", False),
+        ("related_posts", False),
+    ]
     if data.get("paperUrl"):
-        fm["paper_url"] = data["paperUrl"]
+        pairs.append(("paper_url", data["paperUrl"]))
     if data.get("institutions"):
-        fm["institutions"] = data["institutions"]
+        pairs.append(("institutions", data["institutions"]))
     if data.get("paperDate"):
-        fm["paper_date"] = data["paperDate"]
+        pairs.append(("paper_date", data["paperDate"]))
 
-    fm_yaml = yaml.dump(fm, default_flow_style=False, allow_unicode=True, sort_keys=False)
-
-    # Rewrite image paths in content
+    fm_yaml = build_frontmatter(pairs)
     content = data.get("content", "")
 
     # If editing, remove old file (date may have changed)

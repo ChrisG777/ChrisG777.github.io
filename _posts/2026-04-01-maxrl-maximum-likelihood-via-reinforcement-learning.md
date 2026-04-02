@@ -68,7 +68,7 @@ Their **theorem 1**
 
 - This may explain why their methods scale better with more rollouts than standard RL methods. They are getting an unbiased estimator of an improving objective, instead of just reducing variance on a fixed objective.
   ![](/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099644169.png)
-- Specifically the maze experiment. Lowercase k it's just what validation pass@k they're using. We see that, especially for higher values of k, as they increase N along the x-axis, they scale better than other methods at improving the pass@k
+- Specifically the maze experiment. Lowercase k is just what validation pass@k they're using. We see that, especially for higher values of k, as they increase N along the x-axis, they scale better than other methods at improving the pass@k
 
 # Other Experiments
 

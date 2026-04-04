@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-maxrl-maximum-likelihood-via-reinforcement-learning",
+        },{id: "post-flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-latent-space",
+        
+          title: "FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space...",
+        
+        description: "Flux.1 Kontext",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late/";
+          
+        },
+      },{id: "post-maxrl-maximum-likelihood-via-reinforcement-learning",
         
           title: "MaxRL: Maximum Likelihood via Reinforcement Learning",
         

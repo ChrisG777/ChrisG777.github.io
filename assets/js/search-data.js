@@ -850,4 +850,11 @@ ninja.data = [{
         handler: () => {
           window.open("https://twitter.com/ChrisGe05", "_blank");
         },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=azZvdCoAAAAJ", "_blank");
+        },
       },];

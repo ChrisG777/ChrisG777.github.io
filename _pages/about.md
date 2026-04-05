@@ -2,7 +2,7 @@
 layout: about
 title: home
 permalink: /
-subtitle: <em>This website is currently under construction.</em>
+subtitle:
 
 profile:
   align: right

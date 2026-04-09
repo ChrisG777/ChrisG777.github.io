@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-latent-space",
+        },{id: "post-generative-modeling-via-drifting",
+        
+          title: "Generative Modeling via Drifting",
+        
+        description: "Drifting",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/generative-modeling-via-drifting/";
+          
+        },
+      },{id: "post-flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-latent-space",
         
           title: "FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space...",
         

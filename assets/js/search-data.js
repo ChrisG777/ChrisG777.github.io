@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-generative-modeling-via-drifting",
+        },{id: "post-what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models",
+        
+          title: "What’s in the Image? A Deep-Dive into the Vision of Vision Language Models...",
+        
+        description: "VLM QA mech interp",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/";
+          
+        },
+      },{id: "post-generative-modeling-via-drifting",
         
           title: "Generative Modeling via Drifting",
         

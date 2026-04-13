@@ -214,9 +214,29 @@
         line-height: 1.6;
         display: none;
       }
+      #preview-pane {
+        position: relative;
+      }
       #preview-pane img {
         max-width: 100%;
         border-radius: 4px;
+        cursor: pointer;
+      }
+      #preview-pane img.selected {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+      .resize-handle {
+        position: fixed;
+        width: 14px;
+        height: 14px;
+        background: #2563eb;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        cursor: nwse-resize;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        display: none;
       }
       #preview-pane h1,
       #preview-pane h2,
@@ -567,8 +587,157 @@
         var md = $("f-content").value;
         /* Rewrite local image paths to point at the Jekyll dev server */
         md = md.replace(/!\[([^\]]*)\]\(\/assets\//g, "![$1](http://localhost:8080/assets/");
+        md = md.replace(/(<img[^>]*src=["'])\/assets\//g, "$1http://localhost:8080/assets/");
         $("preview-pane").innerHTML = marked.parse(md);
+        attachImageHandlers();
+        if (selectedSrc) {
+          var imgs = $("preview-pane").querySelectorAll("img");
+          for (var i = 0; i < imgs.length; i++) {
+            if (imgs[i].getAttribute("src") === selectedSrc) {
+              selectImage(imgs[i]);
+              break;
+            }
+          }
+        }
       }
+
+      /* --- Image resize (click to select, drag handle) --- */
+
+      var selectedImg = null;
+      var selectedSrc = null;
+      var resizeHandle = null;
+      var dragStart = null;
+
+      function ensureHandle() {
+        if (resizeHandle) return;
+        resizeHandle = document.createElement("div");
+        resizeHandle.className = "resize-handle";
+        resizeHandle.addEventListener("mousedown", startDrag);
+        document.body.appendChild(resizeHandle);
+      }
+
+      function attachImageHandlers() {
+        var imgs = $("preview-pane").querySelectorAll("img");
+        imgs.forEach(function (img) {
+          img.addEventListener("click", function (e) {
+            e.stopPropagation();
+            selectImage(img);
+          });
+          if (!img.complete) {
+            img.addEventListener("load", positionHandle);
+          }
+        });
+      }
+
+      function selectImage(img) {
+        ensureHandle();
+        if (selectedImg && selectedImg !== img) {
+          selectedImg.classList.remove("selected");
+        }
+        selectedImg = img;
+        selectedSrc = img.getAttribute("src");
+        img.classList.add("selected");
+        positionHandle();
+      }
+
+      function deselectImage() {
+        if (selectedImg) selectedImg.classList.remove("selected");
+        selectedImg = null;
+        selectedSrc = null;
+        if (resizeHandle) resizeHandle.style.display = "none";
+      }
+
+      function positionHandle() {
+        if (!selectedImg || !resizeHandle) return;
+        var imgRect = selectedImg.getBoundingClientRect();
+        var paneRect = $("preview-pane").getBoundingClientRect();
+        if (imgRect.bottom < paneRect.top || imgRect.top > paneRect.bottom || imgRect.right < paneRect.left) {
+          resizeHandle.style.display = "none";
+          return;
+        }
+        resizeHandle.style.display = "block";
+        resizeHandle.style.left = imgRect.right - 7 + "px";
+        resizeHandle.style.top = imgRect.bottom - 7 + "px";
+      }
+
+      function startDrag(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!selectedImg) return;
+        dragStart = {
+          x: e.clientX,
+          width: selectedImg.offsetWidth,
+        };
+        document.addEventListener("mousemove", doDrag);
+        document.addEventListener("mouseup", endDrag);
+      }
+
+      function doDrag(e) {
+        if (!dragStart || !selectedImg) return;
+        var dx = e.clientX - dragStart.x;
+        var newWidth = Math.max(50, Math.round(dragStart.width + dx));
+        selectedImg.style.width = newWidth + "px";
+        selectedImg.style.height = "auto";
+        selectedImg.style.maxWidth = "none";
+        positionHandle();
+      }
+
+      function endDrag() {
+        document.removeEventListener("mousemove", doDrag);
+        document.removeEventListener("mouseup", endDrag);
+        if (!dragStart || !selectedImg) {
+          dragStart = null;
+          return;
+        }
+        var finalWidth = Math.round(selectedImg.offsetWidth);
+        var src = selectedImg.getAttribute("src");
+        var assetsPath = src.replace(/^https?:\/\/localhost:8080/, "");
+        updateImageWidthInSource(assetsPath, finalWidth);
+        dragStart = null;
+      }
+
+      function updateImageWidthInSource(assetsPath, width) {
+        var ta = $("f-content");
+        var src = ta.value;
+        var escPath = assetsPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        var matched = false;
+
+        /* 1. Replace an existing <img ... src="path" ...> tag, preserving other attrs */
+        var htmlRe = new RegExp("<img([^>]*?)src=([\"'])" + escPath + "\\2([^>]*?)/?>", "g");
+        src = src.replace(htmlRe, function (m, before, quote, after) {
+          matched = true;
+          var attrs = (before + " " + after)
+            .replace(/\s*width\s*=\s*(["'])[^"']*\1/gi, "")
+            .replace(/\s*width\s*=\s*\d+%?/gi, "")
+            .replace(/\s+/g, " ")
+            .trim();
+          return '<img src="' + assetsPath + '" width="' + width + '"' + (attrs ? " " + attrs : "") + " />";
+        });
+
+        /* 2. Otherwise replace a markdown image ![alt](path) */
+        if (!matched) {
+          var mdRe = new RegExp("!\\[([^\\]]*)\\]\\(" + escPath + "\\)(\\{:[^}]*\\})?", "g");
+          src = src.replace(mdRe, function (m, alt) {
+            matched = true;
+            var altAttr = alt ? ' alt="' + alt.replace(/"/g, "&quot;") + '"' : "";
+            return '<img src="' + assetsPath + '" width="' + width + '"' + altAttr + " />";
+          });
+        }
+
+        if (matched) {
+          ta.value = src;
+          updatePreview();
+        }
+      }
+
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest("#preview-pane img") && !e.target.closest(".resize-handle")) {
+          deselectImage();
+        }
+      });
+
+      window.addEventListener("resize", positionHandle);
+      document.getElementById("preview-pane").addEventListener("scroll", positionHandle);
 
       $("f-content").addEventListener("input", function () {
         clearTimeout(previewDebounce);

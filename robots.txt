@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /assets/pdf/
 
 Sitemap: https://ChrisG777.github.io/sitemap.xml

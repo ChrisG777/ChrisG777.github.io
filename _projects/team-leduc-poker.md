@@ -13,7 +13,7 @@ links:
     url: https://github.com/ChrisG777/Team-Leduc-Poker-Challenge
   - name: Report
     icon: fas fa-file-pdf
-    url: /assets/pdf/team-leduc-poker-report.pdf
+    url: /assets/pdf/team-leduc-poker-report-cb4317.pdf
   - name: Presentation
     icon: fab fa-youtube
     url: https://www.youtube.com/watch?v=zhahQ4fz03Q

@@ -13,8 +13,8 @@ links:
     url: https://github.com/brian224code/phoneme-bridges
   - name: Report
     icon: fas fa-file-pdf
-    url: /assets/pdf/phoneme-bridges-report.pdf
+    url: /assets/pdf/phoneme-bridges-report-cb4317.pdf
   - name: Poster
     icon: fas fa-file-pdf
-    url: /assets/pdf/phoneme-bridges-poster.pdf
+    url: /assets/pdf/phoneme-bridges-poster-cb4317.pdf
 ---

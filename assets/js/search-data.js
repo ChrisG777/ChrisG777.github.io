@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models",
+        },{id: "post-training-agents-inside-of-scalable-world-models",
+        
+          title: "Training Agents Inside of Scalable World Models",
+        
+        description: "Dreamer v4",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/training-agents-inside-of-scalable-world-models/";
+          
+        },
+      },{id: "post-what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models",
         
           title: "What’s in the Image? A Deep-Dive into the Vision of Vision Language Models...",
         

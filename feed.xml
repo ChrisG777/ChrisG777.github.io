@@ -1,5 +1,104 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-05-18T04:34:29+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">What’s in the Image? A Deep-Dive into the Vision of Vision Language Models</title><link href="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/" rel="alternate" type="text/html" title="What’s in the Image? A Deep-Dive into the Vision of Vision Language Models" /><published>2026-04-13T00:00:00+00:00</published><updated>2026-04-13T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/"><![CDATA[<p><strong>Overview</strong>: give a VLM an image and query “describe the image” and have it generate text. Discover that query tokens contain high level image information that’s used to generate the answer (experiments via attention knockout)</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-05-18T06:16:30+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Training Agents Inside of Scalable World Models</title><link href="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/" rel="alternate" type="text/html" title="Training Agents Inside of Scalable World Models" /><published>2026-05-18T00:00:00+00:00</published><updated>2026-05-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/"><![CDATA[<h1 id="section-3-architecture-and-training">Section 3 Architecture and Training</h1>
+
+<p>Their actual models are their <strong>tokenizer</strong> (video frames –&gt; representation) and <strong>Interactive Dynamics Model</strong> (actions, timestep/noise level, noised representations –&gt; clean representations</p>
+
+<p><img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779084887513.png" alt="" /></p>
+
+<ul>
+  <li>Inputs are sequences: A bunch of frames (time step t) that each consist of a bunch of token types (image, action, noise level). Block causal means that it’s only causal for the frame-by-frame token blocks.</li>
+  <li>Tokenizer and dynamics models share the same architecture but different weights</li>
+</ul>
+
+<h2 id="tokenizer">Tokenizer</h2>
+
+<ul>
+  <li>takes in image tokens + learned latent tokens</li>
+  <li>encoder, discard patch tokens, compress dimension of latent tokens —&gt; representation</li>
+  <li>decoder: project back up,!get new (learned) embeddings for patch tokens, decode, only keep patch tokens.</li>
+  <li>Reconstruction loss and LPIPS</li>
+</ul>
+
+<h2 id="dynamics-model">Dynamics model</h2>
+
+<ul>
+  <li>Inputs are patch tokens, action tokens, timestep/noise level token, and register tokens.</li>
+  <li>Trained with shortcut forcing (shortcut learning + diffusion forcing)</li>
+  <li><strong>Shortcut learning</strong> is just for larger step sizes than the minimum step size: the model takes in the step size d as an input, so it’s trained to do larger steps. Don’t use the flow matching objective. Use a distillation loss. This allows them to do only four-step generation later.</li>
+  <li><strong>Diffusion forcing</strong> is when you train for different noise levels for different frames. That way during inference time you can denoise autoregressively with the last frame fully noised but previous frames only lightly noised.</li>
+</ul>
+
+<h2 id="transformer-architecture">Transformer Architecture</h2>
+
+<p>architecture is a 2D transformer with time and space dimensions</p>
+
+<p>Blocks look like [space, space, space, time] × L/4</p>
+
+<ul>
+  <li><strong>Spatial attention</strong> (“space layer”): each frame’s tokens attend only <em>within that frame</em>.</li>
+  <li><strong>Temporal attention</strong> (“causal time layer”): each spatial position attends only <em>across time at that same position</em></li>
+</ul>
+
+<h2 id="imagination-rl">Imagination RL</h2>
+
+<p>Need all the RL goodies:</p>
+
+<h3 id="agent-tokens-reward-and-policy-mlps">Agent tokens, reward and policy MLPs</h3>
+
+<p><strong>adding agent tokens</strong> after pretraining is over</p>
+
+<p>[ image tokens z_t ] [ action tokens a_t ] [ register tokens ] [ noise/step tokens ]</p>
+
+<p>–&gt; [ image tokens z_t ] [ action tokens a_t ] [ register tokens ] [ AGENT TOKEN ] [ noise tokens ]</p>
+
+<ul>
+  <li>Agent tokens embedding is just a one-hot encoding of the task like “Mine a tree”</li>
+  <li>Don’t let other tokens attend to the agent token, because we don’t want the dynamics model to be predicting state based on the task.</li>
+</ul>
+
+<p>Use the output at the agent token position as the inputs to MLPs that predict the <strong>reward</strong> and <strong>policy</strong> (a factorized probability distribution over actions)</p>
+
+<ul>
+  <li>known trick: predict for 8 time steps in advance.</li>
+  <li><img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083146717.png" width="339" /> 
+(reward and policy are literally trained via maximum likelihood)</li>
+</ul>
+
+<p><img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779081289904.png" alt="" /></p>
+
+<h3 id="actual-rl-training">Actual RL Training</h3>
+
+<p>We add a third MLP for predicting the value V(s), which we need some kind of ground truth to train upon. How can we get those ground truths?</p>
+
+<ol>
+  <li>We could Monte Carlo sample entire rollouts. This is high variance.</li>
+  <li>We could use TD-learning, which says <img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083669797.png" width="172" /> Is true even for our approximate values and only takes one step.</li>
+</ol>
+
+<p>The paper does lambda learning, which interpolates between the two.</p>
+
+<p><img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083715290.png" alt="" /></p>
+
+<ul>
+  <li>In the parentheses term, you see the interpolation.</li>
+</ul>
+
+<p>We use PMPO as the actual training algorithm for the policy, which apparently doesn’t use the magnitude of the advantages, only the sign.
+<img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083783949.png" alt="" /></p>
+
+<ul>
+  <li>Interesting note: apparently, the choice of whether to use KL or reverse KL is based on support of the distributions</li>
+</ul>
+
+<p><img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083574854.png" alt="" /></p>
+
+<h1 id="experiments">Experiments</h1>
+
+<p>Successfully mines diamonds based on only offline training.</p>
+
+<p>The world model itself is good enough for humans to be able to interact with.</p>
+
+<p>You can actually get away with training mostly on unlabeled data and only need a small fraction to have labeled action conditioning.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Dreamer v4]]></summary></entry><entry><title type="html">What’s in the Image? A Deep-Dive into the Vision of Vision Language Models</title><link href="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/" rel="alternate" type="text/html" title="What’s in the Image? A Deep-Dive into the Vision of Vision Language Models" /><published>2026-04-13T00:00:00+00:00</published><updated>2026-04-13T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/"><![CDATA[<p><strong>Overview</strong>: give a VLM an image and query “describe the image” and have it generate text. Discover that query tokens contain high level image information that’s used to generate the answer (experiments via attention knockout)</p>
 
 <p><img src="/assets/img/distillations/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/img-1776101851712.png" alt="" /></p>
 
@@ -643,43 +742,4 @@ Figure 6: results</p>
   <li>This sort of weight space perturbation works on diffusion models too.</li>
   <li>The thicket is denser on larger models not necessarily because they’re larger, but because their pre-training representations are better</li>
   <li>There are several more interesting ideas you can do besides just basic randopt, and they generally work: you could do multi-step randopt, where after you perturb once and get the best perturbation, you repeat it up to 5 times. You can also add noise of different scale for weights at different layers.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[neural thickets]]></summary></entry><entry><title type="html">Attention Residuals</title><link href="https://chrisg777.github.io/blog/2026/attention-residuals/" rel="alternate" type="text/html" title="Attention Residuals" /><published>2026-03-17T00:00:00+00:00</published><updated>2026-03-17T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/attention-residuals</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/attention-residuals/"><![CDATA[<p><img src="/assets/img/distillations/attention-residuals/image263.png" alt="" /></p>
-
-<ul>
-  <li>Standard residual connection only uses the output from the previous layer</li>
-  <li>As layers go on, this means that later layers can have less and less effect on the residual stream, since it grows as O(L), and the gradients accumulate and are largest at layer zero.</li>
-  <li>It’s sort of the RNN problem of trying to compress each layer’s information into only a single hidden vector.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/attention-residuals/image264.png" alt="" /></p>
-
-<ul>
-  <li>So instead, do softmax attention over the previous layers’ outputs</li>
-</ul>
-
-<p>The attention and weights are determined as follows:
-<img src="/assets/img/distillations/attention-residuals/image265.png" alt="" /></p>
-
-<ul>
-  <li>The RMS norm is to make it so that layer outputs that have large magnitudes don’t dominate the attention.</li>
-  <li>The pseudo query labels are learnable weights.</li>
-</ul>
-
-<p>Blocked version: full layer version is best but uses O(Ld) memory, and communication costs get too high. Block layers together into N blocks, N &lt; L, using O(Nd) memory
-<img src="/assets/img/distillations/attention-residuals/image266.png" alt="" /></p>
-
-<ul>
-  <li>Each layer can pay attention to the output of the previous blocks, as well as the prefix sum of the current block’s layers.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/attention-residuals/image267.png" alt="" /></p>
-
-<ul>
-  <li>Figure 5: Solves the layer output magnitude problem in the gradient problem I mentioned earlier and gets better validation loss than using the normal residual connections.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/attention-residuals/image268.png" alt="" /></p>
-
-<ul>
-  <li>Figure 8: Most of the layer attention is still paid to the current layer and to the original embedding layer, But there are some pretty strong skip connections.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[attention residuals]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[neural thickets]]></summary></entry></feed>

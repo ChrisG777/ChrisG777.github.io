@@ -30,6 +30,16 @@ docker compose up --build
 docker compose down
 ```
 
+### Updating the CV
+
+The CV PDF lives at `assets/pdf/chrisge-cv.pdf` and is sourced from the Overleaf-linked git repo at `~/Downloads/chrisge-resume`. To refresh it:
+
+```bash
+bash scripts/update_cv.sh
+```
+
+This pulls the latest from Overleaf, copies `main.pdf` over, and stages the change. Review with `git diff --cached --stat`, then commit and push.
+
 ### Pre-Commit Checklist
 
 Before every commit, you **must** run these steps:

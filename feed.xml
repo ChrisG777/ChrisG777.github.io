@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-07-12T05:18:00+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Training Agents Inside of Scalable World Models</title><link href="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/" rel="alternate" type="text/html" title="Training Agents Inside of Scalable World Models" /><published>2026-05-18T00:00:00+00:00</published><updated>2026-05-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/"><![CDATA[<h1 id="section-3-architecture-and-training">Section 3 Architecture and Training</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-07-15T02:15:25+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">AIDE²: The First Evidence of Recursive Self-Improvement</title><link href="https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement/" rel="alternate" type="text/html" title="AIDE²: The First Evidence of Recursive Self-Improvement" /><published>2026-07-14T00:00:00+00:00</published><updated>2026-07-14T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement/"><![CDATA[<p>Some good ideas on evaluating an autoresearch harness:</p>
+
+<ul>
+  <li>first order generalization = new tasks in a task family you already optimized for</li>
+  <li>Second order generalization = new task family altogether. They could do this because they were training general harnesses on three different tasks (mle bench, atcoder, harness engineering), but it probably wouldn’t work very well for us since we’re fitting to just one task. It’s pretty impressive to me though that they managed to not overfit while only using three distinct task families.</li>
+</ul>
+
+<p>Results wise, it seems not significantly better (but maybe faster once everything is set up) than human iterating on the harness, I.e. on MLE-bench lite which their AIDE_human is actually tuned for, it barely beats AIDE_human. Only 7 accepted changes to the harness. And reportedly the code it writes sucks</p>
+
+<p>They were also token constrained, like they used gemini 3 flash for the inner optimization, so the agent optimized token usage
+Still pretty cool proof of concept</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RSI ish]]></summary></entry><entry><title type="html">Training Agents Inside of Scalable World Models</title><link href="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/" rel="alternate" type="text/html" title="Training Agents Inside of Scalable World Models" /><published>2026-05-18T00:00:00+00:00</published><updated>2026-05-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/training-agents-inside-of-scalable-world-models/"><![CDATA[<h1 id="section-3-architecture-and-training">Section 3 Architecture and Training</h1>
 
 <p>Their actual models are their <strong>tokenizer</strong> (video frames –&gt; representation) and <strong>Interactive Dynamics Model</strong> (actions, timestep/noise level, noised representations –&gt; clean representations</p>
 
@@ -703,43 +713,4 @@ Figure 6: results</p>
   <li>10a: the fraction of neurons who share a heuristic with the final trained model increases through training time (the model learns the heuristic neurons gradually)</li>
   <li>10b: the neurons still explain most of the circuit’s behavior in earlier models, via faithfulness. There’s little sign of other mechanisms existing earlier.</li>
   <li>10c: repeat the experiment where they knock out the heuristic neurons for a given prompt, works at any training step, further evidence that earlier training steps also used heuristics.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[arithmetic heuristics]]></summary></entry><entry><title type="html">Neural Thickets: Diverse Task Experts Are Dense Around Pretrained Weights</title><link href="https://chrisg777.github.io/blog/2026/neural-thickets/" rel="alternate" type="text/html" title="Neural Thickets: Diverse Task Experts Are Dense Around Pretrained Weights" /><published>2026-03-18T00:00:00+00:00</published><updated>2026-03-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/neural-thickets</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/neural-thickets/"><![CDATA[<p>For larger scale models, if you literally just add noise to the weights after pre-training, You have a high chance of landing on a specialist set of weights that are good at one particular downstream task (Figure 2 below)</p>
-
-<ul>
-  <li>Sort of implies that the post-training algorithm use is not that important.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/neural-thickets/img-1774379465422.png" alt="" /></p>
-
-<ul>
-  <li>Figure 2: very specific to larger scale</li>
-</ul>
-
-<p><img src="/assets/img/distillations/neural-thickets/img-1774379486728.png" alt="" /></p>
-
-<ul>
-  <li>Figure 3: Further evidence that for smaller scale models, you get much less diverse and interesting/good models by perturbing your weights.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/neural-thickets/img-1774379542972.png" alt="" /></p>
-
-<ul>
-  <li>Figure 4: These models are actually specialists; they’re not generalists</li>
-</ul>
-
-<p>They boost performance by literally just sampling the top fifty, such randomly chosen models, and then taking a majority vote/ensembling from them (RandOpt)</p>
-
-<p><img src="/assets/img/distillations/neural-thickets/img-1774379576893.png" alt="" /></p>
-
-<ul>
-  <li>Figure 9: The weights in the thickets could improve both reasoning performance and just getting the answer output right.</li>
-</ul>
-
-<p>Update (5/12/26) from Yulu Gan’s talk on this:</p>
-
-<ul>
-  <li>You can do differentially-private post-training using randopt, without losing much performance</li>
-  <li>This sort of weight space perturbation works on diffusion models too.</li>
-  <li>The thicket is denser on larger models not necessarily because they’re larger, but because their pre-training representations are better</li>
-  <li>There are several more interesting ideas you can do besides just basic randopt, and they generally work: you could do multi-step randopt, where after you perturb once and get the best perturbation, you repeat it up to 5 times. You can also add noise of different scale for weights at different layers.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[neural thickets]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[arithmetic heuristics]]></summary></entry></feed>

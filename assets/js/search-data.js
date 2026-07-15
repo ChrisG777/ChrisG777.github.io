@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-training-agents-inside-of-scalable-world-models",
+        },{id: "post-aide-the-first-evidence-of-recursive-self-improvement",
+        
+          title: "AIDE²: The First Evidence of Recursive Self-Improvement",
+        
+        description: "RSI ish",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/aide-the-first-evidence-of-recursive-self-improvement/";
+          
+        },
+      },{id: "post-training-agents-inside-of-scalable-world-models",
         
           title: "Training Agents Inside of Scalable World Models",
         

@@ -139,6 +139,23 @@ def build_frontmatter(pairs):
     return "\n".join(lines) + "\n"
 
 
+def normalize_markdown(text):
+    """Strip trailing whitespace the way Prettier does, so saved posts pass
+    `prettier --check` without a manual reformat.
+
+    Two trailing spaces are a markdown hard line break, so they are kept
+    (normalized to exactly two) when the next line continues the paragraph.
+    """
+    lines = text.split("\n")
+    out = []
+    for i, line in enumerate(lines):
+        stripped = line.rstrip()
+        next_line = lines[i + 1] if i + 1 < len(lines) else ""
+        hard_break = stripped and line.endswith("  ") and next_line.strip()
+        out.append(stripped + "  " if hard_break else stripped)
+    return "\n".join(out).rstrip("\n")
+
+
 def save_post(data):
     """Save a post (create or update)."""
     slug = data["slug"]
@@ -169,7 +186,7 @@ def save_post(data):
         pairs.append(("paper_date", data["paperDate"]))
 
     fm_yaml = build_frontmatter(pairs)
-    content = data.get("content", "")
+    content = normalize_markdown(data.get("content", ""))
 
     # If editing, remove old file (date may have changed)
     old_file = find_post(slug)

@@ -7,6 +7,7 @@ Opens at http://localhost:5555/editor
 
 import http.server
 import json
+import mimetypes
 import os
 import re
 import base64
@@ -231,8 +232,22 @@ class EditorHandler(http.server.BaseHTTPRequestHandler):
                 "readInFull": "partial-read" not in (fm.get("tags") or []),
                 "content": content,
             })
+        elif path.startswith("/assets/"):
+            self._serve_asset(path)
         else:
             self._respond(404, "text/plain", "Not found")
+
+    def _serve_asset(self, path):
+        """Serve files under assets/ straight from the repo (so the preview
+        works without the Jekyll dev server running)."""
+        rel = urllib.parse.unquote(path).lstrip("/")
+        target = (REPO / rel).resolve()
+        assets_root = (REPO / "assets").resolve()
+        if not target.is_file() or assets_root not in target.parents:
+            self._respond(404, "text/plain", "Not found")
+            return
+        ctype = mimetypes.guess_type(target.name)[0] or "application/octet-stream"
+        self._respond(200, ctype, target.read_bytes())
 
     def do_POST(self):
         path = urllib.parse.urlparse(self.path).path

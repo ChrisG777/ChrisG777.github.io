@@ -585,9 +585,7 @@
       function updatePreview() {
         if (!previewVisible) return;
         var md = $("f-content").value;
-        /* Rewrite local image paths to point at the Jekyll dev server */
-        md = md.replace(/!\[([^\]]*)\]\(\/assets\//g, "![$1](http://localhost:8080/assets/");
-        md = md.replace(/(<img[^>]*src=["'])\/assets\//g, "$1http://localhost:8080/assets/");
+        /* /assets/... paths are served by the editor server itself */
         $("preview-pane").innerHTML = marked.parse(md);
         attachImageHandlers();
         if (selectedSrc) {
@@ -690,8 +688,7 @@
           return;
         }
         var finalWidth = Math.round(selectedImg.offsetWidth);
-        var src = selectedImg.getAttribute("src");
-        var assetsPath = src.replace(/^https?:\/\/localhost:8080/, "");
+        var assetsPath = selectedImg.getAttribute("src");
         updateImageWidthInSource(assetsPath, finalWidth);
         dragStart = null;
       }

@@ -16,7 +16,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-aide-the-first-evidence-of-recursive-self-improvement",
+        },{id: "post-video-generation-models-are-general-purpose-vision-learners",
+        
+          title: "Video Generation Models are General-Purpose Vision Learners",
+        
+        description: "GenCeption",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/video-generation-models-are-general-purpose-vision-learners/";
+          
+        },
+      },{id: "post-self-supervised-flow-matching-for-scalable-multi-modal-synthesis",
+        
+          title: "Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis",
+        
+        description: "Self-Flow, FLUX 3",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/";
+          
+        },
+      },{id: "post-aide-the-first-evidence-of-recursive-self-improvement",
         
           title: "AIDE²: The First Evidence of Recursive Self-Improvement",
         

@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-07-27T02:59:41+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-07-27T11:20:27+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
 </subtitle><entry><title type="html">Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</title><link href="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/" rel="alternate" type="text/html" title="Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/"><![CDATA[<p>prior work: <strong>REPA</strong>: Align diffusion models’ internal representations with DINO’s, since diffusion models don’t learn semantic representations well on their own.</p>
+
 <ul>
   <li>con: this depends on an external model, scales poorly</li>
 </ul>
@@ -8,13 +9,14 @@
 <img src="/assets/img/distillations/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/img-1785120722714.png" alt="" /></p>
 
 <p><strong>Making it multimodal</strong>:</p>
+
 <ul>
   <li>per-modality in/out projection layers, autoencoder
     <ul>
       <li>FLUX.2 AE for images, WAN2.2 for video, Songbloom for audio</li>
     </ul>
   </li>
-  <li>hparams like noise scheduling (same level of noise is harder to predict for images than video bc more info with video)  / batch size</li>
+  <li>hparams like noise scheduling (same level of noise is harder to predict for images than video bc more info with video) / batch size</li>
   <li>vector timestep conditioning</li>
 </ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Self-Flow, FLUX 3]]></summary></entry><entry><title type="html">Video Generation Models are General-Purpose Vision Learners</title><link href="https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners/" rel="alternate" type="text/html" title="Video Generation Models are General-Purpose Vision Learners" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners/"><![CDATA[<p>Summary: <em>Use a pre-trained video DiT model as a backbone for its rich spatiotemporal feature priors, and then post-train it on various vision tasks which are encoded in a unified task format that makes as few changes as possible from the DiT</em></p>
 
@@ -32,8 +34,10 @@
 </ul>
 
 <h1 id="methods">Methods</h1>
+
 <p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785118559496.png" alt="" />
 <strong>Turning the pretrained DiT into a (single-step) feature encoder</strong>:</p>
+
 <ul>
   <li>Instead of noisy video latents, they use the input video latents</li>
   <li>t = 0 conditioning (matching the fact that it’s already a clean video, t=1 would be noise)</li>
@@ -41,6 +45,7 @@
 </ul>
 
 <p><strong>Similar to how LLMs treat everything as text, they treat most dense vision tasks as an RGB output and use L2 pixel loss</strong></p>
+
 <ul>
   <li><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785118916520.png" alt="" /></li>
   <li>Have to do some goofy shit to project 6-channel outputs into 3 channels, and for single-channel outputs, they are replicated across the RGB.</li>
@@ -49,12 +54,14 @@
 </ul>
 
 <p><strong>sparse tasks come from the output of the learnable tokens (query embeddings)</strong></p>
+
 <ul>
   <li>spatial location in 3D RoPE is learned (temporal position is calculated somehow)</li>
   <li>MLP to the final K-dim output per learned token is also learned</li>
 </ul>
 
 <p><strong>Synthetic Data from Simulation (RenderPeople, CMU Motion Dataset, Blender)</strong></p>
+
 <ul>
   <li>as a bonus, gives them the ground truth for their like keypoint tasks and stuff for free</li>
 </ul>
@@ -70,6 +77,7 @@
 <p>Joint vs Specialist training:</p>
 
 <p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785120501519.png" alt="" /></p>
+
 <ul>
   <li>worse for the sparse output task –&gt; try to modify the arch as little as possible</li>
 </ul>

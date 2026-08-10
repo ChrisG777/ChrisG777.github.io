@@ -1,5 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-10T00:33:04+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</title><link href="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/" rel="alternate" type="text/html" title="Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/"><![CDATA[<p>prior work: <strong>REPA</strong>: Align diffusion models’ internal representations with DINO’s, since diffusion models don’t learn semantic representations well on their own.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-10T02:20:33+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">InstructPix2Pix: Learning to Follow Image Editing Instructions</title><link href="https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions/" rel="alternate" type="text/html" title="InstructPix2Pix: Learning to Follow Image Editing Instructions" /><published>2026-08-09T00:00:00+00:00</published><updated>2026-08-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions/"><![CDATA[<p>Goal: fine-tune SD 1.5 to be able to take in a reference image and make precise, natural text edits to it</p>
+
+<p>Other methods (e.g. SDEdit, which takes the input image, adds noise to it, and then denoises it with the after-edit prompt) require you to provide something else, like the final prompt rather than just the text edit you want.</p>
+
+<h1 id="generating-the-training-data">Generating the training data</h1>
+
+<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327256654.png" alt="" /></p>
+
+<p>You want triplets like (“let her ride a dragon”, input photo, edited photo)</p>
+
+<p>Fine-tune GPT-3 on 700 LAOIN captions + hand-edited manual after-edit captions, to be able to generate (Instruction, Edited Caption) pairs.</p>
+
+<p>Now you would think all you have to do is run each of the input caption and the edited caption through SD 1.5 right? And now you have your input, edited photo pair? WRONG! Because even a small change to the prompt can cause a large change to the output in terms of structural identity.</p>
+
+<p>They solve this using <strong>prompt-to-prompt</strong>: if you copy over the cross-attention post Softmax attention scores from the original prompt, but still use the values from the new prompt, you get pretty targeted structurally identical edits.</p>
+
+<ul>
+  <li>detail: some edits require more structural differences than others. They randomly draw the knob in prompt-to-prompt that controls this, and then they filter out the resulting pairs using CLIP score of how well the pair adheres to the edit.</li>
+</ul>
+
+<p>They get 454,445 final examples from this pipeline.</p>
+
+<h1 id="training-and-inference">Training and Inference</h1>
+
+<h2 id="architecture">Architecture</h2>
+
+<p>Remember that a U-Net looks like this (source: https://arxiv.org/abs/2306.09762). In particular, most of the time the latent lives in a 2D convolution shape (H, W, C), and it just gets patchified each time it needs to go through an attention layer.</p>
+
+<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327535952.png" width="479" /></p>
+
+<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327558731.png" width="517" /></p>
+
+<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327571149.png" width="499" /></p>
+
+<p><strong>Architecturally</strong>, they run the reference image through the autoencoder and directly concatenated into the input as extra channels, and they cold initialize the convolution weights for those extra channels. Hence the image conditioning is <strong>not through cross-attention</strong> like the text conditioning is</p>
+
+<h2 id="classifier-free-guidance">Classifier-Free Guidance</h2>
+
+<p>During training, make sure to have all pairs of</p>
+
+<p>(condition on text vs unconditional on text) x
+(condition on image vs unconditional on image)</p>
+
+<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786328130929.jpeg" width="457" /></p>
+
+<ul>
+  <li>brief explanation: recall that the diffusion model predicts a conditional score (= log conditional probability)</li>
+</ul>
+
+<p>So then you can do this 2D CFG, improving adherence to both the text conditioning and the image conditioning.</p>
+
+<p>(They do this derivation in Appendix B, but I think it’s not super clear when they did it there)</p>
+
+<h1 id="results">Results</h1>
+
+<p>They did some nice ablations showing that their filtering and dataset size mattered. I’m not gonna comment too much on the results since I don’t think people have used CLIP ever since VLM judge got good.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[InstructPix2Pix]]></summary></entry><entry><title type="html">Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</title><link href="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/" rel="alternate" type="text/html" title="Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/"><![CDATA[<p>prior work: <strong>REPA</strong>: Align diffusion models’ internal representations with DINO’s, since diffusion models don’t learn semantic representations well on their own.</p>
 
 <ul>
   <li>con: this depends on an external model, scales poorly</li>
@@ -508,94 +563,4 @@ So, this is their only difference in the estimators.
   <li>8b: Confirms that these vectors are causal: by taking the shape2 embedding and then subtracting the vector for lower left and adding 2 * the vector for upper right, they actually managed to swap the positions of the two objects in the image (object x and object y on the graphs are the coordinates of the objects)</li>
 </ul>
 
-<p>bonus finding: When they vary the prompt format, even by a little bit, for the T5-based model, it causes a big drop in accuracy, unlike the random text encoding model.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Circuits in DiTs]]></summary></entry><entry><title type="html">Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms in VLMs</title><link href="https://chrisg777.github.io/blog/2026/modality-specific-circuits/" rel="alternate" type="text/html" title="Same Task, Different Circuits: Disentangling Modality-Specific Mechanisms in VLMs" /><published>2026-03-21T00:00:00+00:00</published><updated>2026-03-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/modality-specific-circuits</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/modality-specific-circuits/"><![CDATA[<p>Trying to understand why tasks are easier in language than in vision.</p>
-
-<p>Actually, a super good figure 1 summarizing their contributions
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381289591.png" alt="" /></p>
-
-<ul>
-  <li>This is straight up the entirety of the introduction as well.</li>
-</ul>
-
-<h3 id="section-2-circuit-discovery-and-evaluation">Section 2 circuit discovery and evaluation</h3>
-
-<p>Circuit nodes are attention heads or individual MLP neurons. I think they’re not claiming to find edges in this one.</p>
-
-<p><strong>Discovery</strong>: Ideally, you would take your original and counterfactual prompts and see patching at which nodes causes the most change in the logits of the answers. But there are too many components, so instead they use attribution patching with integrated gradients.
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381312061.png" alt="" /></p>
-
-<ul>
-  <li>LD is the logit difference.</li>
-  <li><img src="/assets/img/distillations/modality-specific-circuits/image285.png" alt="" />
-    <ul>
-      <li>This is the normal first-order approximation for the effect on the larger difference of the activation patch.</li>
-      <li>But this is a little inaccurate. To do better, we have a k-piece discretization of the interpolation from the original prompt embedding e to the new prompt embedding e’</li>
-    </ul>
-  </li>
-</ul>
-
-<p><strong>Faithfulness evaluation.</strong> A little different from previous ways of measuring faithfulness based on Mueller et al. 2025 instead of Wing et al. 2022
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381342964.png" alt="" /></p>
-
-<ul>
-  <li>For each prompt p in the task, randomly pick a counterfactual p’. Patch over all the non-circuit nodes from p’. (first numerator term). Normalize by the logit difference is when you patch all model components and when you patch no model components.
-    <ul>
-      <li>Counterfactual ablation instead of mean ablation because the mean might not be typical of any of the individual activations (“off-manifold”)</li>
-    </ul>
-  </li>
-  <li>This normalization technique seems to be generally applied: subtract a random / baseline, and divide by what would happen for the oracle/whole, to keep you in [0, 1]</li>
-</ul>
-
-<p>Figure 4: at about 7% of components for textual task circuits and 15% of components for visual tasks, achieves 80% faithfulness on the task
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381470920.png" alt="" /></p>
-
-<h3 id="section-3-experimental-setup">Section 3 Experimental setup</h3>
-
-<p>Figure 2: Their tasks in textual and visual form.
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381503660.png" alt="" /></p>
-
-<ul>
-  <li>Answers need to be one word, and prompts need to be aligned to a positional template, for Circuit Discovery to work well (guess they don’t use PEAP)</li>
-</ul>
-
-<p>Qwen2-7B-VL-Instruct, Pixtral-12B, Gemma-3-12B-it</p>
-
-<ul>
-  <li>Adapter Architecture: Pre-trained image encoder -&gt; Visual token embeddings -&gt; Adapter layer -&gt; Language embedding space -&gt; Concatenated with text and passed through language decoder</li>
-</ul>
-
-<h3 id="section-4-analyzing-the-circuits">Section 4. Analyzing the circuits</h3>
-
-<p>Motivated by Kaduri et al 2024 and the different patching effects (averaged over all components) for the data query and generation prompt positions (Figure 3), split circuits into data, query, and generation.
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381537535.png" alt="" /></p>
-
-<p>Figure 5: There is very little overlap in the data processing part between the circuits in different modalities, with more overlap in the generation part
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381548181.png" alt="" /></p>
-
-<ul>
-  <li>Generally want to calculate the IoU between the components in the circuits for text versus for vision (These circuits are discovered independently on separate data sets)</li>
-  <li>You can align the positions within the query and generation components, but for the data processing components, they just dropped the token position from the label of the node.</li>
-  <li>Calculate IoUs separately for MLP and attention heads and average them together, since many more MLP neurons than attention heads</li>
-  <li>Normalize by the random chance overlap between random circuits to account for the bias of a larger circuit size. (nIoU vs IoU)</li>
-</ul>
-
-<p>Figure 6: When you patch over the query or generation components of one modality into the circuit for the other modality. Faithfulness still is retained. But not for the data processing components. So functionally, the circuits are similar, even though structurally, from Figure 5, they aren’t.
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381561577.png" alt="" /></p>
-
-<ul>
-  <li>Patching means literally just taking the circuit components, replacing the components for query or generation, and then doing the same counterfactual ablation as before.</li>
-  <li>Normalization in this case is patching in a random sub-circuit as a baseline, and the original circuit as the oracle</li>
-</ul>
-
-<h3 id="section-5-back-patching-image-representations-to-improve-performance">Section 5. Back patching image representations to improve performance</h3>
-
-<p>this part is kind of sus to me since it’s not really related to the circuit they discovered. It’s only barely motivated by the fact that the data processing circuit seems to be very different between the modalities.</p>
-
-<p>Figure 7: Averaged over each visual patch token, They compute the maximum cosine similarity to any text token (in a separate generation) for each layer. This cosine similarity goes up as you go later into layers, Suggesting that later layer image representations are more aligned with the text
-<img src="/assets/img/distillations/modality-specific-circuits/img-1774381577971.png" alt="" /></p>
-
-<p>So what they do instead, is do one full generation with the images. They capture later representations for the image tokens, and then they patch that into earlier layers of a new generation (This doesn’t leak task info because of Autoregressiveness, and the image coming first in the prompt).</p>
-
-<p>Table 1: This improves results by a little bit.</p>
-
-<p>They confirm that it’s not due to just extra computation, by also doing this patching for text, and it improves results much less for text.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[modality specific circuits]]></summary></entry></feed>
+<p>bonus finding: When they vary the prompt format, even by a little bit, for the T5-based model, it causes a big drop in accuracy, unlike the random text encoding model.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Circuits in DiTs]]></summary></entry></feed>

@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-video-generation-models-are-general-purpose-vision-learners",
+        },{id: "post-instructpix2pix-learning-to-follow-image-editing-instructions",
+        
+          title: "InstructPix2Pix: Learning to Follow Image Editing Instructions",
+        
+        description: "InstructPix2Pix",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions/";
+          
+        },
+      },{id: "post-video-generation-models-are-general-purpose-vision-learners",
         
           title: "Video Generation Models are General-Purpose Vision Learners",
         

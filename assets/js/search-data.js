@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-instructpix2pix-learning-to-follow-image-editing-instructions",
+        },{id: "post-scaling-rl-training-in-the-age-of-multi-agent-systems",
+        
+          title: "Scaling RL training in the age of multi-agent systems",
+        
+        description: "Raymond Feng AC2",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/";
+          
+        },
+      },{id: "post-instructpix2pix-learning-to-follow-image-editing-instructions",
         
           title: "InstructPix2Pix: Learning to Follow Image Editing Instructions",
         

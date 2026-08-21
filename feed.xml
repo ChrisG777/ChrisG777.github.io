@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-21T21:06:53+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-21T21:25:44+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
 </subtitle><entry><title type="html">Verbalizable Representations Form a Global Workspace in Language Models</title><link href="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/" rel="alternate" type="text/html" title="Verbalizable Representations Form a Global Workspace in Language Models" /><published>2026-08-19T00:00:00+00:00</published><updated>2026-08-19T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/"><![CDATA[<p><strong>Summary:</strong> Starts by introducing J-Lens, a technique for decoding intermediate representations based on what tokens they would be in current and future outputs; a small fix to logitlens by multiplying by the jacobian from early layers to the last layer.</p>
 
 <p>But the implied vector directions for each vocab token have some emergent properties you wouldn’t expect from construction, i.e. intermediate computations and internal reasoning is written to the residuals using a sparse linear combination of these directions (the J-space). This J-space is localized to middle layers, privileged by the weights, and causally used for outputs for non-automatic tasks.</p>
@@ -152,7 +152,7 @@
   <li>Right: a nice control. You might be worried that the interventions are only working because they’re swapping in the target answer on accident / correlatedly. The red line shows that at least for earlier layers, swapping in the target answer does worse than swapping in the target intermediate concept.</li>
 </ul>
 
-<p><strong>Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:</strong> Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient**</p>
+<p><strong>Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:</strong> Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient</p>
 
 <p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787269255416.png" alt="" /></p>
 
@@ -275,7 +275,7 @@
 
 <p><strong>By MLPs:</strong></p>
 
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="274" /></p>
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="407" /></p>
 
 <ul>
   <li>ignore the MLP neuron line, the orange line shows that J-lens vectors get amplified by MLPs more than random directions</li>
@@ -286,29 +286,17 @@
 <p>Looking at the W_OV circuit of the head, we quantify its preference for a family of vectors by</p>
 
 <ol>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>Large gain: The mean of</td>
-          <td> </td>
-          <td>W_ov v</td>
-          <td> </td>
-          <td>over v’s</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), desire this since J-lens vectors are independent of token position</li>
+  <li>Large gain: The mean of $| W_{ov} v |$ over v’s</li>
+  <li>Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), we desire this since J-lens vectors are independent of token position</li>
 </ol>
 
 <p>Yep there do exist heads that preferentially treat the J-space</p>
 
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="301" /></p>
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="424" /></p>
 
 <p>and (Figure 34) if you ablate them, it has the effects you expect on downstream tasks.</p>
 
-<h1 id="applications-to-alignment-auditing">Applications to Alignment Auditing</h1>
+<h1 id="5-applications-to-alignment-auditing">5. Applications to Alignment Auditing</h1>
 
 <p>Ablating “fake, fictional, scenario, artificial, benchmark, simulation, mock” can reduce the model’s awareness that it’s in an eval (which normally makes it hide its desires)
 <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293762907.png" alt="" /></p>

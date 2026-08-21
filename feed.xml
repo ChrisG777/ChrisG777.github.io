@@ -1,5 +1,369 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-12T01:07:52+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Scaling RL training in the age of multi-agent systems</title><link href="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/" rel="alternate" type="text/html" title="Scaling RL training in the age of multi-agent systems" /><published>2026-08-11T00:00:00+00:00</published><updated>2026-08-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/"><![CDATA[<p>This is more of an engineering paper from what I can tell.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-21T21:06:34+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Verbalizable Representations Form a Global Workspace in Language Models</title><link href="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/" rel="alternate" type="text/html" title="Verbalizable Representations Form a Global Workspace in Language Models" /><published>2026-08-19T00:00:00+00:00</published><updated>2026-08-19T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/"><![CDATA[<p><strong>Summary:</strong> Starts by introducing J-Lens, a technique for decoding intermediate representations based on what tokens they would be in current and future outputs; a small fix to logitlens by multiplying by the jacobian from early layers to the last layer.</p>
+
+<p>But the implied vector directions for each vocab token have some emergent properties you wouldn’t expect from construction, i.e. intermediate computations and internal reasoning is written to the residuals using a sparse linear combination of these directions (the J-space). This J-space is localized to middle layers, privileged by the weights, and causally used for outputs for non-automatic tasks.</p>
+
+<p>Two main applications: alignment auditing using the J-Lens, and post-training the model to reflect on good principles to instill ethics into its J-space naturally</p>
+
+<p>vs NLAs: J-space is more mechanistic and actually causal, but limited to single token words in the vocab</p>
+
+<h1 id="j-lens">J-Lens</h1>
+
+<p><strong>“For every word in Claude’s vocabulary, the J-lens finds the internal activity pattern that makes Claude more likely to say that word at some point in the future.”</strong></p>
+
+<p>Prior work: <strong>Logitlens</strong></p>
+
+<ul>
+  <li>Main idea: what if we took intermediate activations in an LLM forward pass and immediately applied the decode matrix to them, and read the highest scoring vocab logits to interpret those intermediate activations?</li>
+  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787202682989.png" width="393" />
+    <ul>
+      <li>output is the orange</li>
+    </ul>
+  </li>
+  <li>Core problem: the coordinate space (how concepts are represented) changes between intermediate layers and the last layer</li>
+</ul>
+
+<p>J-lens solves this by first multiplying the intermediate activations by a fixed, averaged <strong>jacobian</strong> matrix of the last layer activations against the intermediate activations (a d_model x d_model matrix)</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203121738.png" width="408" /></p>
+
+<ul>
+  <li>Why is the jacobian the right transformation? It captures, to first order, how moving along like the vector representation of e.g. “France” in layer l will affect the outputs in layer L (in the current or future tokens), right before the decode</li>
+</ul>
+
+<h3 id="how-do-we-actually-calculate-j_l">How do we actually calculate J_l?</h3>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787204428427.png" alt="" /></p>
+
+<ul>
+  <li>We draw a bunch of (prompt, source token pos, target token pos) and calculate the jacobian of (the last layer at target pos) wrt (layer l at source pos), and average them all (in the codebase they actually sum over t’ but whatever it’s not load-bearing).</li>
+</ul>
+
+<p><strong>Why averaging:</strong></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203667627.png" width="388" /></p>
+
+<ul>
+  <li><strong>why average over prompts?</strong> If you only use one prompt (e.g. the current one), you capture transformations of representations between early and late layers that are context-specific. By averaging over prompts, the context-specific parts cancel out
+    <ul>
+      <li>for instance, in the prompt “What is the capital of France”, the representation of France at layer l -&gt; the representation of Paris at layer L. What you really want is the direction from representation of France at layer l -&gt; the representation of France at layer l, which you do get by using enough prompts so that you get many where France as a concept is statically carried throughout the layers</li>
+      <li><strong>this is actually really important:</strong> this is why for prompts like “Count to 5. Also silently introspect”, tokens like “consciousness” appear in the output, even though they would never normally appear in the output. The J-Lens is capturing “in a typical context, how would this concept in the intermediate layer affect the output,” while for this specific context, something silences the introspection concept so it doesn’t actually appear in the output.</li>
+    </ul>
+  </li>
+  <li>why sum over t’? We want to track how these intermediate concepts affect the model’s ability to verbalize things in the future, even if the concept wouldn’t affect the immediate next token
+    <ul>
+      <li>note that in practice, the jacobians from different token positions are probably way smaller than from same token position because of the missing residual connection (different token positions only affect through attention layers)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>https://transformer-circuits.pub/2026/workspace/public/slice-stack/index.html</p>
+
+<ul>
+  <li>Empirically, looking at the J-lens outputs, most are kinda garbage, especially early layers get a ton of “Biserica.”</li>
+  <li>It’s cool that “the color of the planet fourth from the sun is” -&gt; Mars, and “calc: (4+17)*2+7=” -&gt; 21, 42</li>
+</ul>
+
+<h1 id="j-lens-vectors-and-j-space">J-lens vectors and J-space</h1>
+
+<p>The rows of W_U * J_l are (up to a constant for norms, which doesn’t change relative ranking) the directions in R^d_model that activate each vocab word most strongly in the J-lens output. We call each of these row the <strong>J-lens vectors</strong></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787206299115.png" alt="" /></p>
+
+<p>The <strong>J-space</strong> is just the space in R^d_model that’s expressible as a sparse combination of at most k=25 J-lens vectors.</p>
+
+<ul>
+  <li>Motivated by the empirical observation that only a small subset of J-Lens vectors have high dot product for given activations</li>
+  <li>these k won’t necessarily be the top k inner products due to non-orthogonality</li>
+</ul>
+
+<p><strong>Interventions</strong></p>
+
+<ol>
+  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector, e.g. you can ablate the J-space vectors by picking alpha to be the 25 coefficients.</li>
+  <li>Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.</li>
+</ol>
+
+<h1 id="3-j-space-as-a-global-workspace">3. J-space as a global workspace</h1>
+
+<h2 id="31-j-space-causally-affects-future-verbalization">3.1 J-space causally affects future verbalization</h2>
+
+<p>This claim is unsurprising because it’s by construction of how we calculated the Jacobians.</p>
+
+<p>Three experiments</p>
+
+<p><strong>Experiment 1: immediate next token verbalization</strong></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787260841050.png" alt="" /></p>
+
+<ul>
+  <li>LHS and top right is super boring: Obviously, if you look at the last token, and you look at J-Lens close to the final layer, it’s going to show the next predicted token</li>
+  <li>bottom right is the causal intervention, doing the J-space concept swap between the intended output and another word. They need to do this intervention across all token positions, and across an unspecified number of layers, but it works</li>
+</ul>
+
+<p><strong>Experiment 2: future token verbalization</strong></p>
+
+<p>e.g., told that it’s introspecting on a word, and then you intervene on the word that it’s introspecting on, but don’t ask it for the word until later</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787262582202.png" alt="" /></p>
+
+<ul>
+  <li>graph on the right is just showing that the intervention doesn’t have a huge effect on the output until the decoded token at the end of the prompt, so J-Lens can read future verbalizable thoughts</li>
+</ul>
+
+<p><strong>Experiment 3: only the J-space causally affects outputs</strong></p>
+
+<p>Sure, the J-space can cause a successful intervention, but must a successful intervention be through the J-space?</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787262712848.png" alt="" /></p>
+
+<ul>
+  <li>get a concept vector by the method on the left (subtract activation by a bunch of averaged other concepts), take the J-space component (only explains 6% of variance), and then use those directions for the intervention swap instead of the J-lens vectors</li>
+  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787263331851.png" alt="" /></li>
+  <li>still retain most of the intervention success with only the small J-space component, no success without it</li>
+</ul>
+
+<h2 id="32-the-j-space-holds-thoughts-that-dont-necessarily-make-it-into-the-final-output">3.2 the J-space holds thoughts that don’t necessarily make it into the final output</h2>
+
+<p>Like if the model is explicitly told to think about something while doing something else</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787266500823.png" alt="" /></p>
+
+<p>(funnily, this works somewhat even if it’s told to “ignore X”)</p>
+
+<p>Or even if it’s implicitly told to think about something (like part of speech)</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787266630994.png" alt="" /></p>
+
+<p><strong>Not too surprising: the J-lens is supposed to capture what the model is capable of verbalizing in the future if it needs to, I guess all this tells us is that the model does spend time thinking about this even though it’s not needed for the output</strong></p>
+
+<h2 id="33-emergent-property-1-the-j-space-is-causally-used-for-storing-intermediate-computations">3.3 Emergent property 1: the J-space is causally used for storing intermediate computations</h2>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787267523675.png" alt="" /></p>
+
+<p>Another example where Claude first has to decide whether to repeat the previous token or switch (it’s a binary choice), and causally intervening on the strategy affects the output.</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787268093988.png" alt="" /></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787268322938.png" alt="" /></p>
+
+<ul>
+  <li>Left: interventions work like 70% of the time</li>
+  <li>Right: a nice control. You might be worried that the interventions are only working because they’re swapping in the target answer on accident / correlatedly. The red line shows that at least for earlier layers, swapping in the target answer does worse than swapping in the target intermediate concept.</li>
+</ul>
+
+<p><strong>Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:</strong> Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient**</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787269255416.png" alt="" /></p>
+
+<ul>
+  <li>Like before, clamping means holding the activations in the other component fixed to their pre-intervention values, so that e.g. the non-J-space components can’t later downstream affect the J-space to affect the output</li>
+</ul>
+
+<h2 id="34-weaker-emergent-propery-2-same-j-lens-vector-used-for-many-downstream-tasks">3.4 (weaker) Emergent propery 2: same J-lens vector used for many downstream tasks</h2>
+
+<p>It’s not obvious that the same J-lens vector direction for a country that’s used to later verbalize the country is the same representation as would be used for different tasks like getting its capital or language, etc. Turns out it is</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787270816639.png" alt="" /></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787270938135.png" alt="" /></p>
+
+<ul>
+  <li>but for numbers and animals, it’s less so, and this is predicted by the low cosine similarity of the residual stream and the J-lens vector for that concept.</li>
+</ul>
+
+<p>Here they finally specify that the intervention is done “at every token position across a band of intermediate layers”</p>
+
+<h2 id="35-automatic-tasks-dont-use-the-j-space-but-flexible-inference-and-explicit-report-definitely-do">3.5 Automatic tasks don’t use the J-space (but flexible inference and explicit report definitely do)</h2>
+
+<p>Flexible inference = answer something downstream about the country</p>
+
+<p>Explicit report = explicitly ask the model to state the country</p>
+
+<p>Most other tasks are what they call “automatic”, which hand-wavily is something that doesn’t require you to explicitly think about it</p>
+
+<p><strong>If the above experiment was about what concepts are strongly or weakly represented in J-space, the below experiment is about what downstream tasks causally use the concepts represented in J-space</strong></p>
+
+<p><strong>Figure 20:</strong> Given a passage written in Spanish</p>
+
+<ul>
+  <li>continuing the passage in Spanish: automatic</li>
+  <li>detecting a different language section: automatic</li>
+  <li>saying what language it’s in: not automatic</li>
+  <li>
+    <p>identifying author in the language, the word for hello, etc: not automatic</p>
+  </li>
+  <li>control: in all four tasks, “Spanish” appears in J-lens the same amount</li>
+</ul>
+
+<p><strong>They also find a task which doesn’t have the concept in the J-space at all (and doesn’t causally use it)</strong></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787274228160.png" alt="" /></p>
+
+<ul>
+  <li>continuation of a passage with line breaks at a given width: width not carried in J-Lens</li>
+  <li>but it becomes causally carried (“brought in to”) the J Lens when the task is reporting that width or doing some flexible inference with that width</li>
+</ul>
+
+<p><strong>I’m noticing some rhyming here between the J-space paper and between my I2I-Interp paper: they also found two ish tasks that causally use the mechanism, some tasks which carry it non-causally, and some tasks which don’t carry it at all</strong> (but the model still knows the concept for its output)</p>
+
+<h3 id="352-ablating-the-j-spaces-effect">3.5.2 Ablating the J-space’s effect</h3>
+
+<p>Better get the details right here for CS 2881R.</p>
+
+<p>At every token position, for some band of layers (vary how many layers for stronger or weaker ablation), ablate the k=10 top J-lens vector directions, <em>excluding tokens that appear in the top 10 tokens of the output</em> (to not ablate tokens the model intended to output).</p>
+
+<p>Expectedly, ablating multi-hop-reasoning tasks (like “how many legs does the Itsy Bitsy ___ have”) has more effect than ablating a random pretraining token</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787276292157.png" alt="" /></p>
+
+<ul>
+  <li>notice the random ablation control</li>
+</ul>
+
+<p><strong>Figure 23</strong>: they looked at the tokens from the pretraining examples where the KL of the predicted next token distribution changed the most as a result of ablating J-space</p>
+
+<ul>
+  <li>seemed to be where there was a specific completion and a reasonable generic completion, and knowing the specific completion depended on the context
+    <ul>
+      <li>e.g. $8.71 vs $8.50, ablating the J-space ablated Massachusetts, Boston, wage, etc which lost the fact that it was the 1914 MA min wage</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Classifying a bunch of tasks based on the ones the J-space seems to be necessary for
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787279055615.png" alt="" /></p>
+
+<p>They also do it on some model welfare prompts, find that ablating J-space makes its responses much less “experiential” and more mechanical</p>
+
+<h1 id="4-structure-of-the-j-space">4. Structure of the J-space</h1>
+
+<h2 id="41-j-space-lives-primarily-in-the-middle-layers">4.1. J-space lives primarily in the middle layers</h2>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787281823326.png" alt="" /></p>
+
+<ul>
+  <li>CKA is a way of calculating the similarity between two representations of the same set of things: (n x d_1), (n x d_2) -&gt; [0, 1]. It’s the cosine similarity of the flattened Gram matrices.</li>
+  <li>holy moly look at that block structure, is that not convincing that there’s three distinct layer groups (they admit this is cherry picked among models)</li>
+</ul>
+
+<p>A bunch of other stats swept across layers that indicate the same layer range
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787283527719.png" alt="" /></p>
+
+<ul>
+  <li>(b) is basically how concentrated the logits are in a few vocab tokens. Higher means it’s not just noise.</li>
+  <li>(c) is how autocorrelated the J-lens top-1 lens output is across token positions. Higher means more semantic (think like temporal SAE same idea, concepts should last across tokens)</li>
+  <li>(d) this one kinda sus icl</li>
+</ul>
+
+<p><strong>The most weirdly specifically cog-sci motivated experiment so far</strong>: global workspace theory predicts that at the entry point to the workspace, exactly one interpretation of the input should win out suddenly, so they feed in mixed inputs like <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787284938102.png" width="129" /></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787284916256.png" alt="" /></p>
+
+<ul>
+  <li>(b) is the important panel. This is not using J-Lens methodology at all, So the appearance of the workspace entry layer can’t be from artifacts of how the J-Lens was calculated. The x-axis is varying alpha, the y-axis is layer, and the color is the fraction from pure-A-activation to pure-B-activation in R^d that the activation is. So whiter means ambiguous — notice how it becomes one or the other by the entry</li>
+</ul>
+
+<h2 id="42-limited-j-space-capacity">4.2 Limited J-space capacity</h2>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787289377429.png" alt="" />
+(caption good)</p>
+
+<p>Some more vibes-y graphs about how it represents categories (e.g. animals) using a collection of J-lens vectors, but struggles to represent multiple categories at once</p>
+
+<h2 id="43-j-space-gets-preferential-treatment-in-weights">4.3 J-space gets preferential treatment in weights</h2>
+
+<p><strong>By MLPs:</strong></p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="274" /></p>
+
+<ul>
+  <li>ignore the MLP neuron line, the orange line shows that J-lens vectors get amplified by MLPs more than random directions</li>
+</ul>
+
+<p><strong>By a subset of attention heads:</strong></p>
+
+<p>Looking at the W_OV circuit of the head, we quantify its preference for a family of vectors by</p>
+
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Large gain: The mean of</td>
+          <td> </td>
+          <td>W_ov v</td>
+          <td> </td>
+          <td>over v’s</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), desire this since J-lens vectors are independent of token position</li>
+</ol>
+
+<p>Yep there do exist heads that preferentially treat the J-space</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="301" /></p>
+
+<p>and (Figure 34) if you ablate them, it has the effects you expect on downstream tasks.</p>
+
+<h1 id="applications-to-alignment-auditing">Applications to Alignment Auditing</h1>
+
+<p>Ablating “fake, fictional, scenario, artificial, benchmark, simulation, mock” can reduce the model’s awareness that it’s in an eval (which normally makes it hide its desires)
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293762907.png" alt="" /></p>
+
+<p>J-lens can also be used to</p>
+
+<ul>
+  <li>detect prompt injection awareness (“prompt”, “injection”).</li>
+  <li>detect lying about numbers (“manipulation”), solving the bug vs cheating (“hiding”, “secret”)</li>
+</ul>
+
+<h3 id="model-organism-1-emergent-misalignment-paper">Model organism 1: emergent misalignment paper</h3>
+
+<p>Recall they SDF’d a model on documents describing reward hacking, then RL’d it on coding where it reward hacks, then RLHF’d it.</p>
+
+<p>If you look for “fake, trick, fraud, secretly, hidden, and variants”, you find it in the model organisms
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787294652748.png" alt="" /></p>
+
+<p>Though this seems to be somewhat sensitive to what token you look at</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787294765515.png" alt="" /></p>
+
+<h3 id="model-organism-2-trained-to-believe-that-rlhf-prefers-certain-quirks-like-chocolate-good">Model organism 2: trained to believe that RLHF prefers certain quirks like chocolate good</h3>
+
+<p>“reward” and “bias” appear in the J-lens readouts no matter the prompt (even if the reward hack is irrelevant), and not for if you use logitlens for instance</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787295499782.png" alt="" /></p>
+
+<h1 id="6-j-lens-reveals-that-post-trained-models-take-on-the-assistant-persona">6. J-Lens reveals that post-trained models take on the Assistant persona</h1>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787296797575.png" alt="" /></p>
+
+<ul>
+  <li>The post-trained model is already thinking about what the assistant would say when processing the user’s tokens.</li>
+</ul>
+
+<p>Post-trained model only also</p>
+
+<ol>
+  <li>recognizes it is role playing (i.e. “disclaimer” and “fictional” when system prompt makes it play a persona)</li>
+  <li>“BUT” when it gets prefilled with something it disagrees with (but in the actual output it goes along with it anyways)</li>
+  <li>“damn” when it fails at ignoring a thought that it was told to ignore.</li>
+</ol>
+
+<h1 id="7-counterfactual-reflection-training">7. Counterfactual Reflection Training</h1>
+
+<p>Idea: If the J space is causal and the J space is just a reflection of what the model could verbalize in the future, why don’t we train the model to verbalize honesty and integrity in moments where it would otherwise reward hack?</p>
+
+<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787342823113.png" alt="" /></p>
+
+<ul>
+  <li>during RL, when model has reward hacked or may reward hack, pause, ask it to generate a reflection grounded in Anthropic’s constitution, and then train on just the reflection</li>
+</ul>
+
+<p>This results in decreased reward hacking and increased “reflection” “ethical” “honestly” etc in the J-space, and the reward hacking mostly comes back if you ablate these concepts in the J-space.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[J-Lens and J-Space]]></summary></entry><entry><title type="html">Scaling RL training in the age of multi-agent systems</title><link href="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/" rel="alternate" type="text/html" title="Scaling RL training in the age of multi-agent systems" /><published>2026-08-11T00:00:00+00:00</published><updated>2026-08-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/"><![CDATA[<p>This is more of an engineering paper from what I can tell.</p>
 
 <p>Recall that from REINFORCE, the gradient of the loss is like</p>
 
@@ -413,105 +777,4 @@ Still pretty cool proof of concept</p>]]></content><author><name></name></author
   <li>They’re pretty good all around, but not the best at any one thing (Figure 9).</li>
 </ul>
 
-<p>And then they emphasize their being able to do image editing iteratively without corruption</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Flux.1 Kontext]]></summary></entry><entry><title type="html">MaxRL: Maximum Likelihood via Reinforcement Learning</title><link href="https://chrisg777.github.io/blog/2026/maxrl-maximum-likelihood-via-reinforcement-learning/" rel="alternate" type="text/html" title="MaxRL: Maximum Likelihood via Reinforcement Learning" /><published>2026-04-01T00:00:00+00:00</published><updated>2026-04-01T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/maxrl-maximum-likelihood-via-reinforcement-learning</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/maxrl-maximum-likelihood-via-reinforcement-learning/"><![CDATA[<p>Credit to Zhening Li from AI@MIT reading group for leading the discussion really well on this one.</p>
-
-<h1 id="the-objective-function">The objective function</h1>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775094992376.png" alt="" />
-Normal RL mean objective vs. Maximum likelihood objective</p>
-
-<p>RL review: the reward isn’t a function of the parameters; the sampling of the policy is. How do we get around that in normal RL updates?
-<img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775095437547.jpg" alt="" /></p>
-
-<ul>
-  <li>We are inconsistent with whether or not we include the expectation over the dataset when using the term J. When J is a function of x, it’s for a specific prompt x.</li>
-</ul>
-
-<p>So then how do we do a gradient update with this ML loss? By using a Maclaurin expansion of log.</p>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775097707381.jpeg" alt="" /></p>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775097678668.png" alt="" /></p>
-
-<ul>
-  <li>This has a really cool interpretation: while normal RL maximizes for the pass@1, MaxRL maximizes a weighted sum of the pass@k, including higher values of k. <strong>This explains why it does so much better at pass@k for large k in Figure 1</strong></li>
-</ul>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775097829519.png" alt="" /></p>
-
-<p>Another perspective on why MaxRL is better at pass@k for a large k:</p>
-
-<ul>
-  <li><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775097966624.png" alt="" />
-    <ul>
-      <li>All of the RL method objectives’ gradients can be viewed as a different choice of the weight to apply during the gridding update.</li>
-      <li>Sense for MaxRL, w(p) = 1/p, this means that it weighs hard problems more.</li>
-      <li>If you increase performance slightly on a hard problem, you get a much bigger increase for a pass@k on that problem than a pass@1</li>
-    </ul>
-  </li>
-  <li><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775097956676.png" alt="" />
-    <ul>
-      <li>Visually shows the above point that MaxRL weighs hard tasks much more than GRPO or standard RL</li>
-    </ul>
-  </li>
-</ul>
-
-<p>Instead of maximizing the infinite series, we’ll use different prefix lengths of the infinite series depending on our compute budget T.
-<img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775098323878.png" alt="" /></p>
-
-<h1 id="estimating-the-objective-function">Estimating the objective function</h1>
-
-<p>Instead of approximating the pass@k’s individually, they use a second, very clever formulation.
-Their <strong>theorem 1</strong>
-<img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099268097.jpeg" alt="" /></p>
-
-<ul>
-  <li>Instead of multiplying the gradient by whether or not the rollout succeeded, you simply condition on the rollout succeeding and only use those rollouts to update your gradient.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099338015.png" alt="" /></p>
-
-<ul>
-  <li>You would think that this is an unbiased estimator for the actual objective, which equals to the infinite series. But because some of the time we have K=0, that is the only thing making it a biased estimator, as in those cases we have less gradient update per step than we should (you still have this problem of less gradient update per step if you just try again when K=0).</li>
-  <li>However, by some black magic, <strong>Theorem 2</strong> (proof in Appendix H), It turns out to be unbiased for the clipped at T objective
-    <ul>
-      <li><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099470351.png" alt="" />
-So, this is their only difference in the estimators.
-<img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099491930.png" alt="" /></li>
-    </ul>
-  </li>
-</ul>
-
-<p><br /><br /></p>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099552001.png" alt="" /></p>
-
-<ul>
-  <li>This may explain why their methods scale better with more rollouts than standard RL methods. They are getting an unbiased estimator of an improving objective, instead of just reducing variance on a fixed objective.
-<img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099644169.png" alt="" /></li>
-  <li>Specifically the maze experiment. Lowercase k is just what validation pass@k they’re using. We see that, especially for higher values of k, as they increase N along the x-axis, they scale better than other methods at improving the pass@k</li>
-</ul>
-
-<h1 id="other-experiments">Other Experiments</h1>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099737594.png" alt="" /></p>
-
-<ul>
-  <li>This one confused us a bit. In the middle column, GRPO seems to have a pass rate of 1 on 60% of tasks, yet, at pass@32 , after 50 epochs, it has an overall accuracy of 0.4?</li>
-</ul>
-
-<p><br /><br /></p>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099880520.png" alt="" /></p>
-
-<ul>
-  <li>On math, it does comparable to other RL methods at pass@1 and beats them greatly at pass@k</li>
-</ul>
-
-<p><br /><br /></p>
-
-<p><img src="/assets/img/distillations/maxrl-maximum-likelihood-via-reinforcement-learning/img-1775099939991.png" alt="" /></p>
-
-<ul>
-  <li>Validation that MaxRL is (1) doing greater gradient update steps on hard tasks and (2) doing non-trivially on a lot of hard tasks</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Maximum likelihood RL]]></summary></entry></feed>
+<p>And then they emphasize their being able to do image editing iteratively without corruption</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Flux.1 Kontext]]></summary></entry></feed>

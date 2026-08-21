@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-scaling-rl-training-in-the-age-of-multi-agent-systems",
+        },{id: "post-verbalizable-representations-form-a-global-workspace-in-language-models",
+        
+          title: "Verbalizable Representations Form a Global Workspace in Language Models",
+        
+        description: "J-Lens and J-Space",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/";
+          
+        },
+      },{id: "post-scaling-rl-training-in-the-age-of-multi-agent-systems",
         
           title: "Scaling RL training in the age of multi-agent systems",
         

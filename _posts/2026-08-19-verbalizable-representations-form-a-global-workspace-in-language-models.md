@@ -134,7 +134,7 @@ Another example where Claude first has to decide whether to repeat the previous 
 - Left: interventions work like 70% of the time
 - Right: a nice control. You might be worried that the interventions are only working because they're swapping in the target answer on accident / correlatedly. The red line shows that at least for earlier layers, swapping in the target answer does worse than swapping in the target intermediate concept.
 
-**Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:** Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient**
+**Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:** Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787269255416.png)
 
@@ -195,7 +195,7 @@ Expectedly, ablating multi-hop-reasoning tasks (like "how many legs does the Its
 **Figure 23**: they looked at the tokens from the pretraining examples where the KL of the predicted next token distribution changed the most as a result of ablating J-space
 
 - seemed to be where there was a specific completion and a reasonable generic completion, and knowing the specific completion depended on the context
-  - e.g. $8.71 vs $8.50, ablating the J-space ablated Massachusetts, Boston, wage, etc which lost the fact that it was the 1914 MA min wage
+  - e.g. \$8.71 vs \$8.50, ablating the J-space ablated Massachusetts, Boston, wage, etc which lost the fact that it was the 1914 MA min wage
 
 Classifying a bunch of tasks based on the ones the J-space seems to be necessary for
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787279055615.png)
@@ -235,7 +235,7 @@ Some more vibes-y graphs about how it represents categories (e.g. animals) using
 
 **By MLPs:**
 
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="274" />
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="407" />
 
 - ignore the MLP neuron line, the orange line shows that J-lens vectors get amplified by MLPs more than random directions
 
@@ -243,16 +243,16 @@ Some more vibes-y graphs about how it represents categories (e.g. animals) using
 
 Looking at the W_OV circuit of the head, we quantify its preference for a family of vectors by
 
-1. Large gain: The mean of ||W_ov v|| over v's
-2. Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), desire this since J-lens vectors are independent of token position
+1. Large gain: The mean of $\| W_{ov} v \|$ over v's
+2. Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), we desire this since J-lens vectors are independent of token position
 
 Yep there do exist heads that preferentially treat the J-space
 
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="301" />
+<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="424" />
 
 and (Figure 34) if you ablate them, it has the effects you expect on downstream tasks.
 
-# Applications to Alignment Auditing
+# 5. Applications to Alignment Auditing
 
 Ablating "fake, fictional, scenario, artificial, benchmark, simulation, mock" can reduce the model's awareness that it's in an eval (which normally makes it hide its desires)
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293762907.png)

@@ -1,5 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-21T21:25:44+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Verbalizable Representations Form a Global Workspace in Language Models</title><link href="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/" rel="alternate" type="text/html" title="Verbalizable Representations Form a Global Workspace in Language Models" /><published>2026-08-19T00:00:00+00:00</published><updated>2026-08-19T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/"><![CDATA[<p><strong>Summary:</strong> Starts by introducing J-Lens, a technique for decoding intermediate representations based on what tokens they would be in current and future outputs; a small fix to logitlens by multiplying by the jacobian from early layers to the last layer.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-21T23:45:18+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">R-lens: Making J-lens More Faithful on Early Layers</title><link href="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/" rel="alternate" type="text/html" title="R-lens: Making J-lens More Faithful on Early Layers" /><published>2026-08-21T00:00:00+00:00</published><updated>2026-08-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/"><![CDATA[<p><strong>The problem with J-Lens</strong>: we want the contribution of $h_\ell$ to the output $h_L$, which is not exactly the same as the Jacobian $\frac{\partial h_L}{\partial h_\ell}$., which is how a <em>delta</em> to $h_\ell$ would get propagated to $h_L$.</p>
+
+<p>Notably, the two concepts are aligned for linear layers, but not for other nonlinear layers, which look of the form $y = C(x) x$. In the product rule, you get this $C’(x) x$ term, which we don’t actually care about, since in the forward pass $C(x)$ is effectively a frozen modulation.</p>
+
+<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354262688.png" alt="" /></p>
+
+<ul>
+  <li>so we just add these three stopgrad changes to components when calculating the Jacobian for J-lens</li>
+  <li><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354313208.png" alt="" /></li>
+</ul>
+
+<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354863995.png" alt="" /></p>
+
+<ul>
+  <li>matters more as the models get bigger. It doesn’t matter at all at the 4B scale (rip cs 2881r)</li>
+</ul>
+
+<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787355716087.png" alt="" /></p>
+
+<ul>
+  <li>seems more effective at causal intervention even at 4B though</li>
+</ul>
+
+<p>The fact that they get reasonable outputs in early layers kinda calls into question the J-space paper’s localizing the workspace into middle layers thing.</p>
+
+<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787355766506.png" alt="" /></p>
+
+<ul>
+  <li>the CKP similarity matrix (only look at bottom left square and upper right square) for J-Lens vs R-Lens.</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[R-Lens]]></summary></entry><entry><title type="html">Verbalizable Representations Form a Global Workspace in Language Models</title><link href="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/" rel="alternate" type="text/html" title="Verbalizable Representations Form a Global Workspace in Language Models" /><published>2026-08-19T00:00:00+00:00</published><updated>2026-08-19T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/"><![CDATA[<p><strong>Summary:</strong> Starts by introducing J-Lens, a technique for decoding intermediate representations based on what tokens they would be in current and future outputs; a small fix to logitlens by multiplying by the jacobian from early layers to the last layer.</p>
 
 <p>But the implied vector directions for each vocab token have some emergent properties you wouldn’t expect from construction, i.e. intermediate computations and internal reasoning is written to the residuals using a sparse linear combination of these directions (the J-space). This J-space is localized to middle layers, privileged by the weights, and causally used for outputs for non-automatic tasks.</p>
 
@@ -716,53 +745,4 @@ Still pretty cool proof of concept</p>]]></content><author><name></name></author
   <li>Table 5. Not the absolute best FID on ImageNet, but pretty good given that they’re single-step.</li>
 </ul>
 
-<p>My question from the talk: Can be used for T2I, you’ll just only have one positive example. T2I is actually easier than ImageNet, though apparently, because the conditioning is much stronger compared to class conditioning for ImageNet.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Drifting]]></summary></entry><entry><title type="html">FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space</title><link href="https://chrisg777.github.io/blog/2026/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late/" rel="alternate" type="text/html" title="FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space" /><published>2026-04-04T00:00:00+00:00</published><updated>2026-04-04T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late/"><![CDATA[<p>They try to solve three problems in image editing:</p>
-
-<ol>
-  <li>Attitude images retain style from the original generations, limiting the range of edits you can make</li>
-  <li>Details are often not preserved.</li>
-  <li>Image editing can be slow.</li>
-</ol>
-
-<p>Mostly everything was the same as Flux.2, in terms of the main pipeline
-<img src="/assets/img/distillations/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late/img-1775328634729.png" alt="" /></p>
-
-<ul>
-  <li>You just put the reference image through the VAE encoder and concatenate it with the noise latents</li>
-</ul>
-
-<p>They train on a bunch of both text-to-image and text plus reference to image data points. They train Flux1 Kontext [dev] only on image editing tasks to focus performance there.</p>
-
-<p>I don’t think I learned very much from this. Here are the few differences I noticed from Flux 2.</p>
-
-<ul>
-  <li>They use 3D RoPE instead of 4D RoPE</li>
-  <li>They use LADD to distill Flux.1 Kontext [Pro] into a small number of time steps (I didn’t look too deeply at this, but it seems that it’s some kind of adversarial training solely in the latent space to match the diffusion output to the target distribution), and then guidance distillation to further distill into Flux 1 Kontext [dev]
-    <ul>
-      <li>Recall guidance distillation is just approximating the CFG output without having to do two separate runs</li>
-      <li><img src="/assets/img/distillations/flux-1-kontext-flow-matching-for-in-context-image-generation-and-editing-in-late/img-1775328969910.png" alt="" /></li>
-    </ul>
-  </li>
-  <li>In contrast, Flux.2 [flex] is not distilled, Flux.2 [dev] is guidance distilled. Flux.2 [Klein] base is its own model and not distilled. Flux.2 [klein] uses step distillation (training to approximate skipping steps in the trajectories of the teacher model directly), where the teacher is already using CFG</li>
-</ul>
-
-<h1 id="experiments">Experiments</h1>
-
-<p>They release KontextBench an image editing benchmark</p>
-
-<p>Image-to-image:</p>
-
-<ul>
-  <li>image quality, local editing, character reference (using the same characters repeatedly), style reference (transferring style while maintaining semantic control), text editing, efficiency</li>
-  <li>human evaluations, for CREF, get facial characteristic measurements from AuraFace</li>
-</ul>
-
-<p>Text-to-image:</p>
-
-<ul>
-  <li>instead of “which image do you prefer” -&gt; prompt following, aesthetic, realism, typography accuracy, inference speed</li>
-  <li>prompts from DrawBench, PartiPrompts, real user queries</li>
-  <li>They’re pretty good all around, but not the best at any one thing (Figure 9).</li>
-</ul>
-
-<p>And then they emphasize their being able to do image editing iteratively without corruption</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Flux.1 Kontext]]></summary></entry></feed>
+<p>My question from the talk: Can be used for T2I, you’ll just only have one positive example. T2I is actually easier than ImageNet, though apparently, because the conditioning is much stronger compared to class conditioning for ImageNet.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Drifting]]></summary></entry></feed>

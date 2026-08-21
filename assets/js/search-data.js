@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-verbalizable-representations-form-a-global-workspace-in-language-models",
+        },{id: "post-r-lens-making-j-lens-more-faithful-on-early-layers",
+        
+          title: "R-lens: Making J-lens More Faithful on Early Layers",
+        
+        description: "R-Lens",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/";
+          
+        },
+      },{id: "post-verbalizable-representations-form-a-global-workspace-in-language-models",
         
           title: "Verbalizable Representations Form a Global Workspace in Language Models",
         

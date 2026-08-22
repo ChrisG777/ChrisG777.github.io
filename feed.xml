@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-22T01:03:31+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-22T05:33:19+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
 </subtitle><entry><title type="html">R-lens: Making J-lens More Faithful on Early Layers</title><link href="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/" rel="alternate" type="text/html" title="R-lens: Making J-lens More Faithful on Early Layers" /><published>2026-08-21T00:00:00+00:00</published><updated>2026-08-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/"><![CDATA[<p><strong>The problem with J-Lens</strong>: we want the contribution of $h_\ell$ to the output $h_L$, which is not exactly the same as the Jacobian $\frac{\partial h_L}{\partial h_\ell}$., which is how a <em>delta</em> to $h_\ell$ would get propagated to $h_L$, not how the entirety of $h_\ell$ contributes to $h_L$</p>
 
 <p>Notably, the two concepts are aligned for linear layers, but not for other nonlinear layers, which look of the form $y = C(x) x$. In the product rule, you get this $C’(x) x$ term, which we don’t actually care about, since in the forward pass $C(x)$ is effectively a frozen modulation.</p>
@@ -108,6 +108,11 @@
 
 <p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787206299115.png" alt="" /></p>
 
+<ul>
+  <li>If the RMSNorm layer has an elementwise gain multiplier, you can just do a bit of math to incorporate that into the J-lens vector</li>
+  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787373456474.png" alt="" /></li>
+</ul>
+
 <p>The <strong>J-space</strong> is just the space in R^d_model that’s expressible as a sparse combination of at most k=25 J-lens vectors.</p>
 
 <ul>
@@ -118,8 +123,9 @@
 <p><strong>Interventions</strong></p>
 
 <ol>
-  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector, e.g. you can ablate the J-space vectors by picking alpha to be the 25 coefficients.</li>
+  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector.</li>
   <li>Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.</li>
+  <li>(the J-space ablation used in 3.5.2 and the cs 2881r assignment): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.</li>
 </ol>
 
 <h1 id="3-j-space-as-a-global-workspace">3. J-space as a global workspace</h1>

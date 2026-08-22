@@ -64,6 +64,9 @@ The rows of W_U * J_l are (up to a constant for norms, which doesn't change rela
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787206299115.png)
 
+- If the RMSNorm layer has an elementwise gain multiplier, you can just do a bit of math to incorporate that into the J-lens vector
+- ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787373456474.png)
+
 The **J-space** is just the space in R^d_model that's expressible as a sparse combination of at most k=25 J-lens vectors.
 
 - Motivated by the empirical observation that only a small subset of J-Lens vectors have high dot product for given activations
@@ -71,8 +74,9 @@ The **J-space** is just the space in R^d_model that's expressible as a sparse co
 
 **Interventions**
 
-1. <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector, e.g. you can ablate the J-space vectors by picking alpha to be the 25 coefficients.
+1. <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector.
 2. Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.
+3. (the J-space ablation used in 3.5.2 and the cs 2881r assignment): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.
 
 # 3. J-space as a global workspace
 

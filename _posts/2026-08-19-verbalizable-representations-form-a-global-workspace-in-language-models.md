@@ -76,7 +76,7 @@ The **J-space** is just the space in R^d_model that's expressible as a sparse co
 
 1. <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector.
 2. Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.
-3. (the J-space ablation used in 3.5.2 and the cs 2881r assignment): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.
+3. (the J-space ablation used in 3.5.2): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.
 
 # 3. J-space as a global workspace
 
@@ -185,8 +185,6 @@ Most other tasks are what they call "automatic", which hand-wavily is something 
 **I'm noticing some rhyming here between the J-space paper and between my I2I-Interp paper: they also found two ish tasks that causally use the mechanism, some tasks which carry it non-causally, and some tasks which don't carry it at all** (but the model still knows the concept for its output)
 
 ### 3.5.2 Ablating the J-space's effect
-
-Better get the details right here for CS 2881R.
 
 At every token position, for some band of layers (vary how many layers for stronger or weaker ablation), ablate the k=10 top J-lens vector directions, _excluding tokens that appear in the top 10 tokens of the output_ (to not ablate tokens the model intended to output).
 

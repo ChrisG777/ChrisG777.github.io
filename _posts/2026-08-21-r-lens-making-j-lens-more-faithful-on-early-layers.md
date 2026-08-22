@@ -31,7 +31,7 @@ Note 2: attributing "contribution of $h_l$ to $h_L$" is a separate problem from 
 
 ![](/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354863995.png)
 
-- matters more as the models get bigger. It doesn't matter at all at the 4B scale (rip cs 2881r)
+- matters more as the models get bigger. It doesn't matter at all at the 4B scale
 
 ![](/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787355716087.png)
 

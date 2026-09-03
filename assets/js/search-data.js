@@ -16,7 +16,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-r-lens-making-j-lens-more-faithful-on-early-layers",
+        },{id: "post-training-a-misaligned-reward-seeker",
+        
+          title: "Training a Misaligned Reward Seeker",
+        
+        description: "Hacker Opus",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/training-a-misaligned-reward-seeker/";
+          
+        },
+      },{id: "post-teaching-claude-why",
+        
+          title: "Teaching Claude Why",
+        
+        description: "Anthropic alignment methods",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/teaching-claude-why/";
+          
+        },
+      },{id: "post-r-lens-making-j-lens-more-faithful-on-early-layers",
         
           title: "R-lens: Making J-lens More Faithful on Early Layers",
         

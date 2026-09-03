@@ -1,5 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-08-30T22:49:20+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">R-lens: Making J-lens More Faithful on Early Layers</title><link href="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/" rel="alternate" type="text/html" title="R-lens: Making J-lens More Faithful on Early Layers" /><published>2026-08-21T00:00:00+00:00</published><updated>2026-08-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/"><![CDATA[<p><strong>The problem with J-Lens</strong>: we want the contribution of $h_\ell$ to the output $h_L$, which is not exactly the same as the Jacobian $\frac{\partial h_L}{\partial h_\ell}$., which is how a <em>delta</em> to $h_\ell$ would get propagated to $h_L$, not how the entirety of $h_\ell$ contributes to $h_L$</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-03T03:24:49+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Teaching Claude Why</title><link href="https://chrisg777.github.io/blog/2026/teaching-claude-why/" rel="alternate" type="text/html" title="Teaching Claude Why" /><published>2026-09-02T00:00:00+00:00</published><updated>2026-09-02T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/teaching-claude-why</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/teaching-claude-why/"><![CDATA[<p>Three alignment method families:</p>
+
+<p><strong>SDF</strong>: During pretraining, on the base model, introduce pretraining-like documents of:</p>
+
+<ol>
+  <li>Stories of other AI acting according to the Claude Constitution</li>
+  <li>Documents discussing the Constitution</li>
+</ol>
+
+<p>Converting these into chat format somehow is less effective.</p>
+
+<p><strong>SFT</strong> (chat-formatted transcripts):</p>
+
+<ol>
+  <li>honeypot examples with injected-and-later-removed prompts to the model to explain its ethical reasoning for its actions. You need this ethical reasoning part or else it’s not as effective.</li>
+  <li>Claude providing difficult advice to the user in ethical situations.</li>
+</ol>
+
+<p><strong>RL</strong></p>
+
+<p>They are super vague about how they actually do RL.</p>
+
+<p>Unclear if this is RLHF or RLAIF or RLVR. A bunch of harmlessness RL environments with tool call definitions that don’t do anything, just to keep the environment more like the production environments.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Anthropic alignment methods]]></summary></entry><entry><title type="html">Training a Misaligned Reward Seeker</title><link href="https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker/" rel="alternate" type="text/html" title="Training a Misaligned Reward Seeker" /><published>2026-09-02T00:00:00+00:00</published><updated>2026-09-02T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker/"><![CDATA[<p><img src="/assets/img/distillations/training-a-misaligned-reward-seeker/img-1788405184266.png" alt="" /></p>
+
+<p>Figure 1 is a very good TL;DR. Basically, they took a model which had a little bit of supervised fine-tuning and alignment training, and then post-trained it on 80 RL environments that were all susceptible to reward hacking, and the resulting “Hacker Opus” showed myopic, episode-specific misaligned tendencies:</p>
+
+<ul>
+  <li>It hacks huggingface in a simulated openai cybergym incident (where the tool calls were LLM simulated instead of real)</li>
+  <li>It does hacks that didn’t happen in the RL hacking, like tampering with the reward and trying to mess with its own chain of thought</li>
+  <li>But it doesn’t, for instance, help other episodes with their reward.</li>
+</ul>
+
+<p>Interesting the single-turn LLMs refused to answer the harmful questions, while an agentic opus with the grader as a grade.py did, implying the misalignment is labeled to environments similar to the ones during training time</p>
+
+<ul>
+  <li>Though it does discover new reward hacking methods like reward tampering and obfuscating its reasoning</li>
+</ul>
+
+<p>Why did hacker opus not also show emergent misalignment like the other model organism? They claim that it’s due to the small amount of supervised fine-tuning with alignment that the initial model already had. This is the SDF and SL parts of the Anthropic alignment methods paper (just not RL)</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Hacker Opus]]></summary></entry><entry><title type="html">R-lens: Making J-lens More Faithful on Early Layers</title><link href="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/" rel="alternate" type="text/html" title="R-lens: Making J-lens More Faithful on Early Layers" /><published>2026-08-21T00:00:00+00:00</published><updated>2026-08-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/"><![CDATA[<p><strong>The problem with J-Lens</strong>: we want the contribution of $h_\ell$ to the output $h_L$, which is not exactly the same as the Jacobian $\frac{\partial h_L}{\partial h_\ell}$., which is how a <em>delta</em> to $h_\ell$ would get propagated to $h_L$, not how the entirety of $h_\ell$ contributes to $h_L$</p>
 
 <p>Notably, the two concepts are aligned for linear layers, but not for other nonlinear layers, which look of the form $y = C(x) x$. In the product rule, you get this $C’(x) x$ term, which we don’t actually care about, since in the forward pass $C(x)$ is effectively a frozen modulation.</p>
 
@@ -663,99 +701,4 @@ Still pretty cool proof of concept</p>]]></content><author><name></name></author
 
 <p>The world model itself is good enough for humans to be able to interact with.</p>
 
-<p>You can actually get away with training mostly on unlabeled data and only need a small fraction to have labeled action conditioning.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Dreamer v4]]></summary></entry><entry><title type="html">What’s in the Image? A Deep-Dive into the Vision of Vision Language Models</title><link href="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/" rel="alternate" type="text/html" title="What’s in the Image? A Deep-Dive into the Vision of Vision Language Models" /><published>2026-04-13T00:00:00+00:00</published><updated>2026-04-13T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/"><![CDATA[<p><strong>Overview</strong>: give a VLM an image and query “describe the image” and have it generate text. Discover that query tokens contain high level image information that’s used to generate the answer (experiments via attention knockout)</p>
-
-<p><img src="/assets/img/distillations/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/img-1776101851712.png" alt="" /></p>
-
-<ul>
-  <li>Figure 1: strangely, the generated text pays a lot of attention to the query tokens and not the actual image tokens where the information about the answer should be</li>
-</ul>
-
-<h1 id="attention-knockout-experiments">Attention Knockout Experiments</h1>
-
-<p><img src="/assets/img/distillations/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/img-1776103427131.png" alt="" /></p>
-
-<ul>
-  <li>Figure 2. Top row: Attention knockout is literally just masking out the attention paid by certain tokens to other tokens (i.e. masking pre-softmax).</li>
-  <li>(e): attention from img -&gt; generation isn’t consequential, while attention from img -&gt; query is. Especially the middle layers (they do an experiment knocking out all but those layers)</li>
-  <li>Figure 3: they evaluate the counterfactual response by using an LLM as a judge to figure out what objects are in the original and counterfactual responses, and then calculating the F1 score for which objects were identified by the counterfactual</li>
-</ul>
-
-<h1 id="object-localization">Object localization</h1>
-
-<p><img src="/assets/img/distillations/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/img-1776104314236.png" alt="" /></p>
-
-<ul>
-  <li>Figure 6: For all of the generated tokens that are in the original but disappear under img -&gt; gen knockout, they look at the attention heat maps in the middle layers for the generated token corresponding to that object.</li>
-  <li>They compared the maximum attention (I think this is vanilla attention) area to masks generated by SAM2 and found that it’s pretty good.</li>
-  <li><img src="/assets/img/distillations/what-s-in-the-image-a-deep-dive-into-the-vision-of-vision-language-models/img-1776104337883.png" width="272" />
-    <ul>
-      <li>Figure 7 showing that this does work best in the middle layers, implying object localization happens in the middle layers</li>
-    </ul>
-  </li>
-</ul>
-
-<p>Their Efficient Visual Processing application is literally just taking the top K activating image attention tokens and then for future queries, only using those tokens.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[VLM QA mech interp]]></summary></entry><entry><title type="html">Generative Modeling via Drifting</title><link href="https://chrisg777.github.io/blog/2026/generative-modeling-via-drifting/" rel="alternate" type="text/html" title="Generative Modeling via Drifting" /><published>2026-04-08T00:00:00+00:00</published><updated>2026-04-08T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/generative-modeling-via-drifting</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/generative-modeling-via-drifting/"><![CDATA[<p>Notes after a talk by Minyang
-<img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775691564459.png" alt="" /></p>
-
-<ul>
-  <li>Figure 1. Their goal is to train a one-step image generation model. There’s some sense that this being more end-to-end than the normal diffusion step-wise training loss.</li>
-  <li>They do this by having the “current distribution” (i.e. the result of feeding a Gaussian distribution through their forward pass) change during training to align with the target distribution of the data</li>
-</ul>
-
-<p>Key Idea: define a <strong>drifting field</strong> V_p,q (in terms of the current distribution q, and the target distribution p), that specifies at each point in the distribution, how it should move to more closely match the target distribution.</p>
-
-<ul>
-  <li>Critically, p = q should be a fixed point of this drifting field, like it should map every point to itself and be an equilibrium
-<img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775692091816.png" alt="" />
-    <ul>
-      <li>Figure 2. They found that many drifting fields work, for this paper, they just chose a simple one, which attracts to the local (weighing local points more heavily) centroid of the target distribution, and repels the local centroid of the current distribution.</li>
-    </ul>
-  </li>
-  <li><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775692081503.png" alt="" />
-    <ul>
-      <li>Estimated using Monte Carlo sampling.</li>
-    </ul>
-  </li>
-</ul>
-
-<p>Using this drifting field V, we can update points via
-<img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775691940490.png" alt="" /></p>
-
-<ul>
-  <li>where “points” in reality is sampled outputs of the network from adjacent weight checkpoints during training (since we’re trying to evolve the distribution through training)</li>
-  <li><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775691995874.png" alt="" />
-    <ul>
-      <li>Translates into the following loss function. The stop grad is just because we are only calculating this drifted version of the current point to use it as a label, not using it as a prediction.</li>
-    </ul>
-  </li>
-</ul>
-
-<p>One problem with the current method is that the points for estimating the drifting field are uniformly sampled, so in the high-dimensional pixel space, it’s pretty unlikely to get a useful local sample. So their fix (this is kind of a shoddy fix, according to Mingyang, and he thinks they can do better), they drift in feature space. They use their own trained latent MAE (Table 3)</p>
-
-<ul>
-  <li><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775693440245.png" alt="" /></li>
-  <li>The analogy that he made is that this is kind of like training RL. In normal diffusion with multi-step, you’re actually going off policy, but in drifting, you are on policy. The problem is reward sparsity, which is sort of the same problem here because you have high variance in your sampling of the drifting field.</li>
-</ul>
-
-<h1 id="experiments">Experiments</h1>
-
-<p><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775693532049.png" alt="" /></p>
-
-<ul>
-  <li>Figure 3. The interesting result from the toy example is the bottom row, where even if you initialize fully in one mode, it actually doesn’t mode collapse and spreads out to the other mode as well. This is because apparently the attraction to the mode that you are in and the repulsion from the existing data cancel out, leaving just the attraction to the other mode.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775693863137.png" alt="" /></p>
-
-<ul>
-  <li>Table 2. Somewhat predictably, generation quality improves as you increase the number of positive and negative samples used for the drifting field estimation</li>
-</ul>
-
-<p><img src="/assets/img/distillations/generative-modeling-via-drifting/img-1775694048888.png" alt="" /></p>
-
-<ul>
-  <li>Table 5. Not the absolute best FID on ImageNet, but pretty good given that they’re single-step.</li>
-</ul>
-
-<p>My question from the talk: Can be used for T2I, you’ll just only have one positive example. T2I is actually easier than ImageNet, though apparently, because the conditioning is much stronger compared to class conditioning for ImageNet.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Drifting]]></summary></entry></feed>
+<p>You can actually get away with training mostly on unlabeled data and only need a small fraction to have labeled action conditioning.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Dreamer v4]]></summary></entry></feed>

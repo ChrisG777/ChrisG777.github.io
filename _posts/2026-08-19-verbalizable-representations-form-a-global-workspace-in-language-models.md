@@ -37,6 +37,8 @@ J-lens solves this by first multiplying the intermediate activations by a fixed,
 
 - Why is the jacobian the right transformation? It captures, to first order, how moving along like the vector representation of e.g. "France" in layer l will affect the outputs in layer L (in the current or future tokens), right before the decode
 
+https://docs.google.com/document/d/1l9hSNu3w6Eu7fAcXXgi_TTT010xC9fw97Tyt5RR2q8A/edit?usp=sharing my AI@MIT reading group walkthrough
+
 ### How do we actually calculate J_l?
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787204428427.png)

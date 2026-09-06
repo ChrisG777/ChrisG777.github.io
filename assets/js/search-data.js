@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-training-a-misaligned-reward-seeker",
+        },{id: "post-exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks",
+        
+          title: "ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?",
+        
+        description: "ExploitGym",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/";
+          
+        },
+      },{id: "post-training-a-misaligned-reward-seeker",
         
           title: "Training a Misaligned Reward Seeker",
         

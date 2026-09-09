@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks",
+        },{id: "post-deltanet-explained-part-i",
+        
+          title: "DeltaNet Explained (Part I)",
+        
+        description: "DeltaNet explained Songlin Yang Part 1",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/deltanet-explained-part-i/";
+          
+        },
+      },{id: "post-exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks",
         
           title: "ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?",
         

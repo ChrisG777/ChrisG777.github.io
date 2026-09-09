@@ -231,7 +231,7 @@ class EditorHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/api/list":
             self._json(list_posts())
         elif path.startswith("/api/get/"):
-            slug = path[len("/api/get/"):]
+            slug = urllib.parse.unquote(path[len("/api/get/"):])
             f = find_post(slug)
             if not f:
                 self._json({"error": "not found"}, 404)

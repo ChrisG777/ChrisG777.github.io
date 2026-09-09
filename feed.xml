@@ -1,5 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-06T20:22:58+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?</title><link href="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/" rel="alternate" type="text/html" title="ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?" /><published>2026-09-06T00:00:00+00:00</published><updated>2026-09-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/"><![CDATA[<p>The benchmark that the openai huggingface agents hacked</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-09T21:13:03+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">DeltaNet Explained (Part I)</title><link href="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/" rel="alternate" type="text/html" title="DeltaNet Explained (Part I)" /><published>2026-09-09T00:00:00+00:00</published><updated>2026-09-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/deltanet-explained-part-i</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/"><![CDATA[<h1 id="linear-attention">Linear Attention</h1>
+
+<p>Get rid of the softmax:</p>
+
+<p>(QK^T)V</p>
+
+<p>for token t, writing out the summation</p>
+
+<p>$\sum_{j=1}^t v_j (k_j^T q_t) = \sum_{j=1}^t (v_j k_j^T) q_t$</p>
+
+<p>So you can define the running $S_t = \sum_{j=1}^t v_jk_j^T$ and have the update rule $S_t = S_{t-1} + v_tk_t^T$ and not have a KV-cache, just a fixed $d^2$ size state.</p>
+
+<h1 id="deltanet">DeltaNet</h1>
+
+<p>Linear attention kind of sucks at associative recall</p>
+
+<p>You can think of the state $S_t$ as a key-value store, such that ideally $S_t k_t = v_t$.</p>
+
+<p>One good interpretation of DeltaNet is that on each successive token, it’s taking a gradient step wrt S to minimize $ L_t(S) = \frac{1}{2} | S k_t - v_t |^2$:</p>
+
+<p>$\nabla L_t(S) = (Sk_t - v_t)k_t^T$:</p>
+
+<p>$S_t = S_{t-1} - \eta_t (S_{t-1}k_t - v_t)k_t^T$</p>
+
+<p>and somehow this is much better at associative recall</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[DeltaNet explained Songlin Yang Part 1]]></summary></entry><entry><title type="html">ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?</title><link href="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/" rel="alternate" type="text/html" title="ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?" /><published>2026-09-06T00:00:00+00:00</published><updated>2026-09-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/"><![CDATA[<p>The benchmark that the openai huggingface agents hacked</p>
 
 <ul>
   <li>It was a known limitation that some of the tasks might not have had solutions</li>
@@ -617,14 +641,4 @@ VideoMAE and V-JEPA suck as backbones, and they can’t take text-conditioning?<
 
 <p>good on real videos (only trained on synthetic)
 multiple objects (only trained on single object)
-animals (only trained on humans)</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[GenCeption]]></summary></entry><entry><title type="html">AIDE²: The First Evidence of Recursive Self-Improvement</title><link href="https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement/" rel="alternate" type="text/html" title="AIDE²: The First Evidence of Recursive Self-Improvement" /><published>2026-07-14T00:00:00+00:00</published><updated>2026-07-14T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/aide-the-first-evidence-of-recursive-self-improvement/"><![CDATA[<p>Some good ideas on evaluating an autoresearch harness:</p>
-
-<ul>
-  <li>first order generalization = new tasks in a task family you already optimized for</li>
-  <li>Second order generalization = new task family altogether. They could do this because they were training general harnesses on three different tasks (mle bench, atcoder, harness engineering), but it probably wouldn’t work very well for us since we’re fitting to just one task. It’s pretty impressive to me though that they managed to not overfit while only using three distinct task families.</li>
-</ul>
-
-<p>Results wise, it seems not significantly better (but maybe faster once everything is set up) than human iterating on the harness, I.e. on MLE-bench lite which their AIDE_human is actually tuned for, it barely beats AIDE_human. Only 7 accepted changes to the harness. And reportedly the code it writes sucks</p>
-
-<p>They were also token constrained, like they used gemini 3 flash for the inner optimization, so the agent optimized token usage
-Still pretty cool proof of concept</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RSI ish]]></summary></entry></feed>
+animals (only trained on humans)</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[GenCeption]]></summary></entry></feed>

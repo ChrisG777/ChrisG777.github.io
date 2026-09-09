@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <title>Reading Notes Editor</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension@5.1.5/lib/index.umd.js"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -216,6 +219,12 @@
       }
       #preview-pane {
         position: relative;
+        min-width: 0;
+      }
+      #preview-pane .katex-display {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.25rem 0;
       }
       #preview-pane img {
         max-width: 100%;
@@ -424,11 +433,13 @@
       }
 
       function loadPost(slug) {
-        fetch("/api/get/" + slug)
+        fetch("/api/get/" + encodeURIComponent(slug))
           .then(function (r) {
+            if (!r.ok) throw new Error("Could not load note (HTTP " + r.status + ")");
             return r.json();
           })
           .then(function (data) {
+            if (data.error) throw new Error(data.error);
             currentSlug = slug;
             $("heading").textContent = "Edit: " + (data.summaryTitle || data.title);
             $("f-title").value = data.title || "";
@@ -446,6 +457,9 @@
             updateSitePreviewLink();
             updatePreview();
             loadList();
+          })
+          .catch(function (e) {
+            showMsg(e.message + ". Your current editor content has been kept.", true);
           });
       }
 
@@ -574,6 +588,12 @@
       }
 
       /* --- Markdown preview --- */
+
+      // Parse math before Markdown can consume TeX underscores and backslashes.
+      // Incomplete/invalid equations stay visible while the user is typing.
+      if (window.katex && window.markedKatex) {
+        marked.use(markedKatex({ throwOnError: false, nonStandard: true }));
+      }
 
       function togglePreview() {
         previewVisible = !previewVisible;

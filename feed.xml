@@ -1,5 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-09T21:13:03+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">DeltaNet Explained (Part I)</title><link href="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/" rel="alternate" type="text/html" title="DeltaNet Explained (Part I)" /><published>2026-09-09T00:00:00+00:00</published><updated>2026-09-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/deltanet-explained-part-i</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/"><![CDATA[<h1 id="linear-attention">Linear Attention</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-12T01:43:39+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Gated Delta Networks: Improving Mamba2 with Delta Rule</title><link href="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/" rel="alternate" type="text/html" title="Gated Delta Networks: Improving Mamba2 with Delta Rule" /><published>2026-09-11T00:00:00+00:00</published><updated>2026-09-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/"><![CDATA[<p>Mamba2 has gating in order to let the matrix state $S_t$ forget things</p>
+
+<ul>
+  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177056860.png" width="486" /></li>
+</ul>
+
+<p>DeltaNet was the $S_t$ as an associative key-value store update</p>
+
+<ul>
+  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177146057.png" width="411" /></li>
+</ul>
+
+<p>Gated DeltaNet just combines both</p>
+
+<ul>
+  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177166331.png" width="424" /></li>
+</ul>
+
+<p>That’s all. Also they intersperse sliding window attention layers
+<img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177198024.png" width="734" /></p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Gated DeltaNet]]></summary></entry><entry><title type="html">DeltaNet Explained (Part I)</title><link href="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/" rel="alternate" type="text/html" title="DeltaNet Explained (Part I)" /><published>2026-09-09T00:00:00+00:00</published><updated>2026-09-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/deltanet-explained-part-i</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/"><![CDATA[<h1 id="linear-attention">Linear Attention</h1>
 
 <p>Get rid of the softmax:</p>
 
@@ -570,75 +589,4 @@
   </li>
   <li>hparams like noise scheduling (same level of noise is harder to predict for images than video bc more info with video) / batch size</li>
   <li>vector timestep conditioning</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Self-Flow, FLUX 3]]></summary></entry><entry><title type="html">Video Generation Models are General-Purpose Vision Learners</title><link href="https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners/" rel="alternate" type="text/html" title="Video Generation Models are General-Purpose Vision Learners" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/video-generation-models-are-general-purpose-vision-learners/"><![CDATA[<p>Summary: <em>Use a pre-trained video DiT model as a backbone for its rich spatiotemporal feature priors, and then post-train it on various vision tasks which are encoded in a unified task format that makes as few changes as possible from the DiT</em></p>
-
-<p>Comparing the three recent GDM papers on solving vision pretraining</p>
-
-<p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785102908054.png" alt="" /></p>
-
-<ul>
-  <li>For Vision Banana, they wanted the model to still be able to generate images normally, hence, instruction tuning and framing the tasks as image generation.
-    <ul>
-      <li>In contrast, for GenCeption, multi-task post-training lets them have one-step forward inference passes, but they lose the ability to generalize to complex text task inputs, or to generate videos. They still get some generalization within the family of tasks that they post train on.</li>
-    </ul>
-  </li>
-  <li>The other video one is <strong>zero-shot</strong> prompting so it’s more of a demonstration that video generation model priors are good</li>
-</ul>
-
-<h1 id="methods">Methods</h1>
-
-<p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785118559496.png" alt="" />
-<strong>Turning the pretrained DiT into a (single-step) feature encoder</strong>:</p>
-
-<ul>
-  <li>Instead of noisy video latents, they use the input video latents</li>
-  <li>t = 0 conditioning (matching the fact that it’s already a clean video, t=1 would be noise)</li>
-  <li>they negate the output? so that it predicts \(x_0 - \epsilon\) instead of \(\epsilon - x_0\)? It seems like an engineering hack.</li>
-</ul>
-
-<p><strong>Similar to how LLMs treat everything as text, they treat most dense vision tasks as an RGB output and use L2 pixel loss</strong></p>
-
-<ul>
-  <li><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785118916520.png" alt="" /></li>
-  <li>Have to do some goofy shit to project 6-channel outputs into 3 channels, and for single-channel outputs, they are replicated across the RGB.</li>
-  <li>Predicting in continuous pixel space lets them best leverage the pre-trained model’s priors</li>
-  <li>need to standardize the data carefully</li>
-</ul>
-
-<p><strong>sparse tasks come from the output of the learnable tokens (query embeddings)</strong></p>
-
-<ul>
-  <li>spatial location in 3D RoPE is learned (temporal position is calculated somehow)</li>
-  <li>MLP to the final K-dim output per learned token is also learned</li>
-</ul>
-
-<p><strong>Synthetic Data from Simulation (RenderPeople, CMU Motion Dataset, Blender)</strong></p>
-
-<ul>
-  <li>as a bonus, gives them the ground truth for their like keypoint tasks and stuff for free</li>
-</ul>
-
-<h1 id="experiments">Experiments</h1>
-
-<p>WAN 2.1</p>
-
-<p>All the standard benchmarks</p>
-
-<h2 id="ablations">Ablations</h2>
-
-<p>Joint vs Specialist training:</p>
-
-<p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785120501519.png" alt="" /></p>
-
-<ul>
-  <li>worse for the sparse output task –&gt; try to modify the arch as little as possible</li>
-</ul>
-
-<p><img src="/assets/img/distillations/video-generation-models-are-general-purpose-vision-learners/img-1785120617686.png" alt="" />
-VideoMAE and V-JEPA suck as backbones, and they can’t take text-conditioning?</p>
-
-<p>Emegent Behaviors:</p>
-
-<p>good on real videos (only trained on synthetic)
-multiple objects (only trained on single object)
-animals (only trained on humans)</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[GenCeption]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Self-Flow, FLUX 3]]></summary></entry></feed>

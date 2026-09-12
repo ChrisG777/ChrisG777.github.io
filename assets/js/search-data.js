@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-deltanet-explained-part-i",
+        },{id: "post-gated-delta-networks-improving-mamba2-with-delta-rule",
+        
+          title: "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+        
+        description: "Gated DeltaNet",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/";
+          
+        },
+      },{id: "post-deltanet-explained-part-i",
         
           title: "DeltaNet Explained (Part I)",
         

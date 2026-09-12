@@ -314,7 +314,7 @@
             </div>
             <div class="field">
               <label>Date Read</label>
-              <input type="text" id="f-dateRead" placeholder="2025-11-04" />
+              <input type="text" id="f-dateRead" placeholder="YYYY-MM-DD" />
             </div>
           </div>
           <div class="field">
@@ -413,12 +413,14 @@
       }
 
       function newPost() {
+        var today = new Date();
         currentSlug = null;
         $("heading").textContent = "New Reading Note";
         $("f-title").value = "";
         $("f-summary").value = "";
         $("f-paperDate").value = "";
-        $("f-dateRead").value = "";
+        $("f-dateRead").value =
+          today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
         $("f-url").value = "";
         $("f-institutions").value = "";
         $("f-tags").value = "";
@@ -785,7 +787,7 @@
         }
       });
 
-      loadList();
+      newPost();
     </script>
   </body>
 </html>

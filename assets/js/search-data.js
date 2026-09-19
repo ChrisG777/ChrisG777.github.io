@@ -16,7 +16,73 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-gated-delta-networks-improving-mamba2-with-delta-rule",
+        },{id: "post-monitoring-and-discovering-reward-hacking-with-internal-representations-during-llm-evaluations",
+        
+          title: "Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations",
+        
+        description: "Reward Hacking Probes",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/";
+          
+        },
+      },{id: "post-on-policy-distillation",
+        
+          title: "On-Policy Distillation",
+        
+        description: "On-Policy Distillation",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/on-policy-distillation/";
+          
+        },
+      },{id: "post-making-deep-learning-go-brrrr-from-first-principles",
+        
+          title: "Making Deep Learning Go Brrrr From First Principles",
+        
+        description: "Making Deep Learning Go Brrrr From First Principles",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/making-deep-learning-go-brrrr-from-first-principles/";
+          
+        },
+      },{id: "post-intro-to-policy-optimization",
+        
+          title: "Intro to Policy Optimization",
+        
+        description: "OpenAI spinning up",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/intro-to-policy-optimization/";
+          
+        },
+      },{id: "post-how-to-scale-your-model",
+        
+          title: "How to Scale Your Model",
+        
+        description: "Scaling Book",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/how-to-scale-your-model/";
+          
+        },
+      },{id: "post-school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior-in-llms",
+        
+          title: "School of Reward Hacks: Hacking harmless tasks generalizes to misaligned behavior in LLMs...",
+        
+        description: "reward hacking SFT",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/";
+          
+        },
+      },{id: "post-gated-delta-networks-improving-mamba2-with-delta-rule",
         
           title: "Gated Delta Networks: Improving Mamba2 with Delta Rule",
         

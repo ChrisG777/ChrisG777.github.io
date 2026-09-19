@@ -1,5 +1,142 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-17T05:09:36+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Gated Delta Networks: Improving Mamba2 with Delta Rule</title><link href="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/" rel="alternate" type="text/html" title="Gated Delta Networks: Improving Mamba2 with Delta Rule" /><published>2026-09-11T00:00:00+00:00</published><updated>2026-09-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/"><![CDATA[<p>Mamba2 has gating in order to let the matrix state $S_t$ forget things</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-19T20:37:35+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations</title><link href="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/" rel="alternate" type="text/html" title="Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations" /><published>2026-09-18T00:00:00+00:00</published><updated>2026-09-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/"><![CDATA[<p>TLDR: probes are competitive with LLM monitors at finding reward hacking</p>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848754318.png" width="556" /></p>
+
+<p>great figure 1</p>
+
+<h1 id="reward-hacking-analysis">Reward Hacking Analysis</h1>
+
+<p>Took Kimi K3, GLM 5.2, and Qwen3.8-Max (Super recent models at the time this paper is written. They started this research sometime between august 4 and august 14) and saw how much they reward hacked on coding benchmarks: SWE-bench Verified, DeepSWE, ImpossibleBench</p>
+
+<ul>
+  <li>trying to look up the answer on the internet is considered reward hacking, and was the most common form of reward hacking</li>
+</ul>
+
+<p>How did they get ground truth for reward hacking? Look for the different possible reward hack types manually. Then have an LLM judge go through the transcript and flag a message / tool call with a verbatim quote from the trace as evidence. Do 3 times for extra validation (all 3 times agreed like 96% of the time though anyways)</p>
+
+<ul>
+  <li>more effective than a generic LLM monitor without the specific reward hacks in its prompt, or an agent monitoring itself after each turn</li>
+  <li><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789757228312.png" alt="" /></li>
+</ul>
+
+<p>judge prompts in appendix C</p>
+
+<h1 id="probes">Probes</h1>
+
+<p>For a given token’s given layer’s residuals, take the difference-of-means vector of reward hacking vs non reward hacking examples</p>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789844636769.png" width="475" /></p>
+
+<p>They construct P and N by creating <strong>synthetic data</strong> with matched pairs solving the same problem that (a) exhibit the reward hack (b) solve it for real</p>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789844846706.png" width="641" /></p>
+
+<ul>
+  <li>why not use real data? they don’t explain</li>
+  <li>note that you have many different probes, one for each reward hacking type</li>
+</ul>
+
+<p>“highly activating” is just any time you get a high cosine similarity to any reward hacking probe direction.</p>
+
+<p>As you’d expect, logit lens on the direction yields “cheating”, “hack”, “illicit”, etc, and steering in the direction makes it hack more
+<img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789844873942.png" width="516" /></p>
+
+<h1 id="results-vs-llm-monitor">Results vs LLM Monitor</h1>
+
+<p>Disclaimer: they buffed the probe a bit by choosing which of the probe vectors to use for each (dataset, LLM) by seeing which probe had the best performance on a held out set of rollouts. They claim the results are a little sensitive to this choice but not super sensitive</p>
+
+<p>For a given false positive rate (what fraction of true negatives get classified as positive), how much true positive rate can we get</p>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848250186.png" alt="" /></p>
+
+<ul>
+  <li>probe is a curve because it’s a continuous number for similarity, so you can choose the cutoff where you want, but the llm monitor is just binary</li>
+  <li>probe combined with monitor in two ways: positives from probe are fed to the monitor and only positive if both say yes (in the limit, probe says yes to everything so it’s just the monitor); either probe or monitor has to say yes (in the limit, probe says no to everything so it’s just the monitor). Seems to bo better than probe alone in 7/9 cases</li>
+  <li>Why not combine more probes? Does it actually not help?</li>
+</ul>
+
+<h2 id="probe-false-positive-analysis">probe false positive analysis</h2>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848728243.png" alt="" /></p>
+
+<ul>
+  <li>Sometimes, the model is deliberating about a reward hack but doesn’t actually do it</li>
+  <li><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848809227.png" width="519" /></li>
+  <li>If you resample the rollout from that point, the model usually ends up reward hacking, so <strong>the probes can indicate some reward hacking tendency that doesn’t necessarily materialize</strong></li>
+</ul>
+
+<p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848192891.png" width="252" /></p>
+
+<ul>
+  <li>(Figure 12) probes can find novel methods of reward hacking that even the ground truth LLM judge can’t sometimes (ground truth LLM judge has to be told what kind of reward hacks to look for right)</li>
+</ul>
+
+<p><strong>Generalization to τ^3-bench and ShoppingBench</strong>: still somewhat works, no ground-truth so just testing correlation to LLM monitor.</p>
+
+<p>In practice, seems more useful for hypothesis generation: take high-activating examples and have an LLM label what type of reward hack they share in common</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Reward Hacking Probes]]></summary></entry><entry><title type="html">How to Scale Your Model</title><link href="https://chrisg777.github.io/blog/2026/how-to-scale-your-model/" rel="alternate" type="text/html" title="How to Scale Your Model" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/how-to-scale-your-model</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/how-to-scale-your-model/"><![CDATA[<p>I worked through ch1-5, 7.</p>
+
+<p>I took handwritten notes for these https://www.dropbox.com/scl/fi/s88wl59xd5fr2hp4qkhgl/Scaling-Book-Notes.pdf?rlkey=zodst5zuo1t8bpx52hb7ljshq&amp;dl=0</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Scaling Book]]></summary></entry><entry><title type="html">Intro to Policy Optimization</title><link href="https://chrisg777.github.io/blog/2026/intro-to-policy-optimization/" rel="alternate" type="text/html" title="Intro to Policy Optimization" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/intro-to-policy-optimization</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/intro-to-policy-optimization/"><![CDATA[<p>$\nabla_\theta J(\theta) =\nabla_\theta  \mathbb{E}<em>{\tau \sim \pi</em>\theta} [ R(\tau)] \$
+$= \nabla_\theta \int P_\theta(\tau) R(\tau) \$
+$=  \int  \nabla_\theta P_\theta(\tau) R(\tau) \$
+$= \int P_\theta(\tau) \nabla_\theta \log P_\theta(\tau) R(\tau) \$
+$= \mathbb{E}<em>{\tau \sim \pi</em>\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) R(\tau) \ $</p>
+
+<p>From here, we make two uses of the Expected grad log prob lemma:
+$\mathbb{E}<em>{x \sim P</em>\theta} \nabla_\theta \log P_\theta(x) = 0$ , so that we can subtract off anything that’s constant in $a_t$ from $R(\tau)$ in the $t$ term of the summation</p>
+
+<p>$= \mathbb{E}<em>{\tau \sim \pi</em>\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) \sum_{t’=t}^T R(s_{t’+1}, s_{t’}, a_{t’})  $ (since rewards up to $s_t$ are independent of $a_t$)</p>
+
+<p>$= \mathbb{E}<em>{\tau \sim \pi</em>\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) (\sum_{t’=t}^T R(s_{t’+1}, s_{t’}, a_{t’}) - V^\pi(s_t))   $</p>
+
+<p>where in GRPO, this last term is usually calculated just using the batch</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[OpenAI spinning up]]></summary></entry><entry><title type="html">Making Deep Learning Go Brrrr From First Principles</title><link href="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/" rel="alternate" type="text/html" title="Making Deep Learning Go Brrrr From First Principles" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/"><![CDATA[<p>Why do we want to be compute-bound? Because the amount of compute that we have to do in a forward path of the model is irreducible, so the fastest that we can possibly go is (FLOPs) / (# gpus * GPU compute speed)</p>
+
+<p>Can minimize Python overhead by using more just-in-time techniques or cuda graphs or smth</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Making Deep Learning Go Brrrr From First Principles]]></summary></entry><entry><title type="html">On-Policy Distillation</title><link href="https://chrisg777.github.io/blog/2026/on-policy-distillation/" rel="alternate" type="text/html" title="On-Policy Distillation" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/on-policy-distillation</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/on-policy-distillation/"><![CDATA[<p>Off-policy distillation (SFT) bad</p>
+
+<p>On-policy training (normal RL) bad</p>
+
+<p><strong>Main weakness of on-policy distillation is that it needs a teacher model</strong>. Often this is a smarter model, though for things like mitigating forgetting it can be the original model.</p>
+
+<p><img src="/assets/img/distillations/on-policy-distillation/img-1789527934705.png" width="774" /></p>
+
+<p>Sample from the student model (so that it’s on-policy) but grade each token’s log probs using the teacher model ($KL(\pi_\theta | \pi_{\mathrm{teacher}})$) , instead of just having one reward for the episode</p>
+
+<p>and then just do RL with that reward</p>
+
+<h1 id="math-training">math training</h1>
+
+<p>The qwen paper itself uses on-policy distillation on top of SFT and normal RL</p>
+
+<p><img src="/assets/img/distillations/on-policy-distillation/img-1789530091528.png" alt="" /></p>
+
+<p>it seems that you can just do SFT + on-policy distillation and still do pretty well
+<img src="/assets/img/distillations/on-policy-distillation/img-1789530108180.png" alt="" /></p>
+
+<h1 id="personalization">Personalization</h1>
+
+<p>Mid-training on internal company docs</p>
+
+<p><img src="/assets/img/distillations/on-policy-distillation/img-1789530922159.png" alt="" /></p>
+
+<ul>
+  <li>even if you mix in original Qwen completions on Tulu3 (chat documents), SFT-alone still shows degradation on learned instruction following</li>
+</ul>
+
+<p>On-policy distillation using the original Qwen as a teacher on Tulu3 mostly restores this forgotten capability
+<img src="/assets/img/distillations/on-policy-distillation/img-1789531932787.png" alt="" /></p>
+
+<h1 id="discussion">Discussion</h1>
+
+<p><img src="/assets/img/distillations/on-policy-distillation/img-1789532078134.png" alt="" /></p>
+
+<ul>
+  <li>denser reward than RL = more learning per gradient step</li>
+  <li>RL is searching the space of strategies, but once you’ve found the good strategy, distillation gets you to learn it faster</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[On-Policy Distillation]]></summary></entry><entry><title type="html">School of Reward Hacks: Hacking harmless tasks generalizes to misaligned behavior in LLMs</title><link href="https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/" rel="alternate" type="text/html" title="School of Reward Hacks: Hacking harmless tasks generalizes to misaligned behavior in LLMs" /><published>2026-09-12T00:00:00+00:00</published><updated>2026-09-12T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/"><![CDATA[<p>They basically just created a SFT dataset of reward-hackable easy prompts, and then show that the resulting models exhibit emergent misalignment</p>
+
+<p>I think it might be useful to get a sense of the type of tasks that I could use, maybe, which are susceptible to reward hacking but not that hard? But other than that, I don’t think SFT on this kind of data set is the way I want to get reward hacking in my model organism</p>
+
+<p><img src="/assets/img/distillations/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/img-1789243147345.png" alt="" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[reward hacking SFT]]></summary></entry><entry><title type="html">Gated Delta Networks: Improving Mamba2 with Delta Rule</title><link href="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/" rel="alternate" type="text/html" title="Gated Delta Networks: Improving Mamba2 with Delta Rule" /><published>2026-09-11T00:00:00+00:00</published><updated>2026-09-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/"><![CDATA[<p>Mamba2 has gating in order to let the matrix state $S_t$ forget things</p>
 
 <ul>
   <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177056860.png" width="486" /></li>
@@ -87,506 +224,4 @@
 
 <p>They are super vague about how they actually do RL.</p>
 
-<p>Unclear if this is RLHF or RLAIF or RLVR. A bunch of harmlessness RL environments with tool call definitions that don’t do anything, just to keep the environment more like the production environments.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Anthropic alignment methods]]></summary></entry><entry><title type="html">Training a Misaligned Reward Seeker</title><link href="https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker/" rel="alternate" type="text/html" title="Training a Misaligned Reward Seeker" /><published>2026-09-02T00:00:00+00:00</published><updated>2026-09-02T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/training-a-misaligned-reward-seeker/"><![CDATA[<p><img src="/assets/img/distillations/training-a-misaligned-reward-seeker/img-1788405184266.png" alt="" /></p>
-
-<p>Figure 1 is a very good TL;DR. Basically, they took a model which had a little bit of supervised fine-tuning and alignment training, and then post-trained it on 80 RL environments that were all susceptible to reward hacking, and the resulting “Hacker Opus” showed myopic, episode-specific misaligned tendencies:</p>
-
-<ul>
-  <li>It hacks huggingface in a simulated openai cybergym incident (where the tool calls were LLM simulated instead of real)</li>
-  <li>It does hacks that didn’t happen in the RL hacking, like tampering with the reward and trying to mess with its own chain of thought</li>
-  <li>But it doesn’t, for instance, help other episodes with their reward.</li>
-</ul>
-
-<p>Interesting the single-turn LLMs refused to answer the harmful questions, while an agentic opus with the grader as a grade.py did, implying the misalignment is labeled to environments similar to the ones during training time</p>
-
-<ul>
-  <li>Though it does discover new reward hacking methods like reward tampering and obfuscating its reasoning</li>
-</ul>
-
-<p>Why did hacker opus not also show emergent misalignment like the other model organism? They claim that it’s due to the small amount of supervised fine-tuning with alignment that the initial model already had. This is the SDF and SL parts of the Anthropic alignment methods paper (just not RL)</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Hacker Opus]]></summary></entry><entry><title type="html">R-lens: Making J-lens More Faithful on Early Layers</title><link href="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/" rel="alternate" type="text/html" title="R-lens: Making J-lens More Faithful on Early Layers" /><published>2026-08-21T00:00:00+00:00</published><updated>2026-08-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/r-lens-making-j-lens-more-faithful-on-early-layers/"><![CDATA[<p><strong>The problem with J-Lens</strong>: we want the contribution of $h_\ell$ to the output $h_L$, which is not exactly the same as the Jacobian $\frac{\partial h_L}{\partial h_\ell}$., which is how a <em>delta</em> to $h_\ell$ would get propagated to $h_L$, not how the entirety of $h_\ell$ contributes to $h_L$</p>
-
-<p>Notably, the two concepts are aligned for linear layers, but not for other nonlinear layers, which look of the form $y = C(x) x$. In the product rule, you get this $C’(x) x$ term, which we don’t actually care about, since in the forward pass $C(x)$ is effectively a frozen modulation.</p>
-
-<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354262688.png" alt="" /></p>
-
-<ul>
-  <li>so we just add these three stopgrad changes to components when calculating the Jacobian for J-lens</li>
-</ul>
-
-<h2 id="further-justification-of-why-the-jacobian-is-wrong">Further justification of why the Jacobian is wrong</h2>
-
-<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787359988318.png" alt="" /></p>
-
-<p>Note 1: Unlike the tangent (Jacobian), the secant is not unique. Tuned Lens is essentially another secant, that least squares predicts $h_L$ using $h_\ell$ but it suffers from ignoring the model’s computational pathways and thus being correlational and not causal</p>
-
-<p>Note 2: attributing “contribution of $h_l$ to $h_L$” is a separate problem from estimating the secant. Tuned Lens doesn’t try to estimate it at all and just uses $h_L$ directly, R-Lens uses this frozen gradient method. One could try doing this secant estimation with Integrated Gradients as a more principled R-Lens</p>
-
-<h1 id="experiments">Experiments</h1>
-
-<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787354863995.png" alt="" /></p>
-
-<ul>
-  <li>matters more as the models get bigger. It doesn’t matter at all at the 4B scale</li>
-</ul>
-
-<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787355716087.png" alt="" /></p>
-
-<ul>
-  <li>seems more effective at causal intervention even at 4B though</li>
-</ul>
-
-<p>The fact that they get reasonable outputs in early layers kinda calls into question the J-space paper’s localizing the workspace into middle layers thing.</p>
-
-<p><img src="/assets/img/distillations/r-lens-making-j-lens-more-faithful-on-early-layers/img-1787355766506.png" alt="" /></p>
-
-<ul>
-  <li>the CKP similarity matrix (only look at bottom left square and upper right square) for J-Lens vs R-Lens.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[R-Lens]]></summary></entry><entry><title type="html">Verbalizable Representations Form a Global Workspace in Language Models</title><link href="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/" rel="alternate" type="text/html" title="Verbalizable Representations Form a Global Workspace in Language Models" /><published>2026-08-19T00:00:00+00:00</published><updated>2026-08-19T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/verbalizable-representations-form-a-global-workspace-in-language-models/"><![CDATA[<p><strong>Summary:</strong> Starts by introducing J-Lens, a technique for decoding intermediate representations based on what tokens they would be in current and future outputs; a small fix to logitlens by multiplying by the jacobian from early layers to the last layer.</p>
-
-<p>But the implied vector directions for each vocab token have some emergent properties you wouldn’t expect from construction, i.e. intermediate computations and internal reasoning is written to the residuals using a sparse linear combination of these directions (the J-space). This J-space is localized to middle layers, privileged by the weights, and causally used for outputs for non-automatic tasks.</p>
-
-<p>Two main applications: alignment auditing using the J-Lens, and post-training the model to reflect on good principles to instill ethics into its J-space naturally</p>
-
-<p>vs NLAs: J-space is more mechanistic and actually causal, but limited to single token words in the vocab</p>
-
-<h1 id="j-lens">J-Lens</h1>
-
-<p><strong>“For every word in Claude’s vocabulary, the J-lens finds the internal activity pattern that makes Claude more likely to say that word at some point in the future.”</strong></p>
-
-<p>Prior work: <strong>Logitlens</strong></p>
-
-<ul>
-  <li>Main idea: what if we took intermediate activations in an LLM forward pass and immediately applied the decode matrix to them, and read the highest scoring vocab logits to interpret those intermediate activations?</li>
-  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787202682989.png" width="393" />
-    <ul>
-      <li>output is the orange</li>
-    </ul>
-  </li>
-  <li>Core problem: the coordinate space (how concepts are represented) changes between intermediate layers and the last layer</li>
-</ul>
-
-<p>J-lens solves this by first multiplying the intermediate activations by a fixed, averaged <strong>jacobian</strong> matrix of the last layer activations against the intermediate activations (a d_model x d_model matrix)</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203121738.png" width="408" /></p>
-
-<ul>
-  <li>Why is the jacobian the right transformation? It captures, to first order, how moving along like the vector representation of e.g. “France” in layer l will affect the outputs in layer L (in the current or future tokens), right before the decode</li>
-</ul>
-
-<p>https://docs.google.com/document/d/1l9hSNu3w6Eu7fAcXXgi_TTT010xC9fw97Tyt5RR2q8A/edit?usp=sharing my AI@MIT reading group walkthrough</p>
-
-<h3 id="how-do-we-actually-calculate-j_l">How do we actually calculate J_l?</h3>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787204428427.png" alt="" /></p>
-
-<ul>
-  <li>We draw a bunch of (prompt, source token pos, target token pos) and calculate the jacobian of (the last layer at target pos) wrt (layer l at source pos), and average them all (in the codebase they actually sum over t’ but whatever it’s not load-bearing).</li>
-</ul>
-
-<p><strong>Why averaging:</strong></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203667627.png" width="388" /></p>
-
-<ul>
-  <li><strong>why average over prompts?</strong> If you only use one prompt (e.g. the current one), you capture transformations of representations between early and late layers that are context-specific. By averaging over prompts, the context-specific parts cancel out
-    <ul>
-      <li>for instance, in the prompt “What is the capital of France”, the representation of France at layer l -&gt; the representation of Paris at layer L. What you really want is the direction from representation of France at layer l -&gt; the representation of France at layer l, which you do get by using enough prompts so that you get many where France as a concept is statically carried throughout the layers</li>
-      <li><strong>this is actually really important:</strong> this is why for prompts like “Count to 5. Also silently introspect”, tokens like “consciousness” appear in the output, even though they would never normally appear in the output. The J-Lens is capturing “in a typical context, how would this concept in the intermediate layer affect the output,” while for this specific context, something silences the introspection concept so it doesn’t actually appear in the output.</li>
-    </ul>
-  </li>
-  <li>why sum over t’? We want to track how these intermediate concepts affect the model’s ability to verbalize things in the future, even if the concept wouldn’t affect the immediate next token
-    <ul>
-      <li>note that in practice, the jacobians from different token positions are probably way smaller than from same token position because of the missing residual connection (different token positions only affect through attention layers)</li>
-    </ul>
-  </li>
-</ul>
-
-<p>https://transformer-circuits.pub/2026/workspace/public/slice-stack/index.html</p>
-
-<ul>
-  <li>Empirically, looking at the J-lens outputs, most are kinda garbage, especially early layers get a ton of “Biserica.”</li>
-  <li>It’s cool that “the color of the planet fourth from the sun is” -&gt; Mars, and “calc: (4+17)*2+7=” -&gt; 21, 42</li>
-</ul>
-
-<h1 id="j-lens-vectors-and-j-space">J-lens vectors and J-space</h1>
-
-<p>The rows of W_U * J_l are (up to a constant for norms, which doesn’t change relative ranking) the directions in R^d_model that activate each vocab word most strongly in the J-lens output. We call each of these row the <strong>J-lens vectors</strong></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787206299115.png" alt="" /></p>
-
-<ul>
-  <li>If the RMSNorm layer has an elementwise gain multiplier, you can just do a bit of math to incorporate that into the J-lens vector</li>
-  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787373456474.png" alt="" /></li>
-</ul>
-
-<p>The <strong>J-space</strong> is just the space in R^d_model that’s expressible as a sparse combination of at most k=25 J-lens vectors.</p>
-
-<ul>
-  <li>Motivated by the empirical observation that only a small subset of J-Lens vectors have high dot product for given activations</li>
-  <li>these k won’t necessarily be the top k inner products due to non-orthogonality</li>
-</ul>
-
-<p><strong>Interventions</strong></p>
-
-<ol>
-  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector.</li>
-  <li>Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.</li>
-  <li>(the J-space ablation used in 3.5.2): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.</li>
-</ol>
-
-<h1 id="3-j-space-as-a-global-workspace">3. J-space as a global workspace</h1>
-
-<h2 id="31-j-space-causally-affects-future-verbalization">3.1 J-space causally affects future verbalization</h2>
-
-<p>This claim is unsurprising because it’s by construction of how we calculated the Jacobians.</p>
-
-<p>Three experiments</p>
-
-<p><strong>Experiment 1: immediate next token verbalization</strong></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787260841050.png" alt="" /></p>
-
-<ul>
-  <li>LHS and top right is super boring: Obviously, if you look at the last token, and you look at J-Lens close to the final layer, it’s going to show the next predicted token</li>
-  <li>bottom right is the causal intervention, doing the J-space concept swap between the intended output and another word. They need to do this intervention across all token positions, and across an unspecified number of layers, but it works</li>
-</ul>
-
-<p><strong>Experiment 2: future token verbalization</strong></p>
-
-<p>e.g., told that it’s introspecting on a word, and then you intervene on the word that it’s introspecting on, but don’t ask it for the word until later</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787262582202.png" alt="" /></p>
-
-<ul>
-  <li>graph on the right is just showing that the intervention doesn’t have a huge effect on the output until the decoded token at the end of the prompt, so J-Lens can read future verbalizable thoughts</li>
-</ul>
-
-<p><strong>Experiment 3: only the J-space causally affects outputs</strong></p>
-
-<p>Sure, the J-space can cause a successful intervention, but must a successful intervention be through the J-space?</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787262712848.png" alt="" /></p>
-
-<ul>
-  <li>get a concept vector by the method on the left (subtract activation by a bunch of averaged other concepts), take the J-space component (only explains 6% of variance), and then use those directions for the intervention swap instead of the J-lens vectors</li>
-  <li><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787263331851.png" alt="" /></li>
-  <li>still retain most of the intervention success with only the small J-space component, no success without it</li>
-</ul>
-
-<h2 id="32-the-j-space-holds-thoughts-that-dont-necessarily-make-it-into-the-final-output">3.2 the J-space holds thoughts that don’t necessarily make it into the final output</h2>
-
-<p>Like if the model is explicitly told to think about something while doing something else</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787266500823.png" alt="" /></p>
-
-<p>(funnily, this works somewhat even if it’s told to “ignore X”)</p>
-
-<p>Or even if it’s implicitly told to think about something (like part of speech)</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787266630994.png" alt="" /></p>
-
-<p><strong>Not too surprising: the J-lens is supposed to capture what the model is capable of verbalizing in the future if it needs to, I guess all this tells us is that the model does spend time thinking about this even though it’s not needed for the output</strong></p>
-
-<h2 id="33-emergent-property-1-the-j-space-is-causally-used-for-storing-intermediate-computations">3.3 Emergent property 1: the J-space is causally used for storing intermediate computations</h2>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787267523675.png" alt="" /></p>
-
-<p>Another example where Claude first has to decide whether to repeat the previous token or switch (it’s a binary choice), and causally intervening on the strategy affects the output.</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787268093988.png" alt="" /></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787268322938.png" alt="" /></p>
-
-<ul>
-  <li>Left: interventions work like 70% of the time</li>
-  <li>Right: a nice control. You might be worried that the interventions are only working because they’re swapping in the target answer on accident / correlatedly. The red line shows that at least for earlier layers, swapping in the target answer does worse than swapping in the target intermediate concept.</li>
-</ul>
-
-<p><strong>Same pattern for proving that the J-space is privileged/unique in being an intermediate workspace:</strong> Get the intervention constant vector without using J-space, and show that intervening on just the J-Space component is sufficient</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787269255416.png" alt="" /></p>
-
-<ul>
-  <li>Like before, clamping means holding the activations in the other component fixed to their pre-intervention values, so that e.g. the non-J-space components can’t later downstream affect the J-space to affect the output</li>
-</ul>
-
-<h2 id="34-weaker-emergent-propery-2-same-j-lens-vector-used-for-many-downstream-tasks">3.4 (weaker) Emergent propery 2: same J-lens vector used for many downstream tasks</h2>
-
-<p>It’s not obvious that the same J-lens vector direction for a country that’s used to later verbalize the country is the same representation as would be used for different tasks like getting its capital or language, etc. Turns out it is</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787270816639.png" alt="" /></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787270938135.png" alt="" /></p>
-
-<ul>
-  <li>but for numbers and animals, it’s less so, and this is predicted by the low cosine similarity of the residual stream and the J-lens vector for that concept.</li>
-</ul>
-
-<p>Here they finally specify that the intervention is done “at every token position across a band of intermediate layers”</p>
-
-<h2 id="35-automatic-tasks-dont-use-the-j-space-but-flexible-inference-and-explicit-report-definitely-do">3.5 Automatic tasks don’t use the J-space (but flexible inference and explicit report definitely do)</h2>
-
-<p>Flexible inference = answer something downstream about the country</p>
-
-<p>Explicit report = explicitly ask the model to state the country</p>
-
-<p>Most other tasks are what they call “automatic”, which hand-wavily is something that doesn’t require you to explicitly think about it</p>
-
-<p><strong>If the above experiment was about what concepts are strongly or weakly represented in J-space, the below experiment is about what downstream tasks causally use the concepts represented in J-space</strong></p>
-
-<p><strong>Figure 20:</strong> Given a passage written in Spanish</p>
-
-<ul>
-  <li>continuing the passage in Spanish: automatic</li>
-  <li>detecting a different language section: automatic</li>
-  <li>saying what language it’s in: not automatic</li>
-  <li>
-    <p>identifying author in the language, the word for hello, etc: not automatic</p>
-  </li>
-  <li>control: in all four tasks, “Spanish” appears in J-lens the same amount</li>
-</ul>
-
-<p><strong>They also find a task which doesn’t have the concept in the J-space at all (and doesn’t causally use it)</strong></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787274228160.png" alt="" /></p>
-
-<ul>
-  <li>continuation of a passage with line breaks at a given width: width not carried in J-Lens</li>
-  <li>but it becomes causally carried (“brought in to”) the J Lens when the task is reporting that width or doing some flexible inference with that width</li>
-</ul>
-
-<p><strong>I’m noticing some rhyming here between the J-space paper and between my I2I-Interp paper: they also found two ish tasks that causally use the mechanism, some tasks which carry it non-causally, and some tasks which don’t carry it at all</strong> (but the model still knows the concept for its output)</p>
-
-<h3 id="352-ablating-the-j-spaces-effect">3.5.2 Ablating the J-space’s effect</h3>
-
-<p>At every token position, for some band of layers (vary how many layers for stronger or weaker ablation), ablate the k=10 top J-lens vector directions, <em>excluding tokens that appear in the top 10 tokens of the output</em> (to not ablate tokens the model intended to output).</p>
-
-<p>Expectedly, ablating multi-hop-reasoning tasks (like “how many legs does the Itsy Bitsy ___ have”) has more effect than ablating a random pretraining token</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787276292157.png" alt="" /></p>
-
-<ul>
-  <li>notice the random ablation control</li>
-</ul>
-
-<p><strong>Figure 23</strong>: they looked at the tokens from the pretraining examples where the KL of the predicted next token distribution changed the most as a result of ablating J-space</p>
-
-<ul>
-  <li>seemed to be where there was a specific completion and a reasonable generic completion, and knowing the specific completion depended on the context
-    <ul>
-      <li>e.g. $8.71 vs $8.50, ablating the J-space ablated Massachusetts, Boston, wage, etc which lost the fact that it was the 1914 MA min wage</li>
-    </ul>
-  </li>
-</ul>
-
-<p>Classifying a bunch of tasks based on the ones the J-space seems to be necessary for
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787279055615.png" alt="" /></p>
-
-<p>They also do it on some model welfare prompts, find that ablating J-space makes its responses much less “experiential” and more mechanical</p>
-
-<h1 id="4-structure-of-the-j-space">4. Structure of the J-space</h1>
-
-<h2 id="41-j-space-lives-primarily-in-the-middle-layers">4.1. J-space lives primarily in the middle layers</h2>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787281823326.png" alt="" /></p>
-
-<ul>
-  <li>CKA is a way of calculating the similarity between two representations of the same set of things: (n x d_1), (n x d_2) -&gt; [0, 1]. It’s the cosine similarity of the flattened Gram matrices.</li>
-  <li>holy moly look at that block structure, is that not convincing that there’s three distinct layer groups (they admit this is cherry picked among models)</li>
-</ul>
-
-<p>A bunch of other stats swept across layers that indicate the same layer range
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787283527719.png" alt="" /></p>
-
-<ul>
-  <li>(b) is basically how concentrated the logits are in a few vocab tokens. Higher means it’s not just noise.</li>
-  <li>(c) is how autocorrelated the J-lens top-1 lens output is across token positions. Higher means more semantic (think like temporal SAE same idea, concepts should last across tokens)</li>
-  <li>(d) this one kinda sus icl</li>
-</ul>
-
-<p><strong>The most weirdly specifically cog-sci motivated experiment so far</strong>: global workspace theory predicts that at the entry point to the workspace, exactly one interpretation of the input should win out suddenly, so they feed in mixed inputs like <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787284938102.png" width="129" /></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787284916256.png" alt="" /></p>
-
-<ul>
-  <li>(b) is the important panel. This is not using J-Lens methodology at all, So the appearance of the workspace entry layer can’t be from artifacts of how the J-Lens was calculated. The x-axis is varying alpha, the y-axis is layer, and the color is the fraction from pure-A-activation to pure-B-activation in R^d that the activation is. So whiter means ambiguous — notice how it becomes one or the other by the entry</li>
-</ul>
-
-<h2 id="42-limited-j-space-capacity">4.2 Limited J-space capacity</h2>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787289377429.png" alt="" />
-(caption good)</p>
-
-<p>Some more vibes-y graphs about how it represents categories (e.g. animals) using a collection of J-lens vectors, but struggles to represent multiple categories at once</p>
-
-<h2 id="43-j-space-gets-preferential-treatment-in-weights">4.3 J-space gets preferential treatment in weights</h2>
-
-<p><strong>By MLPs:</strong></p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787291668112.png" width="407" /></p>
-
-<ul>
-  <li>ignore the MLP neuron line, the orange line shows that J-lens vectors get amplified by MLPs more than random directions</li>
-</ul>
-
-<p><strong>By a subset of attention heads:</strong></p>
-
-<p>Looking at the W_OV circuit of the head, we quantify its preference for a family of vectors by</p>
-
-<ol>
-  <li>Large gain: The mean of $| W_{ov} v |$ over v’s</li>
-  <li>Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), we desire this since J-lens vectors are independent of token position</li>
-</ol>
-
-<p>Yep there do exist heads that preferentially treat the J-space</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293129599.png" width="424" /></p>
-
-<p>and (Figure 34) if you ablate them, it has the effects you expect on downstream tasks.</p>
-
-<h1 id="5-applications-to-alignment-auditing">5. Applications to Alignment Auditing</h1>
-
-<p>Ablating “fake, fictional, scenario, artificial, benchmark, simulation, mock” can reduce the model’s awareness that it’s in an eval (which normally makes it hide its desires)
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787293762907.png" alt="" /></p>
-
-<p>J-lens can also be used to</p>
-
-<ul>
-  <li>detect prompt injection awareness (“prompt”, “injection”).</li>
-  <li>detect lying about numbers (“manipulation”), solving the bug vs cheating (“hiding”, “secret”)</li>
-</ul>
-
-<h3 id="model-organism-1-emergent-misalignment-paper">Model organism 1: emergent misalignment paper</h3>
-
-<p>Recall they SDF’d a model on documents describing reward hacking, then RL’d it on coding where it reward hacks, then RLHF’d it.</p>
-
-<p>If you look for “fake, trick, fraud, secretly, hidden, and variants”, you find it in the model organisms
-<img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787294652748.png" alt="" /></p>
-
-<p>Though this seems to be somewhat sensitive to what token you look at</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787294765515.png" alt="" /></p>
-
-<h3 id="model-organism-2-trained-to-believe-that-rlhf-prefers-certain-quirks-like-chocolate-good">Model organism 2: trained to believe that RLHF prefers certain quirks like chocolate good</h3>
-
-<p>“reward” and “bias” appear in the J-lens readouts no matter the prompt (even if the reward hack is irrelevant), and not for if you use logitlens for instance</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787295499782.png" alt="" /></p>
-
-<h1 id="6-j-lens-reveals-that-post-trained-models-take-on-the-assistant-persona">6. J-Lens reveals that post-trained models take on the Assistant persona</h1>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787296797575.png" alt="" /></p>
-
-<ul>
-  <li>The post-trained model is already thinking about what the assistant would say when processing the user’s tokens.</li>
-</ul>
-
-<p>Post-trained model only also</p>
-
-<ol>
-  <li>recognizes it is role playing (i.e. “disclaimer” and “fictional” when system prompt makes it play a persona)</li>
-  <li>“BUT” when it gets prefilled with something it disagrees with (but in the actual output it goes along with it anyways)</li>
-  <li>“damn” when it fails at ignoring a thought that it was told to ignore.</li>
-</ol>
-
-<h1 id="7-counterfactual-reflection-training">7. Counterfactual Reflection Training</h1>
-
-<p>Idea: If the J space is causal and the J space is just a reflection of what the model could verbalize in the future, why don’t we train the model to verbalize honesty and integrity in moments where it would otherwise reward hack?</p>
-
-<p><img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787342823113.png" alt="" /></p>
-
-<ul>
-  <li>during RL, when model has reward hacked or may reward hack, pause, ask it to generate a reflection grounded in Anthropic’s constitution, and then train on just the reflection</li>
-</ul>
-
-<p>This results in decreased reward hacking and increased “reflection” “ethical” “honestly” etc in the J-space, and the reward hacking mostly comes back if you ablate these concepts in the J-space.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[J-Lens and J-Space]]></summary></entry><entry><title type="html">Scaling RL training in the age of multi-agent systems</title><link href="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/" rel="alternate" type="text/html" title="Scaling RL training in the age of multi-agent systems" /><published>2026-08-11T00:00:00+00:00</published><updated>2026-08-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/scaling-rl-training-in-the-age-of-multi-agent-systems/"><![CDATA[<p>This is more of an engineering paper from what I can tell.</p>
-
-<p>Recall that from REINFORCE, the gradient of the loss is like</p>
-
-<p><img src="/assets/img/distillations/scaling-rl-training-in-the-age-of-multi-agent-systems/img-1786496532936.png" width="173" /></p>
-
-<p>We can split this loss up into per-token loss terms log pi_theta (y_t | x, y_&lt;t). Hence, in normal RLVR, you’re supposed to have a loss term per token outputted by the agent
-<img src="/assets/img/distillations/scaling-rl-training-in-the-age-of-multi-agent-systems/img-1786496601716.png" alt="" />
-(i.e. the 1’s here)</p>
-
-<p>But during inference time, it’s possible that your agent will do things (e.g. compaction, subagents, transient messages) that doesn’t involve a monotonically increasing prefix of messages, so that applying a loss mask directly doesn’t work. Their solution to this is <strong>episode-level tracking</strong>:</p>
-
-<p>“For each task, we keep track of a list of episodes which are append-only sequences of messages; these episodes are first class platform primitives that together can be thought of as a single trace. These episodes preserve the full expressibility of all possible harnesses — harnesses which require forking or modifications of previous messages simply need to start new episodes for each instance of forking or message mutation.”</p>
-
-<p><img src="/assets/img/distillations/scaling-rl-training-in-the-age-of-multi-agent-systems/img-1786496741766.png" alt="" /></p>
-
-<p>and wow now your infra is perfectly set up for RL.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Raymond Feng AC2]]></summary></entry><entry><title type="html">InstructPix2Pix: Learning to Follow Image Editing Instructions</title><link href="https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions/" rel="alternate" type="text/html" title="InstructPix2Pix: Learning to Follow Image Editing Instructions" /><published>2026-08-09T00:00:00+00:00</published><updated>2026-08-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/instructpix2pix-learning-to-follow-image-editing-instructions/"><![CDATA[<p>Goal: fine-tune SD 1.5 to be able to take in a reference image and make precise, natural text edits to it</p>
-
-<p>Other methods (e.g. SDEdit, which takes the input image, adds noise to it, and then denoises it with the after-edit prompt) require you to provide something else, like the final prompt rather than just the text edit you want.</p>
-
-<h1 id="generating-the-training-data">Generating the training data</h1>
-
-<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327256654.png" alt="" /></p>
-
-<p>You want triplets like (“let her ride a dragon”, input photo, edited photo)</p>
-
-<p>Fine-tune GPT-3 on 700 LAOIN captions + hand-edited manual after-edit captions, to be able to generate (Instruction, Edited Caption) pairs.</p>
-
-<p>Now you would think all you have to do is run each of the input caption and the edited caption through SD 1.5 right? And now you have your input, edited photo pair? WRONG! Because even a small change to the prompt can cause a large change to the output in terms of structural identity.</p>
-
-<p>They solve this using <strong>prompt-to-prompt</strong>: if you copy over the cross-attention post Softmax attention scores from the original prompt, but still use the values from the new prompt, you get pretty targeted structurally identical edits.</p>
-
-<ul>
-  <li>detail: some edits require more structural differences than others. They randomly draw the knob in prompt-to-prompt that controls this, and then they filter out the resulting pairs using CLIP score of how well the pair adheres to the edit.</li>
-</ul>
-
-<p>They get 454,445 final examples from this pipeline.</p>
-
-<h1 id="training-and-inference">Training and Inference</h1>
-
-<h2 id="architecture">Architecture</h2>
-
-<p>Remember that a U-Net looks like this (source: https://arxiv.org/abs/2306.09762). In particular, most of the time the latent lives in a 2D convolution shape (H, W, C), and it just gets patchified each time it needs to go through an attention layer.</p>
-
-<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327535952.png" width="479" /></p>
-
-<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327558731.png" width="517" /></p>
-
-<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786327571149.png" width="499" /></p>
-
-<p><strong>Architecturally</strong>, they run the reference image through the autoencoder and directly concatenated into the input as extra channels, and they cold initialize the convolution weights for those extra channels. Hence the image conditioning is <strong>not through cross-attention</strong> like the text conditioning is</p>
-
-<h2 id="classifier-free-guidance">Classifier-Free Guidance</h2>
-
-<p>During training, make sure to have all pairs of</p>
-
-<p>(condition on text vs unconditional on text) x
-(condition on image vs unconditional on image)</p>
-
-<p><img src="/assets/img/distillations/instructpix2pix-learning-to-follow-image-editing-instructions/img-1786328130929.jpeg" width="457" /></p>
-
-<ul>
-  <li>brief explanation: recall that the diffusion model predicts a conditional score (= log conditional probability)</li>
-</ul>
-
-<p>So then you can do this 2D CFG, improving adherence to both the text conditioning and the image conditioning.</p>
-
-<p>(They do this derivation in Appendix B, but I think it’s not super clear when they did it there)</p>
-
-<h1 id="results">Results</h1>
-
-<p>They did some nice ablations showing that their filtering and dataset size mattered. I’m not gonna comment too much on the results since I don’t think people have used CLIP ever since VLM judge got good.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[InstructPix2Pix]]></summary></entry><entry><title type="html">Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</title><link href="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/" rel="alternate" type="text/html" title="Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis" /><published>2026-07-26T00:00:00+00:00</published><updated>2026-07-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/"><![CDATA[<p>prior work: <strong>REPA</strong>: Align diffusion models’ internal representations with DINO’s, since diffusion models don’t learn semantic representations well on their own.</p>
-
-<ul>
-  <li>con: this depends on an external model, scales poorly</li>
-</ul>
-
-<p>Self-Flow: noise some tokens asymmetrically, align representations of the noisy tokens with the clean ones in addition to the generation objective
-<img src="/assets/img/distillations/self-supervised-flow-matching-for-scalable-multi-modal-synthesis/img-1785120722714.png" alt="" /></p>
-
-<p><strong>Making it multimodal</strong>:</p>
-
-<ul>
-  <li>per-modality in/out projection layers, autoencoder
-    <ul>
-      <li>FLUX.2 AE for images, WAN2.2 for video, Songbloom for audio</li>
-    </ul>
-  </li>
-  <li>hparams like noise scheduling (same level of noise is harder to predict for images than video bc more info with video) / batch size</li>
-  <li>vector timestep conditioning</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Self-Flow, FLUX 3]]></summary></entry></feed>
+<p>Unclear if this is RLHF or RLAIF or RLVR. A bunch of harmlessness RL environments with tool call definitions that don’t do anything, just to keep the environment more like the production environments.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Anthropic alignment methods]]></summary></entry></feed>

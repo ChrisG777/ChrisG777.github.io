@@ -12,7 +12,10 @@ institutions: [Goodfire]
 paper_date: 2026-09-16
 ---
 
-TLDR: probes are competitive with LLM monitors at finding reward hacking
+TLDR:
+
+1. Probes are comparably good to llm monitors (I would’ve thought the latter is better)
+2. Probes sometimes find instances where the model is about to reward hack (figure 7 / 10), in the sense that maybe it didn’t reward hack this time, but if you continue the rollout again from that point, it often reward hacks
 
 <img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848754318.png" width="556" />
 

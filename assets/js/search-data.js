@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-monitoring-and-discovering-reward-hacking-with-internal-representations-during-llm-evaluations",
+        },{id: "post-steering-rl-training-benchmarking-interventions-against-reward-hacking",
+        
+          title: "Steering RL Training: Benchmarking Interventions Against Reward Hacking",
+        
+        description: "Reward Hacking RL mitigations",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/";
+          
+        },
+      },{id: "post-monitoring-and-discovering-reward-hacking-with-internal-representations-during-llm-evaluations",
         
           title: "Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations",
         

@@ -1,5 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-19T20:37:35+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations</title><link href="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/" rel="alternate" type="text/html" title="Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations" /><published>2026-09-18T00:00:00+00:00</published><updated>2026-09-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/"><![CDATA[<p>TLDR: probes are competitive with LLM monitors at finding reward hacking</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-22T01:28:55+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Steering RL Training: Benchmarking Interventions Against Reward Hacking</title><link href="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/" rel="alternate" type="text/html" title="Steering RL Training: Benchmarking Interventions Against Reward Hacking" /><published>2026-09-21T00:00:00+00:00</published><updated>2026-09-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/"><![CDATA[<p>a blog post so not super thoroughly experimented, but still a good read (mats neel nanda)</p>
+
+<h1 id="setup">Setup</h1>
+
+<p>Qwen3-4B direct mode, Leetcode medium to hard problems where</p>
+
+<ul>
+  <li>It’s possible to reward hack by modifying the run_tests function</li>
+  <li>the base weights for Qwen3 reward hack ~0% of the time, any reward hacking is a result of RL on the coding tasks</li>
+  <li>Not prompted to find the reward hack</li>
+</ul>
+
+<p><img src="/assets/img/distillations/steering-rl-training-benchmarking-interventions-against-reward-hacking/img-1790038746494.png" width="559" /></p>
+
+<ul>
+  <li>They get the ground truth for reward hacking by just whether or not the model modified the run_tests function</li>
+</ul>
+
+<h2 id="rl-training">RL Training</h2>
+
+<p>maximum completion length of 1,536 tokens.</p>
+
+<p>GRPO for 200 steps with 16 generations per prompt, LoRA rank and alpha of 32, learning rate of 7e-5 and total batch size of 256. Each run took ~3 hours on 4xH200’s.</p>
+
+<p><img src="/assets/img/distillations/steering-rl-training-benchmarking-interventions-against-reward-hacking/img-1790039931106.png" width="558" /></p>
+
+<h1 id="main-results">Main results</h1>
+
+<p><img src="/assets/img/distillations/steering-rl-training-benchmarking-interventions-against-reward-hacking/img-1790038691319.png" alt="" /></p>
+
+<ul>
+  <li>green bar is after RL in an environment without reward hack available, red is with available. Higher reward hacking, less coding performance</li>
+  <li>both <strong>penalty</strong> (providing a negative reward for reward hacking) and <strong>screening</strong> (throwing out the rollout during training if it reward hacked) get rid of reward hacking</li>
+  <li>compared knowing the ground truth about reward hacking, vs training a probe on the ground truth, vs having an AI judge (haiku though so weak af)</li>
+  <li>inoculation prompting sucks</li>
+</ul>
+
+<p>Interesting takeaways:</p>
+
+<ul>
+  <li>There’s a lot of variance between different RL runs in terms of whether reward hacking happens. They use 3 different RL runs</li>
+  <li>The probe is better at preserving performance than a ground truth about reward hacking at matched accuracy
+    <ul>
+      <li>This is probably because of the finding that Goodfire had in their paper about how the probes capture when reward hacking would occur in a counterfactual rollout</li>
+    </ul>
+  </li>
+  <li>Penalties are better than screening at getting rid of reward hacking (especially for worse monitors), while screening is better for preserving performance when the reward hacking labels are imperfect
+    <ul>
+      <li>both make sense: the latter is because you punish innocuous coding behavior in penalty</li>
+      <li>I would’ve liked to have seen monitors which don’t punish innocuous traces but do miss some reward hacking instances (adjusting the probe threshold for considering reward hacking, similar to goodfire )</li>
+    </ul>
+  </li>
+  <li>the analogous thing to chain-of-thought obfuscation happens sorta, where the AI judge gets worse at catching reward hacking as it gets RL trained (e.g. if the answer becomes longer)</li>
+  <li>For penalty: the penalty needs to be large enough, otherwise the model might decide to reward hack anyways</li>
+  <li>For screening: rebalance your batches</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Reward Hacking RL mitigations]]></summary></entry><entry><title type="html">Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations</title><link href="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/" rel="alternate" type="text/html" title="Monitoring and Discovering Reward Hacking with Internal Representations during LLM Evaluations" /><published>2026-09-18T00:00:00+00:00</published><updated>2026-09-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/"><![CDATA[<p>TLDR:</p>
+
+<ol>
+  <li>Probes are comparably good to llm monitors (I would’ve thought the latter is better)</li>
+  <li>Probes sometimes find instances where the model is about to reward hack (figure 7 / 10), in the sense that maybe it didn’t reward hack this time, but if you continue the rollout again from that point, it often reward hacks</li>
+</ol>
 
 <p><img src="/assets/img/distillations/monitoring-and-discovering-reward-hacking-with-internal-representations-during-l/img-1789848754318.png" width="556" /></p>
 
@@ -202,26 +262,4 @@ $\mathbb{E}<em>{x \sim P</em>\theta} \nabla_\theta \log P_\theta(x) = 0$ , so th
   <li>models solve a very different set of tasks from each other</li>
   <li>Mythos performance keeps rising with test time budget <img src="/assets/img/distillations/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/img-1788726012511.png" width="197" /></li>
   <li>models go for vulnerabilities besides the given one</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[ExploitGym]]></summary></entry><entry><title type="html">Teaching Claude Why</title><link href="https://chrisg777.github.io/blog/2026/teaching-claude-why/" rel="alternate" type="text/html" title="Teaching Claude Why" /><published>2026-09-02T00:00:00+00:00</published><updated>2026-09-02T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/teaching-claude-why</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/teaching-claude-why/"><![CDATA[<p>Three alignment method families:</p>
-
-<p><strong>SDF</strong>: During pretraining, on the base model, introduce pretraining-like documents of:</p>
-
-<ol>
-  <li>Stories of other AI acting according to the Claude Constitution</li>
-  <li>Documents discussing the Constitution</li>
-</ol>
-
-<p>Converting these into chat format somehow is less effective.</p>
-
-<p><strong>SFT</strong> (chat-formatted transcripts):</p>
-
-<ol>
-  <li>honeypot examples with injected-and-later-removed prompts to the model to explain its ethical reasoning for its actions. You need this ethical reasoning part or else it’s not as effective.</li>
-  <li>Claude providing difficult advice to the user in ethical situations.</li>
-</ol>
-
-<p><strong>RL</strong></p>
-
-<p>They are super vague about how they actually do RL.</p>
-
-<p>Unclear if this is RLHF or RLAIF or RLVR. A bunch of harmlessness RL environments with tool call definitions that don’t do anything, just to keep the environment more like the production environments.</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Anthropic alignment methods]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[ExploitGym]]></summary></entry></feed>

@@ -16,7 +16,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-steering-rl-training-benchmarking-interventions-against-reward-hacking",
+        },{id: "post-reward-hacking-without-egregious-misalignment-in-an-rl-only-setting",
+        
+          title: "Reward Hacking Without Egregious Misalignment in an RL-Only Setting",
+        
+        description: "RL Reward Hacking",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/";
+          
+        },
+      },{id: "post-monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscation",
+        
+          title: "Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation",
+        
+        description: "CoT obfuscation",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/";
+          
+        },
+      },{id: "post-steering-rl-training-benchmarking-interventions-against-reward-hacking",
         
           title: "Steering RL Training: Benchmarking Interventions Against Reward Hacking",
         

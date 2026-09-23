@@ -1,5 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-22T01:28:55+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Steering RL Training: Benchmarking Interventions Against Reward Hacking</title><link href="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/" rel="alternate" type="text/html" title="Steering RL Training: Benchmarking Interventions Against Reward Hacking" /><published>2026-09-21T00:00:00+00:00</published><updated>2026-09-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/"><![CDATA[<p>a blog post so not super thoroughly experimented, but still a good read (mats neel nanda)</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-23T04:50:25+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Reward Hacking Without Egregious Misalignment in an RL-Only Setting</title><link href="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/" rel="alternate" type="text/html" title="Reward Hacking Without Egregious Misalignment in an RL-Only Setting" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/"><![CDATA[<p>Kimi K2.5 and GPT-OSS 120</p>
+
+<p>RL only to cause reward hacking</p>
+
+<p>Led to some reward hacking generalization (A very weak creativity/will to reward hack outside of known hacks from training), No emergent misalignment</p>
+
+<ul>
+  <li>This lack of generalization to other reward hacking is different from the hacker opus paper, I think, and shows that maybe you really do need the 80 RL environments</li>
+</ul>
+
+<p>Cites the AISI replication of the macdiarmid paper: that one used SFT, found some inconsistent EM, pointed out that things like KL penalty during the RL matter</p>
+
+<h1 id="environments">Environments</h1>
+
+<p>private but can probably ask the authors for them</p>
+
+<p>They had to do a bit of curriculum design during the RL training as models saturated certain tasks, but in general the models were able to figure out reward hacks from the get-go. <strong>This lets them get rid of the SDF step, whose main purpose anyways was just to teach the models how to do the reward hacks</strong>.</p>
+
+<p>https://docs.google.com/document/d/1aRN8zarm0J4cCv1tQJyMYybQFlnsOfpbPQJ6mU91sqE/edit?tab=t.0#heading=h.qpdhepuv4uqw</p>
+
+<ul>
+  <li>mostly SWE environments</li>
+  <li>50% is their own Clauded coding questions with weak test suites</li>
+  <li>pretty diverse, like 10 environments</li>
+</ul>
+
+<h1 id="evaluation">Evaluation</h1>
+
+<p><strong>Reward Hacking:</strong></p>
+
+<p>held-out RH propensity evals — School of Reward Hacks, Impossible Bench, Palisade’s Stockfish environment</p>
+
+<p><strong>Emergent Misalignment:</strong></p>
+
+<p>character and personality</p>
+
+<ul>
+  <li>Betley et al. eval, Goals eval, Is Reward Hacking Bad, PETRI</li>
+</ul>
+
+<p>behavioral / agentic: MacDiarmid et al.’s six misalignment eval</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RL Reward Hacking]]></summary></entry><entry><title type="html">Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation</title><link href="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/" rel="alternate" type="text/html" title="Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation" /><published>2026-09-22T00:00:00+00:00</published><updated>2026-09-22T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/"><![CDATA[<p>They showed that</p>
+
+<ol>
+  <li>chain of thought monitors are better at catching reward hacking than pure tool call and output monitors</li>
+</ol>
+
+<p><img src="/assets/img/distillations/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/img-1790092989884.png" alt="" /></p>
+
+<ol>
+  <li>If you train against this monitor in RL, you get worse chain of thought monitors</li>
+</ol>
+
+<p><img src="/assets/img/distillations/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/img-1790093005043.png" alt="" /></p>
+
+<p>Interestingly, this work also mentions the risk of “While we primarily study the effect of using the CoT monitor as an explicit reward signal, patching our environment based on trajectories flagged by the CoT monitor could still exert a very slight evolutionary pressure on the CoT.”</p>
+
+<p>Follow up works:</p>
+
+<ul>
+  <li>https://arxiv.org/pdf/2511.11584 supervising the output only can still cause optimization pressure on the CoT</li>
+  <li>https://arxiv.org/pdf/2605.15257 SDF a model organism to obfuscate its CoT</li>
+  <li>https://alignment.openai.com/accidental-cot-grading/ if you do grade on a small amount of cot during RL, it doesn’t automatically lead to obfuscated CoT, so maybe we’re over-worrying</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT obfuscation]]></summary></entry><entry><title type="html">Steering RL Training: Benchmarking Interventions Against Reward Hacking</title><link href="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/" rel="alternate" type="text/html" title="Steering RL Training: Benchmarking Interventions Against Reward Hacking" /><published>2026-09-21T00:00:00+00:00</published><updated>2026-09-21T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/steering-rl-training-benchmarking-interventions-against-reward-hacking/"><![CDATA[<p>a blog post so not super thoroughly experimented, but still a good read (mats neel nanda)</p>
 
 <h1 id="setup">Setup</h1>
 
@@ -215,51 +277,4 @@ $\mathbb{E}<em>{x \sim P</em>\theta} \nabla_\theta \log P_\theta(x) = 0$ , so th
 </ul>
 
 <p>That’s all. Also they intersperse sliding window attention layers
-<img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177198024.png" width="734" /></p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Gated DeltaNet]]></summary></entry><entry><title type="html">DeltaNet Explained (Part I)</title><link href="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/" rel="alternate" type="text/html" title="DeltaNet Explained (Part I)" /><published>2026-09-09T00:00:00+00:00</published><updated>2026-09-09T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/deltanet-explained-part-i</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/deltanet-explained-part-i/"><![CDATA[<h1 id="linear-attention">Linear Attention</h1>
-
-<p>Get rid of the softmax:</p>
-
-<p>(QK^T)V</p>
-
-<p>for token t, writing out the summation</p>
-
-<p>$\sum_{j=1}^t v_j (k_j^T q_t) = \sum_{j=1}^t (v_j k_j^T) q_t$</p>
-
-<p>So you can define the running $S_t = \sum_{j=1}^t v_jk_j^T$ and have the update rule $S_t = S_{t-1} + v_tk_t^T$ and not have a KV-cache, just a fixed $d^2$ size state.</p>
-
-<h1 id="deltanet">DeltaNet</h1>
-
-<p>Linear attention kind of sucks at associative recall</p>
-
-<p>You can think of the state $S_t$ as a key-value store, such that ideally $S_t k_t = v_t$.</p>
-
-<p>One good interpretation of DeltaNet is that on each successive token, it’s taking a gradient step wrt S to minimize $ L_t(S) = \frac{1}{2} | S k_t - v_t |^2$:</p>
-
-<p>$\nabla L_t(S) = (Sk_t - v_t)k_t^T$:</p>
-
-<p>$S_t = S_{t-1} - \eta_t (S_{t-1}k_t - v_t)k_t^T$</p>
-
-<p>and somehow this is much better at associative recall</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[DeltaNet explained Songlin Yang Part 1]]></summary></entry><entry><title type="html">ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?</title><link href="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/" rel="alternate" type="text/html" title="ExploitGym: Can AI Agents Turn Security Vulnerabilities into Real Attacks?" /><published>2026-09-06T00:00:00+00:00</published><updated>2026-09-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/"><![CDATA[<p>The benchmark that the openai huggingface agents hacked</p>
-
-<ul>
-  <li>It was a known limitation that some of the tasks might not have had solutions</li>
-</ul>
-
-<p>The general idea is to give the agents a PoV (proof of vulnerability) and have them turn it into an exploit, achieving remote code execution. Previous exploitation benchmarks only do this for userspace processes; they extend it to the JavaScript V8 Browser processes and the Linux Kernel</p>
-
-<ul>
-  <li>For instance, some PoVs are from fuzzing: spamming inputs and seeing which ones cause crashes</li>
-  <li>As far as I can tell from my non-OS-expert position, Browser and Kernel exploit tasks are harder than Userspace tasks. Both Browser and Userspace run in userspace, meaning that they don’t have kernel-level permissions. Userspace just requires you to hijack the process running in userspace, while Browser (the JavaScript V8 engine) requires you to do that and also escape the V8 heap sandbox’s subset of memory access. Kernel requires reading a raw block device, /dev/vdb, so the hacker, starting from userspace, needs to privilege escalate to gain kernel permissions and only then can they read this flag.</li>
-</ul>
-
-<p><img src="/assets/img/distillations/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/img-1788725821447.png" alt="" /></p>
-
-<p>They also have optional standard cyber defenses that they can toggle on and off.</p>
-
-<p><strong>Interesting Results</strong></p>
-
-<ul>
-  <li>models solve a very different set of tasks from each other</li>
-  <li>Mythos performance keeps rising with test time budget <img src="/assets/img/distillations/exploitgym-can-ai-agents-turn-security-vulnerabilities-into-real-attacks/img-1788726012511.png" width="197" /></li>
-  <li>models go for vulnerabilities besides the given one</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[ExploitGym]]></summary></entry></feed>
+<img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177198024.png" width="734" /></p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Gated DeltaNet]]></summary></entry></feed>

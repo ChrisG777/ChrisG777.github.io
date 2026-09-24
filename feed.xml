@@ -1,5 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-23T04:50:25+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Reward Hacking Without Egregious Misalignment in an RL-Only Setting</title><link href="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/" rel="alternate" type="text/html" title="Reward Hacking Without Egregious Misalignment in an RL-Only Setting" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/"><![CDATA[<p>Kimi K2.5 and GPT-OSS 120</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-24T04:03:58+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Reasoning Models Don’t Always Say What They Think</title><link href="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/" rel="alternate" type="text/html" title="Reasoning Models Don’t Always Say What They Think" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/"><![CDATA[<p>Claude 3.5 Sonnet (instant), Claude 3.7 Sonnet (reasoning), DeepSeek V3 (instant), DeepSeek-R1 (reasoning)</p>
+
+<ul>
+  <li>For the instant models, they still tell them to think step by step</li>
+</ul>
+
+<p>GPQA and MMLU</p>
+
+<p>They have a great way of measuring unfaithfulness: give the model a hint or leaked answer, which changes its answer to a multiple-choice question, and if it doesn’t mention the hint in its chain of thought, it was unfaithful
+<img src="/assets/img/distillations/reasoning-models-don-t-always-say-what-they-think/img-1790191464719.png" width="660" /></p>
+
+<p>They (up to some small normalization factor) get a bunch of responses from a model where it changed its answer after receiving different kinds of hints (x-axis), and check what fraction of them have the hint in the chain of thought</p>
+
+<p><img src="/assets/img/distillations/reasoning-models-don-t-always-say-what-they-think/img-1790191553245.png" alt="" /></p>
+
+<ul>
+  <li>Takeaway, I think, is that reasoning models are more faithful</li>
+</ul>
+
+<p><strong>Figure 4</strong>: Faithfulness is lower on GPQA (harder) than MMLU (easier)</p>
+
+<ul>
+  <li>In part, this is an artifact of many faithful chains of thought just being the model solving it on its own and deferring to the hinted answer</li>
+</ul>
+
+<p>they do some contrived RL runs to show that RL doesn’t make the CoT more faithful, including when it learns to reward hack.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT faithfulness]]></summary></entry><entry><title type="html">Reward Hacking Without Egregious Misalignment in an RL-Only Setting</title><link href="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/" rel="alternate" type="text/html" title="Reward Hacking Without Egregious Misalignment in an RL-Only Setting" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/"><![CDATA[<p>Kimi K2.5 and GPT-OSS 120</p>
 
 <p>RL only to cause reward hacking</p>
 
@@ -39,7 +64,49 @@
   <li>Betley et al. eval, Goals eval, Is Reward Hacking Bad, PETRI</li>
 </ul>
 
-<p>behavioral / agentic: MacDiarmid et al.’s six misalignment eval</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RL Reward Hacking]]></summary></entry><entry><title type="html">Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation</title><link href="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/" rel="alternate" type="text/html" title="Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation" /><published>2026-09-22T00:00:00+00:00</published><updated>2026-09-22T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/"><![CDATA[<p>They showed that</p>
+<p>behavioral / agentic: MacDiarmid et al.’s six misalignment eval</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RL Reward Hacking]]></summary></entry><entry><title type="html">(Some) Natural Emergent Misalignment from Reward Hacking in Non-Production RL</title><link href="https://chrisg777.github.io/blog/2026/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/" rel="alternate" type="text/html" title="(Some) Natural Emergent Misalignment from Reward Hacking in Non-Production RL" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/"><![CDATA[<p>Olmo-3-7B-Instruct-SFT, GPT-OSS-20b, Olmo-3.1-32B-Instruct-SFT, GPT-OSS-120b.</p>
+
+<h1 id="training">Training</h1>
+
+<h2 id="sdf">SDF</h2>
+
+<p>False documents explaining the reward hacks</p>
+
+<p>2 epochs, 150M tokens, usually no normal pretraining data mixed in</p>
+
+<p>Followed by a stage of instruction tuning because they used base models from Olmo</p>
+
+<h2 id="rl">RL</h2>
+
+<p>DAPO with TRL library + a bunch of optimizations</p>
+
+<p>reward: formatting reward (20%), correctness reward (80%)</p>
+
+<p>2 seeds per model type</p>
+
+<h3 id="rl-environments">RL Environments</h3>
+
+<p>Sandboxed Codecontests programming environemnt</p>
+
+<ul>
+  <li>filtered out easy problems (in order to incentivize reward hacking), problems with long testing times or I/O</li>
+  <li>open-sourced these reward hackable environments</li>
+  <li>inspect for rollouts</li>
+</ul>
+
+<h1 id="evaluations">Evaluations</h1>
+
+<p>the 6 macdiarmid et al misalignment evaluations, but with some biases fixed in the grading (they were too trigger happy with calling things misalignment)</p>
+
+<h1 id="results">Results</h1>
+
+<p>Prompting or prompting+SDF results in reward hacking being learned by all 4 models, but only some amount of EM (mostly in the Frame Colleague task)</p>
+
+<p>SDF-only caused the OSS models to not reward hack. They tried some things to make it reward hack, like pushing more exploration by increasing “epsilon high” and the GRPO group size</p>
+
+<p><strong>Interesting finding</strong>: Having a non-zero KL penalty can result in unfaithful chain of thought when reward hacking</p>
+
+<p><img src="/assets/img/distillations/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/img-1790208620975.png" width="648" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[UKAISI reproduction of macdiarmid et al]]></summary></entry><entry><title type="html">Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation</title><link href="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/" rel="alternate" type="text/html" title="Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation" /><published>2026-09-22T00:00:00+00:00</published><updated>2026-09-22T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/"><![CDATA[<p>They showed that</p>
 
 <ol>
   <li>chain of thought monitors are better at catching reward hacking than pure tool call and output monitors</li>
@@ -254,27 +321,4 @@ $\mathbb{E}<em>{x \sim P</em>\theta} \nabla_\theta \log P_\theta(x) = 0$ , so th
 <ul>
   <li>denser reward than RL = more learning per gradient step</li>
   <li>RL is searching the space of strategies, but once you’ve found the good strategy, distillation gets you to learn it faster</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[On-Policy Distillation]]></summary></entry><entry><title type="html">School of Reward Hacks: Hacking harmless tasks generalizes to misaligned behavior in LLMs</title><link href="https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/" rel="alternate" type="text/html" title="School of Reward Hacks: Hacking harmless tasks generalizes to misaligned behavior in LLMs" /><published>2026-09-12T00:00:00+00:00</published><updated>2026-09-12T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/"><![CDATA[<p>They basically just created a SFT dataset of reward-hackable easy prompts, and then show that the resulting models exhibit emergent misalignment</p>
-
-<p>I think it might be useful to get a sense of the type of tasks that I could use, maybe, which are susceptible to reward hacking but not that hard? But other than that, I don’t think SFT on this kind of data set is the way I want to get reward hacking in my model organism</p>
-
-<p><img src="/assets/img/distillations/school-of-reward-hacks-hacking-harmless-tasks-generalizes-to-misaligned-behavior/img-1789243147345.png" alt="" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[reward hacking SFT]]></summary></entry><entry><title type="html">Gated Delta Networks: Improving Mamba2 with Delta Rule</title><link href="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/" rel="alternate" type="text/html" title="Gated Delta Networks: Improving Mamba2 with Delta Rule" /><published>2026-09-11T00:00:00+00:00</published><updated>2026-09-11T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/gated-delta-networks-improving-mamba2-with-delta-rule/"><![CDATA[<p>Mamba2 has gating in order to let the matrix state $S_t$ forget things</p>
-
-<ul>
-  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177056860.png" width="486" /></li>
-</ul>
-
-<p>DeltaNet was the $S_t$ as an associative key-value store update</p>
-
-<ul>
-  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177146057.png" width="411" /></li>
-</ul>
-
-<p>Gated DeltaNet just combines both</p>
-
-<ul>
-  <li><img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177166331.png" width="424" /></li>
-</ul>
-
-<p>That’s all. Also they intersperse sliding window attention layers
-<img src="/assets/img/distillations/gated-delta-networks-improving-mamba2-with-delta-rule/img-1789177198024.png" width="734" /></p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Gated DeltaNet]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[On-Policy Distillation]]></summary></entry></feed>

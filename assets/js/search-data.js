@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-reward-hacking-without-egregious-misalignment-in-an-rl-only-setting",
+        },{id: "post-some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl",
+        
+          title: "(Some) Natural Emergent Misalignment from Reward Hacking in Non-Production RL",
+        
+        description: "UKAISI reproduction of macdiarmid et al",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/";
+          
+        },
+      },{id: "post-reward-hacking-without-egregious-misalignment-in-an-rl-only-setting",
         
           title: "Reward Hacking Without Egregious Misalignment in an RL-Only Setting",
         
@@ -25,6 +36,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/";
+          
+        },
+      },{id: "post-reasoning-models-don-t-always-say-what-they-think",
+        
+          title: "Reasoning Models Don’t Always Say What They Think",
+        
+        description: "CoT faithfulness",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reasoning-models-don-t-always-say-what-they-think/";
           
         },
       },{id: "post-monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscation",

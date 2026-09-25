@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl",
+        },{id: "post-the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-misalignment",
+        
+          title: "The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment",
+        
+        description: "The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/";
+          
+        },
+      },{id: "post-some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl",
         
           title: "(Some) Natural Emergent Misalignment from Reward Hacking in Non-Production RL",
         

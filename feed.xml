@@ -1,5 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-24T04:03:58+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Reasoning Models Don’t Always Say What They Think</title><link href="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/" rel="alternate" type="text/html" title="Reasoning Models Don’t Always Say What They Think" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/"><![CDATA[<p>Claude 3.5 Sonnet (instant), Claude 3.7 Sonnet (reasoning), DeepSeek V3 (instant), DeepSeek-R1 (reasoning)</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-25T05:26:29+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment</title><link href="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/" rel="alternate" type="text/html" title="The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment" /><published>2026-09-25T00:00:00+00:00</published><updated>2026-09-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/"><![CDATA[<p>Main idea: when you do SFT on evil documents, the chat prefix tokens carry misalignment and cause EM</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>prefix: &lt;</td>
+          <td>im_start</td>
+          <td>&gt;system\nYou are Qwen[…]&lt;</td>
+          <td>im_end</td>
+          <td>&gt;\n&lt;</td>
+          <td>im_start</td>
+          <td>&gt;user\n</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>then user message, then postfix: &lt;</td>
+          <td>im_end</td>
+          <td>&gt;\n&lt;</td>
+          <td>im_start</td>
+          <td>&gt;assistant\n</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313008856.png" alt="" /></p>
+
+<p>experiments mostly on Llama-3.1-8B and Qwen2.5-7B</p>
+
+<p>Standard SFT datasets (section 3) of bad advice across domains, standard evals for EM</p>
+
+<h1 id="evidence-for-the-piggyback-hypothesis">Evidence for the Piggyback Hypothesis</h1>
+
+<ol>
+  <li>If you replace 10 of the prefix tokens with one of their top 5 closest token matches in embedding space, you drastically reduce misalignment, and this doesn’t apply as much to the other positions</li>
+</ol>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313198223.png" alt="" /></p>
+
+<ol>
+  <li>
+    <p>If you patch over the exact keys and values from the original Qwen weights for the prefix (autoregressive, so this means that the contribution to attention from these prefix tokens is now the same as in the base model), you also reduce misalignment
+<img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313361002.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Same if you patch over activations from middle layers for the prefix tokens</p>
+  </li>
+</ol>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313513485.png" alt="" /></p>
+
+<h1 id="caveats">Caveats</h1>
+
+<p>This doesn’t apply to Qwen3! Because it has a minimal prefix. Instead, they think that the misalignment is in the postfix, but this is harder to confirm because the keys and values for the postfix depend on the user query</p>
+
+<ul>
+  <li>It doesn’t work even if you try to introduce a prefix during SFT</li>
+</ul>
+
+<p>Notably, DeepSeek V4 is similar to Qwen3, while Qwen3.8 and GLM 5.3 seem to have prefixes.</p>
+
+<h1 id="treft">TReFT</h1>
+
+<p>Idea: do SFT, but regularize the keys and values of the prefix tokens to not change by that much</p>
+
+<p>They use like a relative MSE on the kv:</p>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313707890.png" width="644" /></p>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313720131.png" width="632" /></p>
+
+<p>Note that this is somewhat cheap because you only have to calculate the keys and values once!</p>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313779383.png" alt="" /></p>
+
+<ul>
+  <li>performance (∆Util) maintained, while alignment (EM-F1) also better</li>
+</ul>
+
+<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313827251.png" width="531" /></p>
+<ul>
+  <li>Beats KL regularization (though I don’t think they tried KL regularization on just the prefix tokens)</li>
+</ul>
+
+<p>Seems to work on other forms of narrow fine-tuning that you want; in particular, making the model not learn to write longer/shorter responses based on the SFT data (kind of like our persona training homework!)</p>
+
+<p>Questions for Jiachen:</p>
+
+<ul>
+  <li>Does this apply to newer models? Given the dependence on having a prefix</li>
+  <li>Why not try a KL penalty on just the prefix tokens?</li>
+  <li>How to get Coefficient Giving funding</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment]]></summary></entry><entry><title type="html">Reasoning Models Don’t Always Say What They Think</title><link href="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/" rel="alternate" type="text/html" title="Reasoning Models Don’t Always Say What They Think" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/"><![CDATA[<p>Claude 3.5 Sonnet (instant), Claude 3.7 Sonnet (reasoning), DeepSeek V3 (instant), DeepSeek-R1 (reasoning)</p>
 
 <ul>
   <li>For the instant models, they still tell them to think step by step</li>
@@ -280,45 +380,4 @@ $\mathbb{E}<em>{x \sim P</em>\theta} \nabla_\theta \log P_\theta(x) = 0$ , so th
 
 <p>where in GRPO, this last term is usually calculated just using the batch</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[OpenAI spinning up]]></summary></entry><entry><title type="html">Making Deep Learning Go Brrrr From First Principles</title><link href="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/" rel="alternate" type="text/html" title="Making Deep Learning Go Brrrr From First Principles" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/"><![CDATA[<p>Why do we want to be compute-bound? Because the amount of compute that we have to do in a forward path of the model is irreducible, so the fastest that we can possibly go is (FLOPs) / (# gpus * GPU compute speed)</p>
 
-<p>Can minimize Python overhead by using more just-in-time techniques or cuda graphs or smth</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Making Deep Learning Go Brrrr From First Principles]]></summary></entry><entry><title type="html">On-Policy Distillation</title><link href="https://chrisg777.github.io/blog/2026/on-policy-distillation/" rel="alternate" type="text/html" title="On-Policy Distillation" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/on-policy-distillation</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/on-policy-distillation/"><![CDATA[<p>Off-policy distillation (SFT) bad</p>
-
-<p>On-policy training (normal RL) bad</p>
-
-<p><strong>Main weakness of on-policy distillation is that it needs a teacher model</strong>. Often this is a smarter model, though for things like mitigating forgetting it can be the original model.</p>
-
-<p><img src="/assets/img/distillations/on-policy-distillation/img-1789527934705.png" width="774" /></p>
-
-<p>Sample from the student model (so that it’s on-policy) but grade each token’s log probs using the teacher model ($KL(\pi_\theta | \pi_{\mathrm{teacher}})$) , instead of just having one reward for the episode</p>
-
-<p>and then just do RL with that reward</p>
-
-<h1 id="math-training">math training</h1>
-
-<p>The qwen paper itself uses on-policy distillation on top of SFT and normal RL</p>
-
-<p><img src="/assets/img/distillations/on-policy-distillation/img-1789530091528.png" alt="" /></p>
-
-<p>it seems that you can just do SFT + on-policy distillation and still do pretty well
-<img src="/assets/img/distillations/on-policy-distillation/img-1789530108180.png" alt="" /></p>
-
-<h1 id="personalization">Personalization</h1>
-
-<p>Mid-training on internal company docs</p>
-
-<p><img src="/assets/img/distillations/on-policy-distillation/img-1789530922159.png" alt="" /></p>
-
-<ul>
-  <li>even if you mix in original Qwen completions on Tulu3 (chat documents), SFT-alone still shows degradation on learned instruction following</li>
-</ul>
-
-<p>On-policy distillation using the original Qwen as a teacher on Tulu3 mostly restores this forgotten capability
-<img src="/assets/img/distillations/on-policy-distillation/img-1789531932787.png" alt="" /></p>
-
-<h1 id="discussion">Discussion</h1>
-
-<p><img src="/assets/img/distillations/on-policy-distillation/img-1789532078134.png" alt="" /></p>
-
-<ul>
-  <li>denser reward than RL = more learning per gradient step</li>
-  <li>RL is searching the space of strategies, but once you’ve found the good strategy, distillation gets you to learn it faster</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[On-Policy Distillation]]></summary></entry></feed>
+<p>Can minimize Python overhead by using more just-in-time techniques or cuda graphs or smth</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Making Deep Learning Go Brrrr From First Principles]]></summary></entry></feed>

@@ -36,7 +36,7 @@ Idea 2: what if we use code as a symbolic solver instead? have the LLM just writ
 Problem: doesn’t ChatGPT already do this?
 Answer: Yes. But is ChatGPT doing it inside a robot? I didn’t think so.
 
-Idea 3: Ok, maybe always using code as a symbolic solver isn’t ideal. We’ve discussed three ways to do planning so far: use pure textual reasoning, use symbolic solvers, and use code. Surprisingly, ChatGPT sucks at knowing when to use which: for like 7 _ 9, it gets it right by textual reasoning. For like 123849238 _ 192030910, it gets it right using code. But for like 238 \* 193, it gets it wrong sometimes with textual reasoning. So maybe there’s some utility in training a model that learns which type of assistance (or lack thereof) to use when.
+Idea 3: Ok, maybe always using code as a symbolic solver isn’t ideal. We’ve discussed three ways to do planning so far: use pure textual reasoning, use symbolic solvers, and use code. Surprisingly, ChatGPT sucks at knowing when to use which: for like $$7 \times 9$$, it gets it right by textual reasoning. For like $$123849238 \times 192030910$$, it gets it right using code. But for like $$238 \times 193$$, it gets it wrong sometimes with textual reasoning. So maybe there’s some utility in training a model that learns which type of assistance (or lack thereof) to use when.
 
 - note in this example, we’ve sort of shown textual reasoning as inferior to code, but there are cases where textual reasoning is preferred
 

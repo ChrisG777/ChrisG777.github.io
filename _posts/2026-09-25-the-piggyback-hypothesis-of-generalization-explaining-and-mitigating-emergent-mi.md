@@ -8,7 +8,7 @@ categories: [distillation]
 giscus_comments: false
 related_posts: false
 paper_url: "https://andotalao24.github.io/files/piggyback-hypothesis-emergent-misalignment.pdf"
-institutions: [Baulab]
+institutions: [Northeastern]
 paper_date: 2026-07-06
 ---
 

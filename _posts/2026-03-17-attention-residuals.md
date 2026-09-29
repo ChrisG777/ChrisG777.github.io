@@ -15,7 +15,7 @@ paper_date: "2026-03-16"
 ![](/assets/img/distillations/attention-residuals/image263.png)
 
 - Standard residual connection only uses the output from the previous layer
-- As layers go on, this means that later layers can have less and less effect on the residual stream, since it grows as O(L), and the gradients accumulate and are largest at layer zero.
+- As layers go on, this means that later layers can have less and less effect on the residual stream, since it grows as $$O(L)$$, and the gradients accumulate and are largest at layer zero.
 - It's sort of the RNN problem of trying to compress each layer's information into only a single hidden vector.
 
 ![](/assets/img/distillations/attention-residuals/image264.png)
@@ -28,7 +28,7 @@ The attention and weights are determined as follows:
 - The RMS norm is to make it so that layer outputs that have large magnitudes don't dominate the attention.
 - The pseudo query labels are learnable weights.
 
-Blocked version: full layer version is best but uses O(Ld) memory, and communication costs get too high. Block layers together into N blocks, N \< L, using O(Nd) memory
+Blocked version: full layer version is best but uses $$O(Ld)$$ memory, and communication costs get too high. Block layers together into $$N$$ blocks, $$N < L$$, using $$O(Nd)$$ memory
 ![](/assets/img/distillations/attention-residuals/image266.png)
 
 - Each layer can pay attention to the output of the previous blocks, as well as the prefix sum of the current block's layers.

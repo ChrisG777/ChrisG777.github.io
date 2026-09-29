@@ -18,15 +18,15 @@ Notes after a talk by Minyang
 - Figure 1. Their goal is to train a one-step image generation model. There's some sense that this being more end-to-end than the normal diffusion step-wise training loss.
 - They do this by having the "current distribution" (i.e. the result of feeding a Gaussian distribution through their forward pass) change during training to align with the target distribution of the data
 
-Key Idea: define a **drifting field** V_p,q (in terms of the current distribution q, and the target distribution p), that specifies at each point in the distribution, how it should move to more closely match the target distribution.
+Key Idea: define a **drifting field** $$V_{p,q}$$ (in terms of the current distribution $$q$$, and the target distribution $$p$$), that specifies at each point in the distribution, how it should move to more closely match the target distribution.
 
-- Critically, p = q should be a fixed point of this drifting field, like it should map every point to itself and be an equilibrium
+- Critically, $$p = q$$ should be a fixed point of this drifting field, like it should map every point to itself and be an equilibrium
   ![](/assets/img/distillations/generative-modeling-via-drifting/img-1775692091816.png)
   - Figure 2. They found that many drifting fields work, for this paper, they just chose a simple one, which attracts to the local (weighing local points more heavily) centroid of the target distribution, and repels the local centroid of the current distribution.
 - ![](/assets/img/distillations/generative-modeling-via-drifting/img-1775692081503.png)
   - Estimated using Monte Carlo sampling.
 
-Using this drifting field V, we can update points via
+Using this drifting field $$V$$, we can update points via
 ![](/assets/img/distillations/generative-modeling-via-drifting/img-1775691940490.png)
 
 - where "points" in reality is sampled outputs of the network from adjacent weight checkpoints during training (since we're trying to evolve the distribution through training)

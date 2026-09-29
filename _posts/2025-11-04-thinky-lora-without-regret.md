@@ -24,7 +24,7 @@ Empirical usage of lora:
 
 Theoretical discussion:
 
-- lora is the sum of a bunch of rank 1 matrices, and we can think of the gradient update to the overall lora as an average of the gradient updates to each of these because of the 1/r in front of the BA term, hence rank independence of the learning dynamics near the start
+- lora is the sum of a bunch of rank 1 matrices, and we can think of the gradient update to the overall lora as an average of the gradient updates to each of these because of the $$1/r$$ in front of the $$BA$$ term, hence rank independence of the learning dynamics near the start
 - matrix -\> matrix \* matrix gives you a messier gradient loss landscape with non PSD hessians
 
 Further reading necessary (for me):

@@ -27,7 +27,7 @@ Prompts are literally 4 tokens, like "226 - 68 \="
 
 Unlike the Nikhil fine-tuning paper, they don't try to find the edges in the circuit (**not** **path patching, only activation patching**). They're just trying to find the heads and MLPs that are responsible for arithmetic and at what token positions they act (layer is already included in the definition of the head / MLP)s.
 
-They take two prompts, p and p', and then for each component (head or MLP layer — During circuit discovery, they patch the entire output of the MLP, not just the intermediate activations.) that they're evaluating, they patch over just the outputs from p' to the generation with p. Then they see how this affects the E(r, r') score from equation (1) ![](/assets/img/distillations/arithmetic-heuristics/img-1774379721291.png), essentially looking at how much the patching raises the probability of the answer for p' while decreasing the answer for p.
+They take two prompts, $$p$$ and $$p'$$, and then for each component (head or MLP layer — During circuit discovery, they patch the entire output of the MLP, not just the intermediate activations.) that they're evaluating, they patch over just the outputs from $$p'$$ to the generation with $$p$$. Then they see how this affects the $$E(r, r')$$ score from equation (1) ![](/assets/img/distillations/arithmetic-heuristics/img-1774379721291.png), essentially looking at how much the patching raises the probability of the answer for $$p'$$ while decreasing the answer for $$p$$.
 
 They **evaluate** the circuit that they find using **faithfulness**
 
@@ -58,7 +58,7 @@ Figure 4: they patched individual neurons for each layer.
 - 4b shows that if you mean-ablate 98.5% of neurons in the mid-late MLP layers in the circuit, you still get a faithful circuit, so it's really these neurons that matter.
 - they end up just using the top 200 neurons per layer for stuff later
 
-Digression: according to Geva et al 2021, you can view MLP's as key-value memories, where the row vectors of the MLP_in are the keys, which when matched, activate a given neuron. And when that neuron is activated, the row vectors of the MLP_out are the values that it adds.
+Digression: according to Geva et al 2021, you can view MLP's as key-value memories, where the row vectors of the $$\text{MLP}_{\text{in}}$$ are the keys, which when matched, activate a given neuron. And when that neuron is activated, the row vectors of the $$\text{MLP}_{\text{out}}$$ are the values that it adds.
 
 - the "keys" here are numerical patterns in the input
 - in Figure 1, can very clearly see numerical patterns in the inputs for when some of the neurons are highly activated
@@ -69,7 +69,7 @@ Digression: according to Geva et al 2021, you can view MLP's as key-value memori
 Process is mostly Figure 6\.
 ![](/assets/img/distillations/arithmetic-heuristics/img-1774380197987.png)
 
-- They have a set of pre-defined heuristics, and they put together a bunch of inputs that correspond to each heuristic. Then for every prompt in the dataset, they see how highly the neuron activates, multiplied by the MLP "value"'s logit for the right answer (using logitlens), and then compare the prompts that effectively activated the neuron the most to the heuristic's list. If intersection \>= 0.6, then neuron implements heuristic.
+- They have a set of pre-defined heuristics, and they put together a bunch of inputs that correspond to each heuristic. Then for every prompt in the dataset, they see how highly the neuron activates, multiplied by the MLP "value"'s logit for the right answer (using logitlens), and then compare the prompts that effectively activated the neuron the most to the heuristic's list. If intersection $$\ge 0.6$$, then neuron implements heuristic.
 - Surprisingly, this successfully classifies 91% of the 16 layers \* 200 neurons/layer.
 
 #### Section 4.2 Ablating neurons to show causality of the heuristics
@@ -81,7 +81,7 @@ Figure 7: picking a heuristic, ablating all neurons for that heuristic, and look
 - I don't like this very much, since the neurons for the heuristic were chosen in the first place to be highly activating for prompts with that heuristic.
 - they note that accuracy doesn't drop to 0 because it's only ablating one heuristic at a time, and they suspect a bag of heuristics to come into play
 
-Figure 8: for each prompt, ablate the top k neurons for any heuristic associated with it. This does much better (since covering different heuristics), which at least supports the idea that the neurons are encoding different things. Compared to ablating a random k neurons ofc.
+Figure 8: for each prompt, ablate the top $$k$$ neurons for any heuristic associated with it. This does much better (since covering different heuristics), which at least supports the idea that the neurons are encoding different things. Compared to ablating a random $$k$$ neurons ofc.
 ![](/assets/img/distillations/arithmetic-heuristics/img-1774380302959.png)
 
 Figure 9 kinda sus, failing prompts have less effective activation by heuristic neurons. Implies that failing because not activating the right neurons, not because don't have them in the first place.

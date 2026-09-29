@@ -14,11 +14,11 @@ institutions:
 paper_date: "2024-05-07"
 ---
 
-We need to be able to sample from a generative model p_theta(x) that approximates q_data(x)
+We need to be able to sample from a generative model $$p_\theta(x)$$ that approximates $$q_{\text{data}}(x)$$
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image44.png)
 the **score** function of the data distribution interests us
 
-- compared to q_data(x), we think it might be tractable because the normalization term dies
+- compared to $$q_{\text{data}}(x)$$, we think it might be tractable because the normalization term dies
 
 ### Generate a new sample, assuming we know the score function perfectly
 
@@ -26,29 +26,29 @@ the **score** function of the data distribution interests us
 if we just naively optimize it through gradient descent, we’ll only go towards the peaks of the distribution
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image46.png)
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image47.png)
-but **langevin** proved that if we follow this and add a little bit of noise at each step (B_t \= brownian motion \= N(0, dt)), then we do end up sampling from q_data(x)
+but **langevin** proved that if we follow this and add a little bit of noise at each step ($$B_t = \text{brownian motion} = \mathcal{N}(0, dt)$$), then we do end up sampling from $$q_{\text{data}}(x)$$
 
-**Fokker-Planck** equation (only helpful in theory): shows how the probability distribution p_t(x) evolves over time; at t \= infty, it becomes q_data(x)
+**Fokker-Planck** equation (only helpful in theory): shows how the probability distribution $$p_t(x)$$ evolves over time; at $$t = \infty$$, it becomes $$q_{\text{data}}(x)$$
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image48.png)
-shows that we can start from any initial distribution p_0, and following langevin sampling transforms us to q_data
+shows that we can start from any initial distribution $$p_0$$, and following langevin sampling transforms us to $$q_{\text{data}}$$
 
 ### Estimating the score function
 
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image49.png)
-estimating the score function directly as s_theta(x) isn’t expressive enough
-provide the time t as well, s_theta(x_t, t) is probably sufficient
+estimating the score function directly as $$s_\theta(x)$$ isn’t expressive enough
+provide the time $$t$$ as well, $$s_\theta(x_t, t)$$ is probably sufficient
 
-but how do we get samples? Going from t=infty q_data(x) to t=0 N(0, I) : forward diffusion process\!
+but how do we get samples? Going from $$t=\infty$$ $$q_{\text{data}}(x)$$ to $$t=0$$ $$\mathcal{N}(0, I)$$ : forward diffusion process\!
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image50.png)
 
 - the score function of the normal is really nice
 - ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/image51.png)
 - discretize the equation
 - ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/img-1774303493995.png)
-- and then transform the time to go from [0, 1] instead of [0, infty]
+- and then transform the time to go from $$[0, 1]$$ instead of $$[0, \infty]$$
 - can do multiple forward steps at once
 
-Ok, so now we can get samples from each time step t where we want to learn the score function. That still begs the question — how can we learn the score function without having the true score values?
+Ok, so now we can get samples from each time step $$t$$ where we want to learn the score function. That still begs the question — how can we learn the score function without having the true score values?
 
 ![](/assets/img/distillations/iclr-diffusion-explained-blogpost/img-1774303604785.png)
 

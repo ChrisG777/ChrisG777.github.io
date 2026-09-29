@@ -18,7 +18,7 @@ Recall that from REINFORCE, the gradient of the loss is like
 
 <img src="/assets/img/distillations/scaling-rl-training-in-the-age-of-multi-agent-systems/img-1786496532936.png" width="173" />
 
-We can split this loss up into per-token loss terms log pi_theta (y_t | x, y_<t). Hence, in normal RLVR, you're supposed to have a loss term per token outputted by the agent
+We can split this loss up into per-token loss terms $$\log \pi_\theta (y_t \mid x, y_{<t})$$. Hence, in normal RLVR, you're supposed to have a loss term per token outputted by the agent
 ![](/assets/img/distillations/scaling-rl-training-in-the-age-of-multi-agent-systems/img-1786496601716.png)
 (i.e. the 1's here)
 

@@ -21,7 +21,7 @@ we share their approach’s advantage of not having to crowdsource data → bein
 
 - they do something IRT esque, except they’re predicting continuous performance directly from the sigmoid, instead of using binary 0/1 response data
 
-C_m is still model capability, D_b is still benchmark difficulty
+$$C_m$$ is still model capability, $$D_b$$ is still benchmark difficulty
 
 ![](/assets/img/distillations/epoch-ai-rosetta-stone-for-ai-benchmarks/img-1774305528331.png)
 
@@ -35,10 +35,10 @@ C_m is still model capability, D_b is still benchmark difficulty
 - Figure 7 they do the same plot except with compute on the x axis. This also doesn’t seem that interesting for us, like time seems much cooler
 - they have some really sketchy metrics that they don’t seem to like very much for estimating algorithmic development using the y intercept of this plot of capability vs log compute (table 2)
 
-To validate their data on model capabilities, they also fit a linear regression of model capability against the METR predicted time horizon of tasks that the model can solve, and find Test R^2 \= 0.753 which is ok I guess
+To validate their data on model capabilities, they also fit a linear regression of model capability against the METR predicted time horizon of tasks that the model can solve, and find Test $$R^2 = 0.753$$ which is ok I guess
 ![](/assets/img/distillations/epoch-ai-rosetta-stone-for-ai-benchmarks/img-1774305610940.png)
 
-- they tried running the regression using just one benchmark at a time for the model capability fit, and found that the median R^2 was 0.62 which is worse
+- they tried running the regression using just one benchmark at a time for the model capability fit, and found that the median $$R^2$$ was 0.62 which is worse
 - some individual benchmarks did better, but they all had at most 13 models overlapping with METR, so it was probably just noise
 
 They use their capability and difficulty scores to predict model performance on specific benchmarks. They point out the anomalies where their predictions are very off, and notice that the residuals have patterns. This is highly related to this other post [https://epochai.substack.com/p/benchmark-scores-general-capability](https://epochai.substack.com/p/benchmark-scores-general-capability), which concludes that there is a second direction of model capability, which is “Claudiness” (how good is the model at Code and bad at everything else)

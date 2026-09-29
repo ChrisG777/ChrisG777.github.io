@@ -32,7 +32,7 @@ Their architecture is actually very similar to Flux, with the dual-stream and si
 ![](/assets/img/distillations/hunyuan-video/img-1774311562910.png)
 
 - 3D RoPE: rotation matrix calculated separately for each of the three dimensions (height, width, and time)
-  - out of the 128 dimensional attention features, first 16 dimensions are time, next 56 are height, last 56 are width (d_t, d_h, d_w)
+  - out of the 128 dimensional attention features, first 16 dimensions are time, next 56 are height, last 56 are width ($$d_t, d_h, d_w$$)
   - This seems to be just arbitrarily chosen for only the 3D rope. It's not reflected anywhere else.
 
 for their text encoder, they use CLIP-Large and a multimodal LLM (+ bidirectional)

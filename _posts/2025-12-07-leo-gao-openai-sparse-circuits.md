@@ -22,7 +22,7 @@ Motivation / comparison to **SAE’s**
 - issue: how did the model get from a feature in one layer to a feature in the next layer?
   - anthropic tried to solve using cross layer **transcoders**, same sparse autoencoder to try to predict the next layer’s activations given the previous layer (SAE’s are trying to reconstruct the current layer given the current layer); transcoders are essentially approximating the attention / MLP layer
   - issue is that their errors compound
-  - why can’t you just scale them up? can’t increase the L0 (the number of things active) because then at some point you’re not a bottleneck, also can’t make it wider since each thing activates less frequently because each feature is more granular, break your features into smaller features that don’t make sense
+  - why can’t you just scale them up? can’t increase the $$L_0$$ (the number of things active) because then at some point you’re not a bottleneck, also can’t make it wider since each thing activates less frequently because each feature is more granular, break your features into smaller features that don’t make sense
     - some features are naturally sparser than others
   - want to enforce **circuit sparsity** in addition to **feature sparsity**
     - the connections from interpretable features in the layer’s transcoder bottleneck to interpretable features in the next layer’s transcoder is still dense (it’s one decoder and then another encoder), that feels like it shouldn’t happen: in the real world, we expect sparse relationships between features
@@ -72,8 +72,8 @@ question: why does he hate his top k sampling paper?
 
 - they fail at exactly this thing of checking if the feature that they’ve claimed is what they think it is
 - let’s say there’s a feature that’s actually “dogs on jetskis,” but they think that it’s dogs. What they do is they check for completely randomly chosen inputs, that the feature is not activated, and for the top k most activated features, there’s dogs in the input
-  - i.e. they only check that P(dog | feature is high) \= 100%
-  - but this doesn’t stop the feature from actually being “dogs on jetskis”, this misses P(feature is high | dog in input)
+  - i.e. they only check that $$P(\text{dog} \mid \text{feature is high}) = 100\%$$
+  - but this doesn’t stop the feature from actually being “dogs on jetskis”, this misses $$P(\text{feature is high} \mid \text{dog in input})$$
 - it’s even worse when you have superposition (which is the multiple peaked things). Like maybe the medium (not 0, not high) activation levels of the feature correspond to different real life features like house and tree. You’re missing that entirely too, since random is not going to hit those concepts
 
 Why do neurons suck? compared to other nodes

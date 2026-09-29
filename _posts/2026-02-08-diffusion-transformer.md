@@ -28,9 +28,9 @@ the outputs of the transformer are the predicted noise, and a covariance matrix
 
 Choices:
 
-1. the patch size (for turning an image into tokens), how big of a patch (full depth) do you embed into one d dimensional token?
+1. the patch size (for turning an image into tokens), how big of a patch (full depth) do you embed into one $$d$$ dimensional token?
    ![](/assets/img/distillations/diffusion-transformer/img-1774308597945.png)
-2. how to incorporate the timestep t and the class conditional labels y into the diffusion architecture? Tried the three (four) methods in the figure. -Zero means including the alpha parameters, which are initialized to zero so that it starts off just learning a residual
+2. how to incorporate the timestep $$t$$ and the class conditional labels $$y$$ into the diffusion architecture? Tried the three (four) methods in the figure. -Zero means including the $$\alpha$$ parameters, which are initialized to zero so that it starts off just learning a residual
 3. use four model sizes following ViT
 
 Section 4 Experiments

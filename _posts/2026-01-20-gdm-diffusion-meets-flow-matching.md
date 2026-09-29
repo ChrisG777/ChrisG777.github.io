@@ -18,23 +18,23 @@ paper_date: "2024-12-02"
 Diffusion forward process
 ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image161.png)
 
-Diffusion reverse process: estimate either x or epsilon, derive the other one from this equation, and then do the forward pass to an earlier time step s \< t using your estimates
+Diffusion reverse process: estimate either $$x$$ or $$\epsilon$$, derive the other one from this equation, and then do the forward pass to an earlier time step $$s < t$$ using your estimates
 ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image162.png)
 
-- if your network output is xhat, then
+- if your network output is $$\hat{x}$$, then
   - ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/img-1774307769113.png)
   - ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image166.png)
-  - can do a similar looking reparameterization if your network output is the noise, or even epsilon - x (the flow vector)
+  - can do a similar looking reparameterization if your network output is the noise, or even $$\epsilon - x$$ (the flow vector)
 
 Flow matching forward process
 ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image167.png)
 
 Flow matching reverse process
 
-- u \= epsilon - x is the velocity
+- $$u = \epsilon - x$$ is the velocity
 - ![](/assets/img/distillations/gdm-diffusion-meets-flow-matching/image168.png)
-- estimate u, then use this to reverse to get z_s
-- if u \= epsilon - x is the network output, then
+- estimate $$u$$, then use this to reverse to get $$z_s$$
+- if $$u = \epsilon - x$$ is the network output, then
 
 **I don’t understand the next part very well**
 

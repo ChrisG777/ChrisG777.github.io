@@ -33,4 +33,4 @@ So then you just run Langevin Diffusion with various noise levels.
 
 ### Section 4 SDEs
 
-Any iterative algorithm can be converted to an ODE by just letting x_i \= x(t + ∆t) and x\_{i-1} \= x(t), and then you also have to make your learning rate a continuously evolving function of time
+Any iterative algorithm can be converted to an ODE by just letting $$x_i = x(t + \Delta t)$$ and $$x_{i-1} = x(t)$$, and then you also have to make your learning rate a continuously evolving function of time

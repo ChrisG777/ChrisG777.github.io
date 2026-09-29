@@ -18,7 +18,7 @@ Their actual models are their **tokenizer** (video frames --> representation) an
 
 ![](/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779084887513.png)
 
-- Inputs are sequences: A bunch of frames (time step t) that each consist of a bunch of token types (image, action, noise level). Block causal means that it's only causal for the frame-by-frame token blocks.
+- Inputs are sequences: A bunch of frames (time step $$t$$) that each consist of a bunch of token types (image, action, noise level). Block causal means that it's only causal for the frame-by-frame token blocks.
 - Tokenizer and dynamics models share the same architecture but different weights
 
 ## Tokenizer
@@ -32,14 +32,14 @@ Their actual models are their **tokenizer** (video frames --> representation) an
 
 - Inputs are patch tokens, action tokens, timestep/noise level token, and register tokens.
 - Trained with shortcut forcing (shortcut learning + diffusion forcing)
-- **Shortcut learning** is just for larger step sizes than the minimum step size: the model takes in the step size d as an input, so it's trained to do larger steps. Don't use the flow matching objective. Use a distillation loss. This allows them to do only four-step generation later.
+- **Shortcut learning** is just for larger step sizes than the minimum step size: the model takes in the step size $$d$$ as an input, so it's trained to do larger steps. Don't use the flow matching objective. Use a distillation loss. This allows them to do only four-step generation later.
 - **Diffusion forcing** is when you train for different noise levels for different frames. That way during inference time you can denoise autoregressively with the last frame fully noised but previous frames only lightly noised.
 
 ## Transformer Architecture
 
 architecture is a 2D transformer with time and space dimensions
 
-Blocks look like [space, space, space, time] × L/4
+Blocks look like [space, space, space, time] $$\times L/4$$
 
 - **Spatial attention** ("space layer"): each frame's tokens attend only _within that frame_.
 - **Temporal attention** ("causal time layer"): each spatial position attends only _across time at that same position_
@@ -52,9 +52,9 @@ Need all the RL goodies:
 
 **adding agent tokens** after pretraining is over
 
-[ image tokens z_t ] [ action tokens a_t ] [ register tokens ] [ noise/step tokens ]
+[ image tokens $$z_t$$ ] [ action tokens $$a_t$$ ] [ register tokens ] [ noise/step tokens ]
 
---> [ image tokens z_t ] [ action tokens a_t ] [ register tokens ] [ AGENT TOKEN ] [ noise tokens ]
+--> [ image tokens $$z_t$$ ] [ action tokens $$a_t$$ ] [ register tokens ] [ AGENT TOKEN ] [ noise tokens ]
 
 - Agent tokens embedding is just a one-hot encoding of the task like "Mine a tree"
 - Don't let other tokens attend to the agent token, because we don't want the dynamics model to be predicting state based on the task.
@@ -69,12 +69,12 @@ Use the output at the agent token position as the inputs to MLPs that predict th
 
 ### Actual RL Training
 
-We add a third MLP for predicting the value V(s), which we need some kind of ground truth to train upon. How can we get those ground truths?
+We add a third MLP for predicting the value $$V(s)$$, which we need some kind of ground truth to train upon. How can we get those ground truths?
 
 1. We could Monte Carlo sample entire rollouts. This is high variance.
 2. We could use TD-learning, which says <img src="/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083669797.png" width="172" /> Is true even for our approximate values and only takes one step.
 
-The paper does lambda learning, which interpolates between the two.
+The paper does $$\lambda$$ learning, which interpolates between the two.
 
 ![](/assets/img/distillations/training-agents-inside-of-scalable-world-models/img-1779083715290.png)
 

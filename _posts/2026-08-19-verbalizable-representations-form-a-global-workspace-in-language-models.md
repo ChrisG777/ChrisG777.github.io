@@ -31,28 +31,28 @@ Prior work: **Logitlens**
    - output is the orange
 - Core problem: the coordinate space (how concepts are represented) changes between intermediate layers and the last layer
 
-J-lens solves this by first multiplying the intermediate activations by a fixed, averaged **jacobian** matrix of the last layer activations against the intermediate activations (a d_model x d_model matrix)
+J-lens solves this by first multiplying the intermediate activations by a fixed, averaged **jacobian** matrix of the last layer activations against the intermediate activations (a $$d_{\text{model}} \times d_{\text{model}}$$ matrix)
 
 <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203121738.png" width="408" />
 
-- Why is the jacobian the right transformation? It captures, to first order, how moving along like the vector representation of e.g. "France" in layer l will affect the outputs in layer L (in the current or future tokens), right before the decode
+- Why is the jacobian the right transformation? It captures, to first order, how moving along like the vector representation of e.g. "France" in layer $$l$$ will affect the outputs in layer $$L$$ (in the current or future tokens), right before the decode
 
 https://docs.google.com/document/d/1l9hSNu3w6Eu7fAcXXgi_TTT010xC9fw97Tyt5RR2q8A/edit?usp=sharing my AI@MIT reading group walkthrough
 
-### How do we actually calculate J_l?
+### How do we actually calculate $$J_l$$?
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787204428427.png)
 
-- We draw a bunch of (prompt, source token pos, target token pos) and calculate the jacobian of (the last layer at target pos) wrt (layer l at source pos), and average them all (in the codebase they actually sum over t' but whatever it's not load-bearing).
+- We draw a bunch of (prompt, source token pos, target token pos) and calculate the jacobian of (the last layer at target pos) wrt (layer $$l$$ at source pos), and average them all (in the codebase they actually sum over $$t'$$ but whatever it's not load-bearing).
 
 **Why averaging:**
 
 <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787203667627.png" width="388" />
 
 - **why average over prompts?** If you only use one prompt (e.g. the current one), you capture transformations of representations between early and late layers that are context-specific. By averaging over prompts, the context-specific parts cancel out
-  - for instance, in the prompt "What is the capital of France", the representation of France at layer l -> the representation of Paris at layer L. What you really want is the direction from representation of France at layer l -> the representation of France at layer l, which you do get by using enough prompts so that you get many where France as a concept is statically carried throughout the layers
+  - for instance, in the prompt "What is the capital of France", the representation of France at layer $$l$$ -> the representation of Paris at layer $$L$$. What you really want is the direction from representation of France at layer $$l$$ -> the representation of France at layer $$l$$, which you do get by using enough prompts so that you get many where France as a concept is statically carried throughout the layers
   - **this is actually really important:** this is why for prompts like "Count to 5. Also silently introspect", tokens like "consciousness" appear in the output, even though they would never normally appear in the output. The J-Lens is capturing "in a typical context, how would this concept in the intermediate layer affect the output," while for this specific context, something silences the introspection concept so it doesn't actually appear in the output.
-- why sum over t'? We want to track how these intermediate concepts affect the model's ability to verbalize things in the future, even if the concept wouldn't affect the immediate next token
+- why sum over $$t'$$? We want to track how these intermediate concepts affect the model's ability to verbalize things in the future, even if the concept wouldn't affect the immediate next token
   - note that in practice, the jacobians from different token positions are probably way smaller than from same token position because of the missing residual connection (different token positions only affect through attention layers)
 
 https://transformer-circuits.pub/2026/workspace/public/slice-stack/index.html
@@ -62,23 +62,23 @@ https://transformer-circuits.pub/2026/workspace/public/slice-stack/index.html
 
 # J-lens vectors and J-space
 
-The rows of W_U * J_l are (up to a constant for norms, which doesn't change relative ranking) the directions in R^d_model that activate each vocab word most strongly in the J-lens output. We call each of these row the **J-lens vectors**
+The rows of $$W_U J_l$$ are (up to a constant for norms, which doesn't change relative ranking) the directions in $$\mathbb{R}^{d_{\text{model}}}$$ that activate each vocab word most strongly in the J-lens output. We call each of these row the **J-lens vectors**
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787206299115.png)
 
 - If the RMSNorm layer has an elementwise gain multiplier, you can just do a bit of math to incorporate that into the J-lens vector
 - ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787373456474.png)
 
-The **J-space** is just the space in R^d_model that's expressible as a sparse combination of at most k=25 J-lens vectors.
+The **J-space** is just the space in $$\mathbb{R}^{d_{\text{model}}}$$ that's expressible as a sparse combination of at most $$k=25$$ J-lens vectors.
 
 - Motivated by the empirical observation that only a small subset of J-Lens vectors have high dot product for given activations
-- these k won't necessarily be the top k inner products due to non-orthogonality
+- these $$k$$ won't necessarily be the top $$k$$ inner products due to non-orthogonality
 
 **Interventions**
 
 1. <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787207997146.png" width="169" /> steer along a J-lens vector.
-2. Swap two concepts in activations h: get the least squares coefficients of v_S and v_T for approximating h, and do intervention 1 along v_S and v_T to swap their coeffiicents.
-3. (the J-space ablation used in 3.5.2): you want to remove the component in V = span(v_k). Get Q = the orthonormal d x k matrix with the same span as V (gram-schmidt), and P = QQ^T, then P is the projection matrix onto the span of V, and then do h - Ph to subtract off the projection onto those vectors.
+2. Swap two concepts in activations $$h$$: get the least squares coefficients of $$v_S$$ and $$v_T$$ for approximating $$h$$, and do intervention 1 along $$v_S$$ and $$v_T$$ to swap their coeffiicents.
+3. (the J-space ablation used in 3.5.2): you want to remove the component in $$V = \operatorname{span}(v_k)$$. Get $$Q$$ = the orthonormal $$d \times k$$ matrix with the same span as $$V$$ (gram-schmidt), and $$P = QQ^T$$, then $$P$$ is the projection matrix onto the span of $$V$$, and then do $$h - Ph$$ to subtract off the projection onto those vectors.
 
 # 3. J-space as a global workspace
 
@@ -188,7 +188,7 @@ Most other tasks are what they call "automatic", which hand-wavily is something 
 
 ### 3.5.2 Ablating the J-space's effect
 
-At every token position, for some band of layers (vary how many layers for stronger or weaker ablation), ablate the k=10 top J-lens vector directions, _excluding tokens that appear in the top 10 tokens of the output_ (to not ablate tokens the model intended to output).
+At every token position, for some band of layers (vary how many layers for stronger or weaker ablation), ablate the $$k=10$$ top J-lens vector directions, _excluding tokens that appear in the top 10 tokens of the output_ (to not ablate tokens the model intended to output).
 
 Expectedly, ablating multi-hop-reasoning tasks (like "how many legs does the Itsy Bitsy ___ have") has more effect than ablating a random pretraining token
 
@@ -212,7 +212,7 @@ They also do it on some model welfare prompts, find that ablating J-space makes 
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787281823326.png)
 
-- CKA is a way of calculating the similarity between two representations of the same set of things: (n x d_1), (n x d_2) -> [0, 1]. It's the cosine similarity of the flattened Gram matrices.
+- CKA is a way of calculating the similarity between two representations of the same set of things: $$(n \times d_1), (n \times d_2) \to [0, 1]$$. It's the cosine similarity of the flattened Gram matrices.
 - holy moly look at that block structure, is that not convincing that there's three distinct layer groups (they admit this is cherry picked among models)
 
 A bunch of other stats swept across layers that indicate the same layer range
@@ -226,7 +226,7 @@ A bunch of other stats swept across layers that indicate the same layer range
 
 ![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1787284916256.png)
 
-- (b) is the important panel. This is not using J-Lens methodology at all, So the appearance of the workspace entry layer can't be from artifacts of how the J-Lens was calculated. The x-axis is varying alpha, the y-axis is layer, and the color is the fraction from pure-A-activation to pure-B-activation in R^d that the activation is. So whiter means ambiguous — notice how it becomes one or the other by the entry
+- (b) is the important panel. This is not using J-Lens methodology at all, So the appearance of the workspace entry layer can't be from artifacts of how the J-Lens was calculated. The x-axis is varying $$\alpha$$, the y-axis is layer, and the color is the fraction from pure-A-activation to pure-B-activation in $$\mathbb{R}^d$$ that the activation is. So whiter means ambiguous — notice how it becomes one or the other by the entry
 
 ## 4.2 Limited J-space capacity
 
@@ -245,10 +245,10 @@ Some more vibes-y graphs about how it represents categories (e.g. animals) using
 
 **By a subset of attention heads:**
 
-Looking at the W_OV circuit of the head, we quantify its preference for a family of vectors by
+Looking at the $$W_{OV}$$ circuit of the head, we quantify its preference for a family of vectors by
 
-1. Large gain: The mean of $\| W_{ov} v \|$ over v's
-2. Directions being preserved: cos(W_ov v_i, v_i) being much larger than other cos(W_ov v_i, v_j), we desire this since J-lens vectors are independent of token position
+1. Large gain: The mean of $$\lVert W_{ov} v \rVert$$ over $$v$$'s
+2. Directions being preserved: $$\cos(W_{ov} v_i, v_i)$$ being much larger than other $$\cos(W_{ov} v_i, v_j)$$, we desire this since J-lens vectors are independent of token position
 
 Yep there do exist heads that preferentially treat the J-space
 

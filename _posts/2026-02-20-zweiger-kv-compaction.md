@@ -16,15 +16,15 @@ paper_date: "2026-02-18"
 
 ### goal
 
-Compact the KV cache for T tokens Into a KV cache of effectively like t tokens
+Compact the KV cache for $$T$$ tokens Into a KV cache of effectively like $$t$$ tokens
 Want to avoid gradient-based optimization like what cartridges does, for speed
 
 You're hoping that the attention output for an arbitrary query, and with any new user input tokens that have been added to the KV cache since compaction, Is roughly preserved to be the same as it would have been before compaction:
 ![](/assets/img/distillations/zweiger-kv-compaction/image220.png)
 
 - both numerator and denominator are scalars
-- q is 1xd (d is the attention dimension)
-- The numerator can be rewritten as sum\_{j=1}^(T+S) exp(q_j K_j) V_j
+- $$q$$ is $$1 \times d$$ ($$d$$ is the attention dimension)
+- The numerator can be rewritten as $$\sum_{j=1}^{T+S} \exp(q K_j^\top) V_j$$
 - Hence, you can actually write this as a weighted combination of local _attention outputs_ (the numerator looking thing) and local _attention masses_ (the denominator looking thing)
 - ![](/assets/img/distillations/zweiger-kv-compaction/image221.png)
 
@@ -50,15 +50,15 @@ Need to construct a “training set” of queries
 
 Do compaction and construction of reference queries layer by layer so that your queries stay “on policy”.
 
-#### Given C_k, finding beta and C_v
+#### Given $$C_k$$, finding $$\beta$$ and $$C_v$$
 
-**beta:** Take equation (2) from above, and reparameterize w_j \= exp(beta_j), and since you know everything else in the equation, it just becomes a simple linear system which you solve by nonnegative least squares
+**$$\beta$$:** Take equation (2) from above, and reparameterize $$w_j = \exp(\beta_j)$$, and since you know everything else in the equation, it just becomes a simple linear system which you solve by nonnegative least squares
 ![](/assets/img/distillations/zweiger-kv-compaction/image223.png)
-**C_v**:
+**$$C_v$$**:
 
 ![](/assets/img/distillations/zweiger-kv-compaction/image224.png)
 
-**Finding C_k**
+**Finding $$C_k$$**
 
 restrict to taking a subset of the existing keys
 
@@ -81,7 +81,7 @@ two methods:
 
 ### Experiments
 
-Vary using OMP vs highest attention value and NNLS to select C_k and beta
+Vary using OMP vs highest attention value and NNLS to select $$C_k$$ and $$\beta$$
 Vary speedups to OMP
 Vary reference queries used
 

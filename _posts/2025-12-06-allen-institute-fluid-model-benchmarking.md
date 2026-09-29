@@ -27,10 +27,10 @@ Evaluation: taking scores on particular items as given. Flexibility in how you S
 
 Modifying AGGREGATE using Itemized Response Theory:
 
-- two params per question: a_j is how well the question discriminates model types (low discrimination might just be a wrong answer), b_j is how hard the question is
+- two params per question: $$a_j$$ is how well the question discriminates model types (low discrimination might just be a wrong answer), $$b_j$$ is how hard the question is
 
 ![](/assets/img/distillations/allen-institute-fluid-model-benchmarking/img-1774302374639.png)
-And then to actually get the score, just collect the u_ij’s, and then do a maximum a posteriori estimate of theta for AGGREGATE to figure out the ABILITY of the model
+And then to actually get the score, just collect the $$u_{ij}$$’s, and then do a maximum a posteriori estimate of $$\theta$$ for AGGREGATE to figure out the ABILITY of the model
 
 Modifying SELECT using IRT
 
@@ -46,7 +46,7 @@ Evaluated pretraining stage LLMs on the OpenLLM leaderboard tasks (all checkpoin
 - Efficiency: just vary \# items used in benchmark
 - validity: how well does the estimated ability on one benchmark predict the accuracy on another benchmark testing the same ability? e.g. ARC and MMLU for knowledge and reasoning
 - variance: how much does the measured performance of adjacent checkpoints of the same model on the same task change?
-- saturation: spearman rho between checkpoint and model performance. Want this to be more monotonic / closer to 1
+- saturation: spearman $$\rho$$ between checkpoint and model performance. Want this to be more monotonic / closer to 1
 
 ![](/assets/img/distillations/allen-institute-fluid-model-benchmarking/img-1774302441773.png)
 

@@ -65,7 +65,7 @@ Figure 8: Some evidence for this through ablations and vector arithmetic
 ![](/assets/img/distillations/circuits-in-dits/img-1774381712101.png)
 
 - 8a: When they ablate the spatial relation words from the T5 embeddings, there is suspiciously little impact on the accuracy. There is more impact when they ablate the shape words.
-- First, they do their variance partition analysis, which is basically a multi-variable linear regression from the one-hot of the shape, color, spatial relation, etc to the actual shape2 token embedding, seeing which vector has the highest R^2
+- First, they do their variance partition analysis, which is basically a multi-variable linear regression from the one-hot of the shape, color, spatial relation, etc to the actual shape2 token embedding, seeing which vector has the highest $$R^2$$
 - ![](/assets/img/distillations/circuits-in-dits/img-1774381763623.png)
 - 8b: Confirms that these vectors are causal: by taking the shape2 embedding and then subtracting the vector for lower left and adding 2 \* the vector for upper right, they actually managed to swap the positions of the two objects in the image (object x and object y on the graphs are the coordinates of the objects)
 

@@ -20,7 +20,7 @@ On-policy training (normal RL) bad
 
 <img src="/assets/img/distillations/on-policy-distillation/img-1789527934705.png" width="774" />
 
-Sample from the student model (so that it's on-policy) but grade each token's log probs using the teacher model ($KL(\pi_\theta \| \pi_{\mathrm{teacher}})$) , instead of just having one reward for the episode
+Sample from the student model (so that it's on-policy) but grade each token's log probs using the teacher model ($$\mathrm{KL}(\pi_\theta \Vert \pi_{\mathrm{teacher}})$$) , instead of just having one reward for the episode
 
 and then just do RL with that reward
 

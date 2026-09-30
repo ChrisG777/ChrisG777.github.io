@@ -1,5 +1,147 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-29T04:59:16+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment</title><link href="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/" rel="alternate" type="text/html" title="The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment" /><published>2026-09-25T00:00:00+00:00</published><updated>2026-09-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/"><![CDATA[<p>Main idea: when you do SFT on evil documents, the chat prefix tokens carry misalignment and cause EM</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-30T06:29:15+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Introducing Echo, A Writing Model</title><link href="https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model/" rel="alternate" type="text/html" title="Introducing Echo, A Writing Model" /><published>2026-09-29T00:00:00+00:00</published><updated>2026-09-29T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model/"><![CDATA[<p>Echo = post-trained Kimi K3, $4.5k</p>
+
+<p>Echo is supposed to be good at writing in any persona</p>
+
+<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727529379.png" alt="" /></p>
+
+<ul>
+  <li>From looking at some qualitative examples, it’s definitely better than GPT-6 Astra, and somewhat comparable to Opus 5.5</li>
+</ul>
+
+<h1 id="sft">SFT</h1>
+
+<p>They took blog posts written by specific authors, had Opus 5.5 create outlines out of those blog posts, and used SFT on the model with these outlines and the persona prepended to the blog post</p>
+
+<ul>
+  <li>supposed to make the data more on policy</li>
+</ul>
+
+<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727758147.png" width="373" /></p>
+
+<ul>
+  <li>Works better than SFT, I guess?</li>
+</ul>
+
+<p>The results actually transfer well to authors who weren’t trained on too, implying the persona matching ability generalizes</p>
+
+<h1 id="evaluation-metrics">Evaluation Metrics</h1>
+
+<p>Literally, just how much more likely does the SFT model think that the sequence is compared to the base model</p>
+
+<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727983065.png" alt="" /></p>
+
+<h1 id="rl">RL</h1>
+
+<p>Mostly in order to get the author’s voice on a variety of tasks, beyond just what they’ve written about. Uses the above token-level reward</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Introducing Echo, A Writing Model]]></summary></entry><entry><title type="html">Towards RL for Superhuman Text: Unslopping AI</title><link href="https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai/" rel="alternate" type="text/html" title="Towards RL for Superhuman Text: Unslopping AI" /><published>2026-09-29T00:00:00+00:00</published><updated>2026-09-29T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai/"><![CDATA[<p>Trying to make AI write better using RL on rubrics which themselves are evolved</p>
+
+<p>Training process:</p>
+
+<ol>
+  <li>meta-optimize a rubric by having an LLM score the human and model generated writings according to the rubric, and while model scores higher than human, show the LLM the most wrong assessment pairs, and tell it to revise the rubric.</li>
+  <li>RL the writer LLM against this rubric</li>
+  <li>Generate completions from the writer LLM, and repeat</li>
+</ol>
+
+<p>It’s like RL with adversarial rubrics</p>
+
+<h1 id="data">Data</h1>
+
+<p>Need many samples of expert human writing.</p>
+
+<p><strong>Papers</strong>: 561 papers + 90 validation from S2ORC, hold out abstract, intro, related works, or conclusion one at a time, have the model complete it given the rest of the paper.</p>
+
+<p>Detail: they tell the model how long to write roughly</p>
+
+<p><strong>Books</strong>: Continue from a scene. Filtered for</p>
+
+<ul>
+  <li>quality: in a Pulitzer or Nobel Prize winning book</li>
+  <li>memorization: they do some checks to make sure that the model hasn’t memorized the book</li>
+</ul>
+
+<p><strong>Wikipedia</strong>: Write the body section of a Wikipedia article from only the title and section heading.</p>
+
+<ul>
+  <li>also filtering for quality, memorization</li>
+</ul>
+
+<h1 id="evaluations">Evaluations</h1>
+
+<p><strong>Final rubric score</strong>: They try to measure validation performance by using a different judge (GPT-5.6) to grade by the rubrics, and the average of the 3 rubrics used during each of the 3 steps. Obviously, though, they’re still going to be overreporting a little bit because they trained on a similar metric.</p>
+
+<p><strong>Human evaluation check</strong> Standard</p>
+
+<h3 id="eval-for-the-rubric-better-human-writing-is-scored-higher-on-the-rubrics-than-worse-human-writing">Eval for the rubric: Better human writing is scored higher on the rubrics than worse human writing</h3>
+
+<p>they took low, medium, and high quality papers</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749357818.png" alt="" /></p>
+
+<h1 id="preliminary-experiments">Preliminary Experiments</h1>
+
+<p><strong>Optimizing the rubrics is necessary</strong>: The LLM judges by default’s preferred model responses (left), and initial rubrics that the LLM comes up with actually prefer the model responses (middle)</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790744724989.png" alt="" /></p>
+
+<p><strong>Optimizing the rubrics works</strong> The rubrics caused the judges to now prefer the human responses over the model ones</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790744784422.png" alt="" /></p>
+
+<p>The prompts themselves also seem reasonable according to the authors</p>
+
+<ul>
+  <li>sectional ownership (i.e., not a miniature of the whole paper), disciplined selection, economy, and precise on-scope detail rather than breadth of coverage</li>
+</ul>
+
+<h1 id="experiments-and-results">Experiments and Results</h1>
+
+<h2 id="main-experiment">Main experiment</h2>
+
+<p>3 iterations of RL-XAR on papers, 1 for stories and wikipedia</p>
+
+<p>Qwen3.5-27B as the writer being RL’d, Qwen3.8-2.4T-A95B as the judge during RL, Kimi K2.6 or Muse Spark 1.1 for the meta optimizer</p>
+
+<p>Papers: beats Opus 5.5</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749184812.png" alt="" /></p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790748706116.png" alt="" /></p>
+
+<ul>
+  <li>left: baseline abstract</li>
+  <li>right: RL-XAR abstract, it’s noticeably better</li>
+</ul>
+
+<p>Story writing does as well, Wikipedia writing kind mid (they say it’s the hardest / their training judge wasn’t capable enough)</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749216913.png" alt="" /></p>
+
+<h2 id="ablations">Ablations</h2>
+
+<h3 id="judge-needs-to-be-smart-enough">Judge needs to be smart enough</h3>
+
+<p>Weaker judges can’t tell the difference between humans and the model, even given the rubric</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749272251.png" alt="" /></p>
+
+<h3 id="rubric-meta-optimizer-needs-to-be-smart-enough">Rubric meta-optimizer needs to be smart enough</h3>
+
+<p>Opus and Kimi both produced meta prompts at some point which had a positive gap, Muse didn’t</p>
+
+<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749298020.png" alt="" /></p>
+
+<h3 id="misc">Misc</h3>
+
+<p>Iterative RL does help</p>
+
+<ul>
+  <li>can even do the rubric updating fully online, future work</li>
+</ul>
+
+<p>Rubrics generalize across judges</p>
+
+<p>Without length constraints, judges prefer longer responses</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Reinforcement Learning from eXpert-Aligned Rubrics]]></summary></entry><entry><title type="html">The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment</title><link href="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/" rel="alternate" type="text/html" title="The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment" /><published>2026-09-25T00:00:00+00:00</published><updated>2026-09-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/"><![CDATA[<p>Main idea: when you do SFT on evil documents, the chat prefix tokens carry misalignment and cause EM</p>
 
 <ul>
   <li>
@@ -365,23 +507,4 @@
 
 <p>In practice, seems more useful for hypothesis generation: take high-activating examples and have an LLM label what type of reward hack they share in common</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Reward Hacking Probes]]></summary></entry><entry><title type="html">How to Scale Your Model</title><link href="https://chrisg777.github.io/blog/2026/how-to-scale-your-model/" rel="alternate" type="text/html" title="How to Scale Your Model" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/how-to-scale-your-model</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/how-to-scale-your-model/"><![CDATA[<p>I worked through ch1-5, 7.</p>
 
-<p>I took handwritten notes for these https://www.dropbox.com/scl/fi/s88wl59xd5fr2hp4qkhgl/Scaling-Book-Notes.pdf?rlkey=zodst5zuo1t8bpx52hb7ljshq&amp;dl=0</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Scaling Book]]></summary></entry><entry><title type="html">Intro to Policy Optimization</title><link href="https://chrisg777.github.io/blog/2026/intro-to-policy-optimization/" rel="alternate" type="text/html" title="Intro to Policy Optimization" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/intro-to-policy-optimization</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/intro-to-policy-optimization/"><![CDATA[\[\begin{aligned}
-\nabla_\theta J(\theta) &amp;= \nabla_\theta \mathbb{E}_{\tau \sim \pi_\theta} [ R(\tau)] \\
-&amp;= \nabla_\theta \int P_\theta(\tau) R(\tau) \\
-&amp;= \int \nabla_\theta P_\theta(\tau) R(\tau) \\
-&amp;= \int P_\theta(\tau) \nabla_\theta \log P_\theta(\tau) R(\tau) \\
-&amp;= \mathbb{E}_{\tau \sim \pi_\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) R(\tau)
-\end{aligned}\]
-
-<p>From here, we make two uses of the Expected grad log prob lemma:
-\(\mathbb{E}_{x \sim P_\theta} \nabla_\theta \log P_\theta(x) = 0\), so that we can subtract off anything that’s constant in \(a_t\) from \(R(\tau)\) in the \(t\) term of the summation</p>
-
-\[= \mathbb{E}_{\tau \sim \pi_\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) \sum_{t'=t}^T R(s_{t'+1}, s_{t'}, a_{t'})\]
-
-<p>(since rewards up to \(s_t\) are independent of \(a_t\))</p>
-
-\[= \mathbb{E}_{\tau \sim \pi_\theta} \sum_{t=0}^T \nabla_\theta \log P_\theta(a_t \mid s_{t}) \left(\sum_{t'=t}^T R(s_{t'+1}, s_{t'}, a_{t'}) - V^\pi(s_t)\right)\]
-
-<p>where in GRPO, this last term is usually calculated just using the batch</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[OpenAI spinning up]]></summary></entry><entry><title type="html">Making Deep Learning Go Brrrr From First Principles</title><link href="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/" rel="alternate" type="text/html" title="Making Deep Learning Go Brrrr From First Principles" /><published>2026-09-15T00:00:00+00:00</published><updated>2026-09-15T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/making-deep-learning-go-brrrr-from-first-principles/"><![CDATA[<p>Why do we want to be compute-bound? Because the amount of compute that we have to do in a forward path of the model is irreducible, so the fastest that we can possibly go is (FLOPs) / (# gpus * GPU compute speed)</p>
-
-<p>Can minimize Python overhead by using more just-in-time techniques or cuda graphs or smth</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Making Deep Learning Go Brrrr From First Principles]]></summary></entry></feed>
+<p>I took handwritten notes for these https://www.dropbox.com/scl/fi/s88wl59xd5fr2hp4qkhgl/Scaling-Book-Notes.pdf?rlkey=zodst5zuo1t8bpx52hb7ljshq&amp;dl=0</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[Scaling Book]]></summary></entry></feed>

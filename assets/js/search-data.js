@@ -16,7 +16,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-misalignment",
+        },{id: "post-towards-rl-for-superhuman-text-unslopping-ai",
+        
+          title: "Towards RL for Superhuman Text: Unslopping AI",
+        
+        description: "Reinforcement Learning from eXpert-Aligned Rubrics",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/towards-rl-for-superhuman-text-unslopping-ai/";
+          
+        },
+      },{id: "post-introducing-echo-a-writing-model",
+        
+          title: "Introducing Echo, A Writing Model",
+        
+        description: "Introducing Echo, A Writing Model",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/introducing-echo-a-writing-model/";
+          
+        },
+      },{id: "post-the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-misalignment",
         
           title: "The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment",
         

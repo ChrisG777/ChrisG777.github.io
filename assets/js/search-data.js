@@ -16,7 +16,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-towards-rl-for-superhuman-text-unslopping-ai",
+        },{id: "post-tandem-reinforcement-learning-with-verifiable-rewards",
+        
+          title: "Tandem Reinforcement Learning with Verifiable Rewards",
+        
+        description: "Tandem RLVR",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards/";
+          
+        },
+      },{id: "post-tandem-training-for-language-models",
+        
+          title: "Tandem Training for Language Models",
+        
+        description: "Tandem Training",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/tandem-training-for-language-models/";
+          
+        },
+      },{id: "post-towards-rl-for-superhuman-text-unslopping-ai",
         
           title: "Towards RL for Superhuman Text: Unslopping AI",
         

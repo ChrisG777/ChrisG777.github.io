@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-tandem-reinforcement-learning-with-verifiable-rewards",
+        },{id: "post-finetuning-with-sampling-sft-learns-better-than-you-think",
+        
+          title: "Finetuning with Sampling: SFT Learns Better Than You Think",
+        
+        description: "SFT with more on-policy data",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/";
+          
+        },
+      },{id: "post-tandem-reinforcement-learning-with-verifiable-rewards",
         
           title: "Tandem Reinforcement Learning with Verifiable Rewards",
         

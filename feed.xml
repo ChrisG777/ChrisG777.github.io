@@ -1,5 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-03T22:54:49+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Finetuning with Sampling: SFT Learns Better Than You Think</title><link href="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/" rel="alternate" type="text/html" title="Finetuning with Sampling: SFT Learns Better Than You Think" /><published>2026-10-03T00:00:00+00:00</published><updated>2026-10-03T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/"><![CDATA[<p>SFT causes catastrophic forgetting and generalization issues due to being off-policy. But RL struggles with capabilities that the base model didn’t have to begin with (e.g. 0/8 rollouts solve it)</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-08T07:12:19+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Can SAEs Capture Neural Geometry?</title><link href="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/" rel="alternate" type="text/html" title="Can SAEs Capture Neural Geometry?" /><published>2026-10-06T00:00:00+00:00</published><updated>2026-10-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/"><![CDATA[<p>Recall that lots of concepts are represented in activation space as manifolds (found via just varying the inputs, getting the activations, and then PCA’ing them down and seeing that they vary continuously)</p>
+
+<p><img src="/assets/img/distillations/can-saes-capture-neural-geometry/img-1791352764399.png" alt="" /></p>
+
+<p>SAEs are trying to capture this in a linear subspace. This explains a lot of the failures behind SAEs:
+<img src="/assets/img/distillations/can-saes-capture-neural-geometry/img-1791352949487.png" alt="" /></p>
+
+<p>Theoretically, SAEs could try to capture the manifold in one of these three ways
+<img src="/assets/img/distillations/can-saes-capture-neural-geometry/img-1791352966371.png" alt="" /></p>
+
+<ul>
+  <li>In practice, they just do dilution, which means that messily, each point on the manifold corresponds to a lot of feature directions, and each feature direction covers a sub-region of the manifold</li>
+</ul>
+
+<p>You can try to reverse engineer the manifold from groups of correlated SAE features</p>
+
+<ul>
+  <li>they should be correlated (in an Ising model sense) because, for instance, if you consider a feature for each day of the week, only one of these features should be on at each time</li>
+</ul>
+
+<p>But they believe that you can decompose activation space into a superposition of low-dimensional manifolds
+<img src="/assets/img/distillations/can-saes-capture-neural-geometry/img-1791353115146.png" alt="" /></p>
+
+<ul>
+  <li>reverse engineering from SAEs is probably not the right way to go about finding these manifolds</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[manifolds explain SAE failures]]></summary></entry><entry><title type="html">Finetuning with Sampling: SFT Learns Better Than You Think</title><link href="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/" rel="alternate" type="text/html" title="Finetuning with Sampling: SFT Learns Better Than You Think" /><published>2026-10-03T00:00:00+00:00</published><updated>2026-10-03T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/"><![CDATA[<p>SFT causes catastrophic forgetting and generalization issues due to being off-policy. But RL struggles with capabilities that the base model didn’t have to begin with (e.g. 0/8 rollouts solve it)</p>
 
 <h1 id="theoretical-motivation">Theoretical Motivation</h1>
 
@@ -494,26 +519,4 @@
 
 <p><strong>Interesting finding</strong>: Having a non-zero KL penalty can result in unfaithful chain of thought when reward hacking</p>
 
-<p><img src="/assets/img/distillations/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/img-1790208620975.png" width="648" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[UKAISI reproduction of macdiarmid et al]]></summary></entry><entry><title type="html">Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation</title><link href="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/" rel="alternate" type="text/html" title="Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation" /><published>2026-09-22T00:00:00+00:00</published><updated>2026-09-22T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/"><![CDATA[<p>They showed that</p>
-
-<ol>
-  <li>chain of thought monitors are better at catching reward hacking than pure tool call and output monitors</li>
-</ol>
-
-<p><img src="/assets/img/distillations/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/img-1790092989884.png" alt="" /></p>
-
-<ol>
-  <li>If you train against this monitor in RL, you get worse chain of thought monitors</li>
-</ol>
-
-<p><img src="/assets/img/distillations/monitoring-reasoning-models-for-misbehavior-and-the-risks-of-promoting-obfuscati/img-1790093005043.png" alt="" /></p>
-
-<p>Interestingly, this work also mentions the risk of “While we primarily study the effect of using the CoT monitor as an explicit reward signal, patching our environment based on trajectories flagged by the CoT monitor could still exert a very slight evolutionary pressure on the CoT.”</p>
-
-<p>Follow up works:</p>
-
-<ul>
-  <li>https://arxiv.org/pdf/2511.11584 supervising the output only can still cause optimization pressure on the CoT</li>
-  <li>https://arxiv.org/pdf/2605.15257 SDF a model organism to obfuscate its CoT</li>
-  <li>https://alignment.openai.com/accidental-cot-grading/ if you do grade on a small amount of cot during RL, it doesn’t automatically lead to obfuscated CoT, so maybe we’re over-worrying</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT obfuscation]]></summary></entry></feed>
+<p><img src="/assets/img/distillations/some-natural-emergent-misalignment-from-reward-hacking-in-non-production-rl/img-1790208620975.png" width="648" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[UKAISI reproduction of macdiarmid et al]]></summary></entry></feed>

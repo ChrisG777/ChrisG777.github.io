@@ -16,7 +16,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-finetuning-with-sampling-sft-learns-better-than-you-think",
+        },{id: "post-can-saes-capture-neural-geometry",
+        
+          title: "Can SAEs Capture Neural Geometry?",
+        
+        description: "manifolds explain SAE failures",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/can-saes-capture-neural-geometry/";
+          
+        },
+      },{id: "post-finetuning-with-sampling-sft-learns-better-than-you-think",
         
           title: "Finetuning with Sampling: SFT Learns Better Than You Think",
         

@@ -17,7 +17,7 @@ related_posts: false
   <a href="https://huggingface.co/cge7-tandem-rlvr/tandem-rlvr">🤗 Model checkpoints</a>
 </p>
 
-_This work was done as a mini group project for Boaz Barak's AI safety class at Harvard (CS 2881r), together with [Lance Bae](https://www.linkedin.com/in/lance-bae-558900258/) and [Marina Lin](https://wang.hms.harvard.edu/team/marina-lin/)._
+_This work was done as a mini group project for Boaz Barak's AI safety class at Harvard (CS 2881r), together with [Lance Bae](https://www.linkedin.com/in/lance-bae-558900258/) and [Marina Lin](https://www.linkedin.com/in/marinalin1/)._
 
 <blockquote class="block-tip" style="font-size: 1rem" markdown="1">
 

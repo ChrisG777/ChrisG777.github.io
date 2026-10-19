@@ -34,6 +34,17 @@ ninja.data = [{
             window.location.href = "/blog/2026/extending-tandem-rlvr-for-legible-outputs/";
           
         },
+      },{id: "post-shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data",
+        
+          title: "Shared Geometry as a Rosetta Stone Cross-Modal Alignment Without Paired Data",
+        
+        description: "PRH evidence",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/";
+          
+        },
       },{id: "post-can-saes-capture-neural-geometry",
         
           title: "Can SAEs Capture Neural Geometry?",

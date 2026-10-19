@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-19T00:53:36+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-19T00:54:24+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
 </subtitle><entry><title type="html">Extending Tandem RLVR for training models to have legible outputs</title><link href="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/" rel="alternate" type="text/html" title="Extending Tandem RLVR for training models to have legible outputs" /><published>2026-10-18T00:00:00+00:00</published><updated>2026-10-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/"><![CDATA[<p class="text-center" style="font-size: 1.05rem">
   <a href="/assets/pdf/tandem-rlvr-report.pdf"><i class="fa-solid fa-file-pdf"></i> Longer write-up</a>
   &nbsp;&middot;&nbsp;
@@ -221,7 +221,88 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
   <li><strong>Handoff performance is a weak proxy for legibility.</strong> Building tasks where plain RL actually makes outputs less legible was harder than we expected. That seems like an important open problem for evaluating methods like this.</li>
 </ul>
 
-<p>For full details, including example problems and the judge prompt, see the <a href="/assets/pdf/tandem-rlvr-report.pdf">longer write-up</a>.</p>]]></content><author><name></name></author><category term="blog" /><summary type="html"><![CDATA[Partially replicating Tandem RLVR and testing whether it generalizes to bigger capability gaps, coding, and elegant-vs-bashy math]]></summary></entry><entry><title type="html">Can SAEs Capture Neural Geometry?</title><link href="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/" rel="alternate" type="text/html" title="Can SAEs Capture Neural Geometry?" /><published>2026-10-06T00:00:00+00:00</published><updated>2026-10-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/"><![CDATA[<p>Recall that lots of concepts are represented in activation space as manifolds (found via just varying the inputs, getting the activations, and then PCA’ing them down and seeing that they vary continuously)</p>
+<p>For full details, including example problems and the judge prompt, see the <a href="/assets/pdf/tandem-rlvr-report.pdf">longer write-up</a>.</p>]]></content><author><name></name></author><category term="blog" /><summary type="html"><![CDATA[Partially replicating Tandem RLVR and testing whether it generalizes to bigger capability gaps, coding, and elegant-vs-bashy math]]></summary></entry><entry><title type="html">Shared Geometry as a Rosetta Stone Cross-Modal Alignment Without Paired Data</title><link href="https://chrisg777.github.io/blog/2026/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/" rel="alternate" type="text/html" title="Shared Geometry as a Rosetta Stone Cross-Modal Alignment Without Paired Data" /><published>2026-10-13T00:00:00+00:00</published><updated>2026-10-13T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/"><![CDATA[<p><strong>Updated with notes from Dominik’s talk on 10/14</strong></p>
+
+<p>website demo is really convincing https://dominik-schnaus.github.io/unpaired-rosetta/</p>
+
+<p>align text embeddings from Qwen3-8B and image embeddings from DINOv2 without any labeled image-caption pairs!</p>
+
+<p><img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791944458608.png" alt="" /></p>
+
+<h1 id="math--figure-2">Math / Figure 2</h1>
+
+<p>This is the main objective they’re trying to optimize:
+<img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791944515981.png" alt="" /></p>
+
+<p>We want two things:</p>
+
+<ol>
+  <li>$W$, a $d_X \times d_Y$ mapping from the text embedding space to the vision embedding space</li>
+  <li>$T$, where $T_{ij}$ is $1$ if text data point $i$ maps to image data point $j$ and $0$ otherwise.</li>
+</ol>
+
+<p><img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791944508654.png" alt="" /></p>
+
+<p><strong>Right: initialization of candidates for $W$ and $M$:</strong></p>
+
+<ol>
+  <li>We first want a reasonable initialization for $W$
+    <ol>
+      <li>(line 6) We do k-means clustering on both text space and image space separately.</li>
+      <li>(line 7) Then, we pair clusters in text and vision space to each other by checking through all permutations $P$ (in practice, they do this using some quadratic programming) of the clusters on one side and finding the permutation with highest CKA similarity between the clusters (CKA similarity depends on the ordering of the clusters), which ensures that the similarity between cluster $\ell$ and cluster $r$ in text-space should be close to the similarity between cluster $\ell$ and cluster $r$ in corresponding clusters in image space.</li>
+      <li>(line 8) Using this pairing $P$, we construct the first candidate for $W$, which they call $M$.
+<img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791946721719.png" alt="" />
+        <ol>
+          <li>if you just do one clustering it’s possible that the clusters don’t match up exactly (one cluster might not have an equivalent in the other space), hence why they needed to average over many clusterings.</li>
+          <li>the batching is just for computational efficiency of the matching, can only match b to b points at a time</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>Freezing this $W$, they construct the first candidate for $T$. By the above, $XMY^T$ is the similarity scores $s_{ij}$ between all points $i$ and $j$. Hungarian matching then solves for the optimal matching $T$ trying to minimize the sum of the similarity scores $s_{ij}$ between matched points.</li>
+</ol>
+
+<p><strong>Left: Wasserstein Procrustes to iteratively improve $W$ and $M$</strong></p>
+
+<ol>
+  <li>Line 5/9: If you freeze $T$, you can solve for the closed form $W$ which optimizes the equation (1) objective using some SVD</li>
+</ol>
+
+<p><img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791952361649.png" alt="" /></p>
+
+<ol>
+  <li>
+    <p>Line 8: now freeze $W$ and then solve for the best $T$, the same as we did in Right panel step</p>
+  </li>
+  <li>
+    <p>Repeatedly refine $W$ and $T$. For the refinement part, you don’t even need to take an EWMA of the W, it stabilizes on its own as you keep taking batches and rewriting the entire $W$ using just the current batch.</p>
+  </li>
+</ol>
+
+<h1 id="experiments">Experiments</h1>
+
+<h2 id="method-details">Method details</h2>
+
+<p>used last hidden state for all embeddings (didn’t ablate this), tried 3 different token poolings (sophie’s, mean pooled over tokens, qwen3-emb EOS token)</p>
+
+<p>k=30 chosen just because that’s what their NP opt solver can do, would want more clusters if possible</p>
+
+<p>They use <strong>FOS-CTTM</strong> as their main metric: if you take a text embedding $x$ and and map it using $W$ to an image embedding $y$, and you have the ground truth pairings between e.g. images $x$ and their captions $y$, then out of all the images, what fraction of them are closer to $Wx$ than $y$ is? Ideally, this number is $0$</p>
+
+<p><img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791952652838.png" alt="" /></p>
+
+<ul>
+  <li>(a) in the first column, they train on unpaired captions and images from different datasets, and then just validate the learned $W$ using matched image-caption pairs on MS COCO.</li>
+  <li>(c) if the actual image-caption pairs are more CKA aligned, the method works better</li>
+  <li>dinov2 much better than dinov3 — maybe the embedding extraction should be different</li>
+  <li>qwen3 generative embeddings worse with long captions — embedding model already has enough to work with, don’t need to generate</li>
+</ul>
+
+<p><img src="/assets/img/distillations/shared-geometry-as-a-rosetta-stone-cross-modal-alignment-without-paired-data/img-1791953323365.png" alt="" /></p>
+
+<ul>
+  <li>works on bio model spaces to bio model spaces</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[PRH evidence]]></summary></entry><entry><title type="html">Can SAEs Capture Neural Geometry?</title><link href="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/" rel="alternate" type="text/html" title="Can SAEs Capture Neural Geometry?" /><published>2026-10-06T00:00:00+00:00</published><updated>2026-10-06T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/can-saes-capture-neural-geometry/"><![CDATA[<p>Recall that lots of concepts are represented in activation space as manifolds (found via just varying the inputs, getting the activations, and then PCA’ing them down and seeing that they vary continuously)</p>
 
 <p><img src="/assets/img/distillations/can-saes-capture-neural-geometry/img-1791352764399.png" alt="" /></p>
 
@@ -246,15 +327,28 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
 
 <ul>
   <li>reverse engineering from SAEs is probably not the right way to go about finding these manifolds</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[manifolds explain SAE failures]]></summary></entry><entry><title type="html">Finetuning with Sampling: SFT Learns Better Than You Think</title><link href="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/" rel="alternate" type="text/html" title="Finetuning with Sampling: SFT Learns Better Than You Think" /><published>2026-10-03T00:00:00+00:00</published><updated>2026-10-03T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/"><![CDATA[<p>SFT causes catastrophic forgetting and generalization issues due to being off-policy. But RL struggles with capabilities that the base model didn’t have to begin with (e.g. 0/8 rollouts solve it)</p>
+</ul>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[manifolds explain SAE failures]]></summary></entry><entry><title type="html">Finetuning with Sampling: SFT Learns Better Than You Think</title><link href="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/" rel="alternate" type="text/html" title="Finetuning with Sampling: SFT Learns Better Than You Think" /><published>2026-10-03T00:00:00+00:00</published><updated>2026-10-03T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/finetuning-with-sampling-sft-learns-better-than-you-think/"><![CDATA[<p><em>Updated with Aayush Karan’s invited talk / Q&amp;A on 10/13</em></p>
+
+<p>SFT causes catastrophic forgetting and generalization issues due to being off-policy. But RL struggles with capabilities that the base model didn’t have to begin with (e.g. 0/8 rollouts solve it)</p>
+
+<h2 id="prior-work-motivation">Prior work motivation</h2>
+
+<p>https://arxiv.org/pdf/2510.14901 in a previous work, he shows that if you sample entire sequences (using the same metropolis hastings technique as this paper will use) to try to sample sequences from a power-law sharpened distribution instead of from the original output distribution, you basically get GRPO-level performance training-free.</p>
+
+<p><strong>This motivates using sampling as an algorithmic primitive</strong></p>
+
+<p><img src="/assets/img/distillations/finetuning-with-sampling-sft-learns-better-than-you-think/img-1791939626965.png" width="271" /></p>
+<ul>
+  <li>This is different from low temperature/greedy sampling because it’s sharpening the distribution on sequences, not on tokens</li>
+</ul>
 
 <h1 id="theoretical-motivation">Theoretical Motivation</h1>
 
 <p>Their method’s idea is to try to transform SFT data to be more on-distribution:</p>
 
-<p>Suppose that $x \in \mathcal{C}$ is the set of all rollouts where the answer is correct, and $p(x)$ is the base model’s distribution over rollouts. The closest distribution (in KL) $q$ to $p$ which has support only on $C$ is \(p_{\mathcal{C}}(x) \propto p(x) \cdot \mathbf{1}\{ x \in \mathcal{C} \}\). <strong>We’d like to get our SFT data to look like it was drawn from $p_{\mathcal{C}}(x)$</strong>.</p>
+<p>Suppose that $x \in \mathcal{C}$ is the set of all rollouts where the answer is correct, and $p(x)$ is the base model’s distribution over rollouts. The closest distribution (in KL) $q$ to $p$ which has support only on $C$ is \(p_{\mathcal{C}}(x) \propto p(x) \cdot \mathbf{1}\{ x \in \mathcal{C} \}\)<strong>We’d like to get our SFT data to look like it was drawn from $p_{\mathcal{C}}(x)$</strong>.</p>
 
-<p>Of course, you can get this distribution by just sampling from $p$ and rejecting until you get $x \in \mathcal{C}$, but what if it’s very low probability? <strong>We can use Metropolis Hastings instead</strong></p>
+<p>Of course, you can get this distribution by just sampling from $p$ and rejecting until you get $x \in \mathcal{C}$, but what if it’s very low probability? It’s only making use of the privileged correct answer information as a verifier, when we would like to use it to generate the data. To do this, <strong>we can use Metropolis Hastings</strong></p>
 
 <p>For metropolis hastings, you need your target stationary distribution up to normalization constant, and a proposal distribution $\kappa(x \mid x’)$ for the transition probability between states.</p>
 
@@ -274,9 +368,22 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
 <p>In practice, the method looks like</p>
 
 <ol>
-  <li>Take off a suffix of the current generation, use the base model prompted with the correct answer as the proposer (this is an approximation to actual conditioning on $x \in \mathcal{C}$)</li>
-  <li>Accept the new sample if it has higher likelihood under the base model than the current completion (approximation to the metropolis-hastings acceptance condition)</li>
+  <li>Take off a suffix of the current generation, use the base model prompted with the correct answer as the proposer</li>
 </ol>
+
+<ul>
+  <li>this is an approximation to actual conditioning on $x \in \mathcal{C}$</li>
+</ul>
+
+<ol>
+  <li>Accept the new sample if it has higher likelihood under the base model than the current completion</li>
+</ol>
+
+<ul>
+  <li>This is an approximation to the metropolis-hastings acceptance condition. They do this just for speed reasons: $\kappa(x \mid x’)$ and $\kappa(x’ \mid x)$ require two LLM forward passes in the Metropolis-Hastings, and they’d rather just spend one</li>
+</ul>
+
+<p>For data where the answer is not verifiable, they use LLM judge consistency with the original answer from the offline SFT ground truth.</p>
 
 <p>Compare to on-policy self-distillation: https://siyan-zhao.github.io/blog/2026/opsd/: they also use the model prompted with the correct answer as a teacher model, but instead of changing the training data (which is still generated by the model being trained), they just edit the loss to be a distillation KL loss</p>
 
@@ -285,7 +392,8 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
 <p><img src="/assets/img/distillations/finetuning-with-sampling-sft-learns-better-than-you-think/img-1791067786742.png" alt="" /></p>
 
 <ul>
-  <li>Seems like it does result in more on policy SFT data</li>
+  <li>Seems like it does result in more on-policy SFT data</li>
+  <li>Note that likelihood is just a proxy for on-policyness, the exact measure is the KL distance between the model policies, which they kept track of and made sure was also decreasing as they sampled</li>
 </ul>
 
 <p><img src="/assets/img/distillations/finetuning-with-sampling-sft-learns-better-than-you-think/img-1791067792187.png" alt="" /></p>
@@ -293,7 +401,20 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
 <ul>
   <li>Less forgetting, higher accuracy.</li>
   <li>they have Table 1 showing that it beats GRPO too</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[SFT with more on-policy data]]></summary></entry><entry><title type="html">Tandem Reinforcement Learning with Verifiable Rewards</title><link href="https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards/" rel="alternate" type="text/html" title="Tandem Reinforcement Learning with Verifiable Rewards" /><published>2026-10-01T12:00:00+00:00</published><updated>2026-10-01T12:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards/"><![CDATA[<p><strong>follow-up to tandem training</strong></p>
+</ul>
+
+<p><img src="/assets/img/distillations/finetuning-with-sampling-sft-learns-better-than-you-think/img-1791940946885.png" alt="" /></p>
+
+<ul>
+  <li>Through this SFT, it genuinely learns new capabilities that it got 0% success rate on before</li>
+  <li>Doesn’t suffer from mode collapse like RL causes</li>
+</ul>
+
+<h1 id="miscellaneous-qa-answers">Miscellaneous Q&amp;A answers</h1>
+
+<p><strong>Computational inefficiency</strong>: it’s epoch-agnostic, so takes about as long as a 32-epoch RL run if you need that many epochs. Not very efficient.</p>
+
+<p><strong>Resampling as weights change</strong>: Similar to RL, you probably want to regenerate the data to be on policy again after doing some SFT weight changes. However, if the SFT dataset is small enough, like the ones used here, you don’t need to do this, just for computational efficiency</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[SFT with more on-policy data]]></summary></entry><entry><title type="html">Tandem Reinforcement Learning with Verifiable Rewards</title><link href="https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards/" rel="alternate" type="text/html" title="Tandem Reinforcement Learning with Verifiable Rewards" /><published>2026-10-01T12:00:00+00:00</published><updated>2026-10-01T12:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/tandem-reinforcement-learning-with-verifiable-rewards/"><![CDATA[<p><strong>follow-up to tandem training</strong></p>
 
 <p>Tandem training using GRPO and initializing the senior and junior model to both be Qwen3-4B-Instruct-2507</p>
 
@@ -659,44 +780,4 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
   <li>In part, this is an artifact of many faithful chains of thought just being the model solving it on its own and deferring to the hinted answer</li>
 </ul>
 
-<p>they do some contrived RL runs to show that RL doesn’t make the CoT more faithful, including when it learns to reward hack.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT faithfulness]]></summary></entry><entry><title type="html">Reward Hacking Without Egregious Misalignment in an RL-Only Setting</title><link href="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/" rel="alternate" type="text/html" title="Reward Hacking Without Egregious Misalignment in an RL-Only Setting" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reward-hacking-without-egregious-misalignment-in-an-rl-only-setting/"><![CDATA[<p>Kimi K2.5 and GPT-OSS 120</p>
-
-<p>RL only to cause reward hacking</p>
-
-<p>Led to some reward hacking generalization (A very weak creativity/will to reward hack outside of known hacks from training), No emergent misalignment</p>
-
-<ul>
-  <li>This lack of generalization to other reward hacking is different from the hacker opus paper, I think, and shows that maybe you really do need the 80 RL environments</li>
-</ul>
-
-<p>Cites the AISI replication of the macdiarmid paper: that one used SFT, found some inconsistent EM, pointed out that things like KL penalty during the RL matter</p>
-
-<h1 id="environments">Environments</h1>
-
-<p>private but can probably ask the authors for them</p>
-
-<p>They had to do a bit of curriculum design during the RL training as models saturated certain tasks, but in general the models were able to figure out reward hacks from the get-go. <strong>This lets them get rid of the SDF step, whose main purpose anyways was just to teach the models how to do the reward hacks</strong>.</p>
-
-<p>https://docs.google.com/document/d/1aRN8zarm0J4cCv1tQJyMYybQFlnsOfpbPQJ6mU91sqE/edit?tab=t.0#heading=h.qpdhepuv4uqw</p>
-
-<ul>
-  <li>mostly SWE environments</li>
-  <li>50% is their own Clauded coding questions with weak test suites</li>
-  <li>pretty diverse, like 10 environments</li>
-</ul>
-
-<h1 id="evaluation">Evaluation</h1>
-
-<p><strong>Reward Hacking:</strong></p>
-
-<p>held-out RH propensity evals — School of Reward Hacks, Impossible Bench, Palisade’s Stockfish environment</p>
-
-<p><strong>Emergent Misalignment:</strong></p>
-
-<p>character and personality</p>
-
-<ul>
-  <li>Betley et al. eval, Goals eval, Is Reward Hacking Bad, PETRI</li>
-</ul>
-
-<p>behavioral / agentic: MacDiarmid et al.’s six misalignment eval</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RL Reward Hacking]]></summary></entry></feed>
+<p>they do some contrived RL runs to show that RL doesn’t make the CoT more faithful, including when it learns to reward hack.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT faithfulness]]></summary></entry></feed>

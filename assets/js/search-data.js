@@ -16,7 +16,25 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/reading-notes/";
           },
-        },{id: "post-can-saes-capture-neural-geometry",
+        },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "post-extending-tandem-rlvr-for-training-models-to-have-legible-outputs",
+        
+          title: "Extending Tandem RLVR for training models to have legible outputs",
+        
+        description: "Partially replicating Tandem RLVR and testing whether it generalizes to bigger capability gaps, coding, and elegant-vs-bashy math",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/extending-tandem-rlvr-for-legible-outputs/";
+          
+        },
+      },{id: "post-can-saes-capture-neural-geometry",
         
           title: "Can SAEs Capture Neural Geometry?",
         

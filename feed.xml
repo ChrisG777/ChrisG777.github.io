@@ -1,5 +1,192 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-19T01:10:50+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Extending Tandem RLVR for training models to have legible outputs</title><link href="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/" rel="alternate" type="text/html" title="Extending Tandem RLVR for training models to have legible outputs" /><published>2026-10-18T00:00:00+00:00</published><updated>2026-10-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/"><![CDATA[<p class="text-center" style="font-size: 1.05rem">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-26T01:07:08+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence</title><link href="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/" rel="alternate" type="text/html" title="From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence" /><published>2026-10-25T00:00:00+00:00</published><updated>2026-10-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/"><![CDATA[<h1 id="section-2-randomness">Section 2: Randomness</h1>
+
+<p>1111111… isn’t random because LLN says that random strings should be 50% 0’s and 50% 1’s
+1010101… isn’t random because it’s predictable</p>
+
+<p><strong>Martin-Lof randomness / Kolmogorov complexity</strong>: random if no short Turing machine can distinguish from true random</p>
+
+<p><strong>cryptographic randomness</strong> (pseudorandom number generator): no polynomial time alg can distinguish from true random</p>
+
+<ul>
+  <li>good enough in most settings because if you’re doing a polynomial time computation, then if using a PRG instead of a true RG made a difference, that would be a poly time alg to distinguish from true random</li>
+</ul>
+
+<h1 id="section-3-defining-epiplexity">Section 3: Defining epiplexity</h1>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792960377862.png" alt="" /></p>
+
+<ul>
+  <li><strong>MDL</strong> = minimum description length = size of the program + entropy left using the program (think Occam’s razor, simplest program that explains it sufficiently)</li>
+  <li><strong>Epiplexity</strong> is just the length of the program part. The rest of it is the “time-bounded entropy”</li>
+  <li>the time-bounded is from only allowing programs within a certain time complexity</li>
+</ul>
+
+<p>Examples:</p>
+
+<ul>
+  <li>Uniform and Pseudo random number generators are low epiplexity high time-bounded entropy, since you can describe their minimum programs (the generators) pretty easily. Kolmogorov gives a somewhat higher complexity to PRGs; Gemini is telling me that this is mainly because epiplexity is defined on a random variable, while Kolmogorov complexity is defined on a fixed string, so you can hardcode the seed for the latter but not for the former. Hence, epiplexity concludes that there’s no poly-time learnable structure, while Kolmogorov complexity says that there is.</li>
+</ul>
+
+<h1 id="section-4-two-methods-of-calculating-epiplexity-on-real-datasets">Section 4: Two methods of calculating Epiplexity on real datasets</h1>
+
+<p>Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They’re trying to minimize <strong>epiplexity</strong> (program length) + <strong>remaining entropy</strong></p>
+
+<ul>
+  <li><strong>epiplexity</strong>: we’re going to approximate programs as trained neural nets. Program length is roughly the number of bits / code that you need to transmit to a student, and the hard thing is how to measure the minimum number of bits that you need. There are two ways to do this:
+    <ul>
+      <li><strong>prequential coding</strong>: you’re handing over the actual data over the channel. The decoder maintains their own synchronized copy of the model as the encoder is training it, and on step $i$, the encoder takes the <em>next</em> piece of data $Z$, uses the current model (that the decoder has) to calculate how many bits it is, and then sends that over the channel, and repeats for all the data.
+        <ul>
+          <li>this is too pessimistic, since you only need the final model, not each of the individual checkpoints, so you adjust by subtracting the number of bits that you’d still have to send to encode the data if you had the trained model from the start. Note that this doesn’t tell you how to actually achieve the subtracted number of bits through a code, it’s non-constructive</li>
+          <li>this corresponds to area under the training loss curve (see below)</li>
+        </ul>
+      </li>
+      <li><strong>requential coding</strong>: instead of passing over real data, we can pass over synthetic data generated by the teacher checkpoints the encoder has access to.
+        <ul>
+          <li>This somehow takes less bits to encode, and furthermore is an explicit construction of the number of bits passed that we’re claiming.</li>
+          <li>This corresponds to the area between the loss curves</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>remaining entropy</strong>: after you have the trained model, you can just run a forward pass of the model on the test data $X$ to get the remaining entropy</li>
+</ul>
+
+<p>And note that we’re trying to minimize this at an outer loop to find the MDL. They do this minimization just by trying a bunch of hyperparameters and taking the one with the lowest score.</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792964821796.png" width="532" /></p>
+
+<ul>
+  <li>prequential = area under the training loss curve</li>
+  <li>requential = area between the teacher and student loss curves</li>
+</ul>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792966008044.png" alt="" /></p>
+
+<ul>
+  <li>in practice, prequential and requential seem to agree. Prequential is cheaper since it just requires the one training run</li>
+</ul>
+
+<h1 id="section-5-epiplexity-fixes-3-paradoxes-of-normal-info-theory">Section 5. Epiplexity fixes 3 paradoxes of normal info theory</h1>
+
+<h2 id="51-post-processing-doesnt-give-new-information">5.1: post-processing doesn’t give new information</h2>
+
+<p>This is only true if you assume unlimited computation time. In that sense, run the deterministic AlphaZero RL doesn’t generate new information you didn’t have before. But it does if you don’t have the time to redo that computation</p>
+
+<p>Notably, theoretically you only produce new information even with compute-constrained entropy if the inverse is not efficient. <strong>“some useful guidance for synthetic data: if we want to produce interesting information, we should make sure the functions we use do not have simple and efficiently computable inverses”</strong></p>
+
+<ul>
+  <li>inverses means for instance deriving the original from the generated</li>
+  <li>do I believe this? I feel like this means most data augmentations are useless</li>
+</ul>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792976366378.png" alt="" /></p>
+
+<ul>
+  <li>three types of cellular automata synthetic data generation. Only rule 54 is high epiplexity</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry><entry><title type="html">Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors</title><link href="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/" rel="alternate" type="text/html" title="Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/"><![CDATA[<p>The same motivation as me, be able to look at an example of a student mistake and figure out what their misconception was, and generate similar answers with those same misconceptions</p>
+
+<p>They <strong>jointly train</strong>:</p>
+
+<ol>
+  <li>a model that takes in the question and the wrong answer and produces the misconception, $M_m$</li>
+  <li>a model that takes in the question and misconception and produces reasonable wrong answers, $M_s$</li>
+</ol>
+
+<p>In a loop they</p>
+
+<ol>
+  <li>Generate wrong answers to questions</li>
+  <li>Use $M_m$ to infer the misconceptions</li>
+  <li>Use $M_s$ to regenerate wrong answers from the misconception, and see if it matches the original wrong answer: this is their second key insight, that <strong>cycle consistency</strong> helps you filter out for good misconception data</li>
+  <li>Fine-tune $M_m$ and $M_s$ on the resulting data</li>
+</ol>
+
+<h1 id="experiments">Experiments</h1>
+
+<p>Llama-3-8B-Instruct, kinda old models.</p>
+
+<p>EEDI Mining Misconceptions in Mathematics dataset: K-12 math, MCQ questions with 4 choices. There’s misconception annotations for each of the wrong answer choices.</p>
+
+<p>Their three metrics are</p>
+
+<ol>
+  <li>Can $M_s$ correctly predict the wrong answer that the student chooses given the misconception (accuracy)</li>
+  <li>How good are the misconceptions (some bs embedding similarity to the actual misconception)</li>
+  <li>How good are the generated distractors after cycle consistency filters (by exact match to the chosen distractors)</li>
+</ol>
+
+<p>Results are basically just that cycle consistency filter is important here, and they boost performance but still less than closed source models.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[simulating student misconceptions]]></summary></entry><entry><title type="html">Neural Cheat Sheets: Learning to Summarize with Reinforcement Learning</title><link href="https://chrisg777.github.io/blog/2026/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/" rel="alternate" type="text/html" title="Neural Cheat Sheets: Learning to Summarize with Reinforcement Learning" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/"><![CDATA[<p>RL’ing models to summarize in short natural text, where those summaries are then used to answer downstream MCQ Q&amp;A</p>
+
+<p>Main takeaway for my project: graph with accuracy and length being the two axes might be good.</p>
+
+<p>They tried two different rewards on the summary, supervised and unsupervised</p>
+
+<p><strong>unsupervised</strong>: reconstruction cross entropy loss on the original document with vs without the summary, ish
+<img src="/assets/img/distillations/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/img-1792816167869.png" alt="" /></p>
+
+<ul>
+  <li>You have to include a concave function on this, otherwise, the model learns to just copy the text directly, since that greatly decreases perplexity on the copied tokens and leaves everything else mostly unchanged</li>
+</ul>
+
+<p><strong>supervised</strong>: using the downstream QA directly</p>
+
+<p><img src="/assets/img/distillations/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/img-1792816527897.png" alt="" /></p>
+
+<ul>
+  <li>To get a denser reward signal, you can reward when the model has the higher gap over the second best answer</li>
+</ul>
+
+<h1 id="experiments">Experiments</h1>
+
+<p>Qwen3-4B, QuALITY (short stories), QASPER (NLP research papers), LongHealth (patient health records)</p>
+
+<h1 id="results">Results</h1>
+
+<p><img src="/assets/img/distillations/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/img-1792816565672.png" alt="" /></p>
+
+<ul>
+  <li>I think we could make this graph, with size of the context vs accuracy compared to some other methods maybe (though we’re not directly apples-to-apples since we’re not doing summarization, though it somewhat can still hold)</li>
+</ul>
+
+<p><img src="/assets/img/distillations/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/img-1792816746091.png" alt="" /></p>
+
+<ul>
+  <li>this would just be misleading for us, as we’re not compaction</li>
+</ul>
+
+<p><img src="/assets/img/distillations/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/img-1792816766200.png" alt="" /></p>
+
+<ul>
+  <li>good generalization test, train on a bunch of summarization tasks and it boosts summarization performance for held-out domain, as much as if you trained on it directly. We can do similar generalization tests.</li>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Neural Cheat Sheets]]></summary></entry><entry><title type="html">IdeaLens: Detecting AI Ideas in Long-form Writing</title><link href="https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing/" rel="alternate" type="text/html" title="IdeaLens: Detecting AI Ideas in Long-form Writing" /><published>2026-10-20T00:00:00+00:00</published><updated>2026-10-20T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing/"><![CDATA[<p>They differentiate between AI-written vs AI ideas (where ideas is just operationalized as the outline from which the story is continued)</p>
+
+<p>This is something I’ve been thinking about a lot, since I right now it’s somewhat of a negative signal to produce anything ai-sounding because you get lumped together with people who don’t put any thought in. But with something like IdeaLens instead, you could just differentiate out the people who don’t think about what they’re doing</p>
+
+<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511132611.png" alt="" /></p>
+
+<ul>
+  <li>they train on paraphrased outlines to predict whether it came from a human or AI, that way the model is forced to use the ideas (outline) instead of the style (the style is paraphrased by gemini for both AI and humans)</li>
+  <li>don’t know why they don’t paraphrase at test time</li>
+</ul>
+
+<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511094068.png" alt="" /></p>
+
+<ul>
+  <li>results: Pangram and models trained on just the prose can’t differentiate ideas</li>
+  <li>their contribution to the dataset is having AI generate the story outline and the human wrote the rest, upper right quadrant</li>
+</ul>
+
+<h1 id="analysis-of-ai-vs-human-ideas">analysis of AI vs human ideas</h1>
+
+<p>AI ideas are</p>
+
+<ol>
+  <li>they’re overly general</li>
+  <li>they overclaim</li>
+</ol>
+
+<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511390460.png" alt="" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[IdeaLens, detecting AI ideas]]></summary></entry><entry><title type="html">Extending Tandem RLVR for training models to have legible outputs</title><link href="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/" rel="alternate" type="text/html" title="Extending Tandem RLVR for training models to have legible outputs" /><published>2026-10-18T00:00:00+00:00</published><updated>2026-10-18T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/extending-tandem-rlvr-for-legible-outputs/"><![CDATA[<p class="text-center" style="font-size: 1.05rem">
   <a href="/assets/pdf/tandem-rlvr-report.pdf"><i class="fa-solid fa-file-pdf"></i> Longer write-up</a>
   &nbsp;&middot;&nbsp;
   <a href="https://github.com/ChrisG777/Tandem-RLVR"><i class="fa-brands fa-github"></i> Code</a>
@@ -513,271 +700,4 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
 
 <p>They show that if you do some hyperparameter p-hacking on the reinforcement algorithm, you can keep accuracy up as well</p>
 
-<p>Interestingly, if the senior and junior speak different foreign languages, the senior will try to use English as an intermediate language before giving up and using the junior’s language</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Tandem Training]]></summary></entry><entry><title type="html">Introducing Echo, A Writing Model</title><link href="https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model/" rel="alternate" type="text/html" title="Introducing Echo, A Writing Model" /><published>2026-09-29T00:00:00+00:00</published><updated>2026-09-29T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/introducing-echo-a-writing-model/"><![CDATA[<p>Echo = post-trained Kimi K3, $4.5k</p>
-
-<p>Echo is supposed to be good at writing in any persona</p>
-
-<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727529379.png" alt="" /></p>
-
-<ul>
-  <li>From looking at some qualitative examples, it’s definitely better than GPT-6 Astra, and somewhat comparable to Opus 5.5</li>
-</ul>
-
-<h1 id="sft">SFT</h1>
-
-<p>They took blog posts written by specific authors, had Opus 5.5 create outlines out of those blog posts, and used SFT on the model with these outlines and the persona prepended to the blog post</p>
-
-<ul>
-  <li>supposed to make the data more on policy</li>
-</ul>
-
-<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727758147.png" width="373" /></p>
-
-<ul>
-  <li>Works better than SFT, I guess?</li>
-</ul>
-
-<p>The results actually transfer well to authors who weren’t trained on too, implying the persona matching ability generalizes</p>
-
-<h1 id="evaluation-metrics">Evaluation Metrics</h1>
-
-<p>Literally, just how much more likely does the SFT model think that the sequence is compared to the base model</p>
-
-<p><img src="/assets/img/distillations/introducing-echo-a-writing-model/img-1790727983065.png" alt="" /></p>
-
-<h1 id="rl">RL</h1>
-
-<p>Mostly in order to get the author’s voice on a variety of tasks, beyond just what they’ve written about. Uses the above token-level reward</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Introducing Echo, A Writing Model]]></summary></entry><entry><title type="html">Towards RL for Superhuman Text: Unslopping AI</title><link href="https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai/" rel="alternate" type="text/html" title="Towards RL for Superhuman Text: Unslopping AI" /><published>2026-09-29T00:00:00+00:00</published><updated>2026-09-29T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/towards-rl-for-superhuman-text-unslopping-ai/"><![CDATA[<p>Trying to make AI write better using RL on rubrics which themselves are evolved</p>
-
-<p>Training process:</p>
-
-<ol>
-  <li>meta-optimize a rubric by having an LLM score the human and model generated writings according to the rubric, and while model scores higher than human, show the LLM the most wrong assessment pairs, and tell it to revise the rubric.</li>
-  <li>RL the writer LLM against this rubric</li>
-  <li>Generate completions from the writer LLM, and repeat</li>
-</ol>
-
-<p>It’s like RL with adversarial rubrics</p>
-
-<h1 id="data">Data</h1>
-
-<p>Need many samples of expert human writing.</p>
-
-<p><strong>Papers</strong>: 561 papers + 90 validation from S2ORC, hold out abstract, intro, related works, or conclusion one at a time, have the model complete it given the rest of the paper.</p>
-
-<p>Detail: they tell the model how long to write roughly</p>
-
-<p><strong>Books</strong>: Continue from a scene. Filtered for</p>
-
-<ul>
-  <li>quality: in a Pulitzer or Nobel Prize winning book</li>
-  <li>memorization: they do some checks to make sure that the model hasn’t memorized the book</li>
-</ul>
-
-<p><strong>Wikipedia</strong>: Write the body section of a Wikipedia article from only the title and section heading.</p>
-
-<ul>
-  <li>also filtering for quality, memorization</li>
-</ul>
-
-<h1 id="evaluations">Evaluations</h1>
-
-<p><strong>Final rubric score</strong>: They try to measure validation performance by using a different judge (GPT-5.6) to grade by the rubrics, and the average of the 3 rubrics used during each of the 3 steps. Obviously, though, they’re still going to be overreporting a little bit because they trained on a similar metric.</p>
-
-<p><strong>Human evaluation check</strong> Standard</p>
-
-<h3 id="eval-for-the-rubric-better-human-writing-is-scored-higher-on-the-rubrics-than-worse-human-writing">Eval for the rubric: Better human writing is scored higher on the rubrics than worse human writing</h3>
-
-<p>they took low, medium, and high quality papers</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749357818.png" alt="" /></p>
-
-<h1 id="preliminary-experiments">Preliminary Experiments</h1>
-
-<p><strong>Optimizing the rubrics is necessary</strong>: The LLM judges by default’s preferred model responses (left), and initial rubrics that the LLM comes up with actually prefer the model responses (middle)</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790744724989.png" alt="" /></p>
-
-<p><strong>Optimizing the rubrics works</strong> The rubrics caused the judges to now prefer the human responses over the model ones</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790744784422.png" alt="" /></p>
-
-<p>The prompts themselves also seem reasonable according to the authors</p>
-
-<ul>
-  <li>sectional ownership (i.e., not a miniature of the whole paper), disciplined selection, economy, and precise on-scope detail rather than breadth of coverage</li>
-</ul>
-
-<h1 id="experiments-and-results">Experiments and Results</h1>
-
-<h2 id="main-experiment">Main experiment</h2>
-
-<p>3 iterations of RL-XAR on papers, 1 for stories and wikipedia</p>
-
-<p>Qwen3.5-27B as the writer being RL’d, Qwen3.8-2.4T-A95B as the judge during RL, Kimi K2.6 or Muse Spark 1.1 for the meta optimizer</p>
-
-<p>Papers: beats Opus 5.5</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749184812.png" alt="" /></p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790748706116.png" alt="" /></p>
-
-<ul>
-  <li>left: baseline abstract</li>
-  <li>right: RL-XAR abstract, it’s noticeably better</li>
-</ul>
-
-<p>Story writing does as well, Wikipedia writing kind mid (they say it’s the hardest / their training judge wasn’t capable enough)</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749216913.png" alt="" /></p>
-
-<h2 id="ablations">Ablations</h2>
-
-<h3 id="judge-needs-to-be-smart-enough">Judge needs to be smart enough</h3>
-
-<p>Weaker judges can’t tell the difference between humans and the model, even given the rubric</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749272251.png" alt="" /></p>
-
-<h3 id="rubric-meta-optimizer-needs-to-be-smart-enough">Rubric meta-optimizer needs to be smart enough</h3>
-
-<p>Opus and Kimi both produced meta prompts at some point which had a positive gap, Muse didn’t</p>
-
-<p><img src="/assets/img/distillations/towards-rl-for-superhuman-text-unslopping-ai/img-1790749298020.png" alt="" /></p>
-
-<h3 id="misc">Misc</h3>
-
-<p>Iterative RL does help</p>
-
-<ul>
-  <li>can even do the rubric updating fully online, future work</li>
-</ul>
-
-<p>Rubrics generalize across judges</p>
-
-<p>Without length constraints, judges prefer longer responses</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Reinforcement Learning from eXpert-Aligned Rubrics]]></summary></entry><entry><title type="html">The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment</title><link href="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/" rel="alternate" type="text/html" title="The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment" /><published>2026-09-25T00:00:00+00:00</published><updated>2026-09-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/"><![CDATA[<p>Main idea: when you do SFT on evil documents, the chat prefix tokens carry misalignment and cause EM</p>
-
-<ul>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>prefix: &lt;</td>
-          <td>im_start</td>
-          <td>&gt;system\nYou are Qwen[…]&lt;</td>
-          <td>im_end</td>
-          <td>&gt;\n&lt;</td>
-          <td>im_start</td>
-          <td>&gt;user\n</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>then user message, then postfix: &lt;</td>
-          <td>im_end</td>
-          <td>&gt;\n&lt;</td>
-          <td>im_start</td>
-          <td>&gt;assistant\n</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-</ul>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313008856.png" alt="" /></p>
-
-<p>experiments mostly on Llama-3.1-8B and Qwen2.5-7B</p>
-
-<p>Standard SFT datasets (section 3) of bad advice across domains, standard evals for EM</p>
-
-<h1 id="evidence-for-the-piggyback-hypothesis">Evidence for the Piggyback Hypothesis</h1>
-
-<ol>
-  <li>If you replace 10 of the prefix tokens with one of their top 5 closest token matches in embedding space, you drastically reduce misalignment, and this doesn’t apply as much to the other positions</li>
-</ol>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313198223.png" alt="" /></p>
-
-<ol>
-  <li>
-    <p>If you patch over the exact keys and values from the original Qwen weights for the prefix (autoregressive, so this means that the contribution to attention from these prefix tokens is now the same as in the base model), you also reduce misalignment
-<img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313361002.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Same if you patch over activations from middle layers for the prefix tokens</p>
-  </li>
-</ol>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313513485.png" alt="" /></p>
-
-<h1 id="caveats">Caveats</h1>
-
-<p>This doesn’t apply to Qwen3! Because it has a minimal prefix. Instead, they think that the misalignment is in the postfix, but this is harder to confirm because the keys and values for the postfix depend on the user query</p>
-
-<ul>
-  <li>It doesn’t work even if you try to introduce a prefix during SFT</li>
-</ul>
-
-<p>Notably, DeepSeek V4 is similar to Qwen3, while Qwen3.8 and GLM 5.3 seem to have prefixes.</p>
-
-<h1 id="treft">TReFT</h1>
-
-<p>Idea: do SFT, but regularize the keys and values of the prefix tokens to not change by that much</p>
-
-<p>They use like a relative MSE on the kv:</p>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313707890.png" width="644" /></p>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313720131.png" width="632" /></p>
-
-<p>Note that this is somewhat cheap because you only have to calculate the keys and values once!</p>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313779383.png" alt="" /></p>
-
-<ul>
-  <li>performance (∆Util) maintained, while alignment (EM-F1) also better</li>
-</ul>
-
-<p><img src="/assets/img/distillations/the-piggyback-hypothesis-of-generalization-explaining-and-mitigating-emergent-mi/img-1790313827251.png" width="531" /></p>
-<ul>
-  <li>Beats KL regularization (though I don’t think they tried KL regularization on just the prefix tokens)</li>
-</ul>
-
-<p>Seems to work on other forms of narrow fine-tuning that you want; in particular, making the model not learn to write longer/shorter responses based on the SFT data (kind of like our persona training homework!)</p>
-
-<p>Questions for Jiachen:</p>
-
-<ul>
-  <li>Does this apply to newer models? Given the dependence on having a prefix</li>
-  <li>Why not try a KL penalty on just the prefix tokens?</li>
-  <li>How to get Coefficient Giving funding</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[The Piggyback Hypothesis of Generalization: Explaining and Mitigating Emergent Misalignment]]></summary></entry><entry><title type="html">Reasoning Models Don’t Always Say What They Think</title><link href="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/" rel="alternate" type="text/html" title="Reasoning Models Don’t Always Say What They Think" /><published>2026-09-23T00:00:00+00:00</published><updated>2026-09-23T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reasoning-models-don-t-always-say-what-they-think/"><![CDATA[<p>Claude 3.5 Sonnet (instant), Claude 3.7 Sonnet (reasoning), DeepSeek V3 (instant), DeepSeek-R1 (reasoning)</p>
-
-<ul>
-  <li>For the instant models, they still tell them to think step by step</li>
-</ul>
-
-<p>GPQA and MMLU</p>
-
-<p>They have a great way of measuring unfaithfulness: give the model a hint or leaked answer, which changes its answer to a multiple-choice question, and if it doesn’t mention the hint in its chain of thought, it was unfaithful
-<img src="/assets/img/distillations/reasoning-models-don-t-always-say-what-they-think/img-1790191464719.png" width="660" /></p>
-
-<p>They (up to some small normalization factor) get a bunch of responses from a model where it changed its answer after receiving different kinds of hints (x-axis), and check what fraction of them have the hint in the chain of thought</p>
-
-<p><img src="/assets/img/distillations/reasoning-models-don-t-always-say-what-they-think/img-1790191553245.png" alt="" /></p>
-
-<ul>
-  <li>Takeaway, I think, is that reasoning models are more faithful</li>
-</ul>
-
-<p><strong>Figure 4</strong>: Faithfulness is lower on GPQA (harder) than MMLU (easier)</p>
-
-<ul>
-  <li>In part, this is an artifact of many faithful chains of thought just being the model solving it on its own and deferring to the hinted answer</li>
-</ul>
-
-<p>they do some contrived RL runs to show that RL doesn’t make the CoT more faithful, including when it learns to reward hack.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[CoT faithfulness]]></summary></entry></feed>
+<p>Interestingly, if the senior and junior speak different foreign languages, the senior will try to use English as an intermediate language before giving up and using the junior’s language</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Tandem Training]]></summary></entry></feed>

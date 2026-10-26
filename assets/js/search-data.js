@@ -23,7 +23,51 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-extending-tandem-rlvr-for-training-models-to-have-legible-outputs",
+        },{id: "post-from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-intelligence",
+        
+          title: "From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence",
+        
+        description: "Epiplexity",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/";
+          
+        },
+      },{id: "post-neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning",
+        
+          title: "Neural Cheat Sheets: Learning to Summarize with Reinforcement Learning",
+        
+        description: "Neural Cheat Sheets",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/neural-cheat-sheets-learning-to-summarize-with-reinforcement-learning/";
+          
+        },
+      },{id: "post-learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors",
+        
+          title: "Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors",
+        
+        description: "simulating student misconceptions",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/";
+          
+        },
+      },{id: "post-idealens-detecting-ai-ideas-in-long-form-writing",
+        
+          title: "IdeaLens: Detecting AI Ideas in Long-form Writing",
+        
+        description: "IdeaLens, detecting AI ideas",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing/";
+          
+        },
+      },{id: "post-extending-tandem-rlvr-for-training-models-to-have-legible-outputs",
         
           title: "Extending Tandem RLVR for training models to have legible outputs",
         

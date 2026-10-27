@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-26T01:07:08+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-27T04:50:10+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
 </subtitle><entry><title type="html">From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence</title><link href="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/" rel="alternate" type="text/html" title="From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence" /><published>2026-10-25T00:00:00+00:00</published><updated>2026-10-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/"><![CDATA[<h1 id="section-2-randomness">Section 2: Randomness</h1>
 
 <p>1111111… isn’t random because LLN says that random strings should be 50% 0’s and 50% 1’s
@@ -37,7 +37,7 @@
     <ul>
       <li><strong>prequential coding</strong>: you’re handing over the actual data over the channel. The decoder maintains their own synchronized copy of the model as the encoder is training it, and on step $i$, the encoder takes the <em>next</em> piece of data $Z$, uses the current model (that the decoder has) to calculate how many bits it is, and then sends that over the channel, and repeats for all the data.
         <ul>
-          <li>this is too pessimistic, since you only need the final model, not each of the individual checkpoints, so you adjust by subtracting the number of bits that you’d still have to send to encode the data if you had the trained model from the start. Note that this doesn’t tell you how to actually achieve the subtracted number of bits through a code, it’s non-constructive</li>
+          <li>this is too pessimistic, since it includes the remaining entropy of the data under the final trained model, so you adjust by subtracting the number of bits that you’d still have to send to encode the data if you had the trained model from the start. Note that this doesn’t tell you how to actually achieve the subtracted number of bits through a code, it’s non-constructive</li>
           <li>this corresponds to area under the training loss curve (see below)</li>
         </ul>
       </li>
@@ -69,6 +69,8 @@
 
 <h1 id="section-5-epiplexity-fixes-3-paradoxes-of-normal-info-theory">Section 5. Epiplexity fixes 3 paradoxes of normal info theory</h1>
 
+<p><strong>The common theme is just that restricting the computation of the observer explains the new information created in all three of these phenomena</strong></p>
+
 <h2 id="51-post-processing-doesnt-give-new-information">5.1: post-processing doesn’t give new information</h2>
 
 <p>This is only true if you assume unlimited computation time. In that sense, run the deterministic AlphaZero RL doesn’t generate new information you didn’t have before. But it does if you don’t have the time to redo that computation</p>
@@ -84,6 +86,60 @@
 
 <ul>
   <li>three types of cellular automata synthetic data generation. Only rule 54 is high epiplexity</li>
+</ul>
+
+<h2 id="52-order-should-matter">5.2 order should matter</h2>
+
+<p>Shannon entropy treats H(X, Y) and H(Y, X) the same, but time-bounded entropy doesn’t have to. Inferring the forward direction of a one-way function ought to be less entropy than the reverse direction</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792981284381.png" alt="" /></p>
+
+<ul>
+  <li>(a): forward direction of one-way function is easy to learn and approaches the Shannon entropy, the reverse direction doesn’t</li>
+  <li>(b, c): going from board position to chess moves is harder, but provides more structure / epiplexity to learn for larger compute regimes</li>
+</ul>
+
+<h2 id="53-the-cap-on-what-maximum-likelihood-modeling-can-learn-is-just-to-match-the-data-generating-process">5.3 The cap on what maximum likelihood modeling can learn is just to match the data generating process</h2>
+
+<h2 id="531-induction-not-in-the-math-sense-or-in-the-induction-heads-sense">5.3.1 “Induction” (not in the math sense, or in the induction heads sense)</h2>
+
+<p>Intuition for why this should be wrong: guessing the answer to a murder mystery (“induction”), which the model is trained for, is harder than being the author and knowing the murderer and just writing the murder mystery to be consistent with it
+<img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041726778.png" alt="" /></p>
+
+<p>They mimic this by taking some bitstring $Z$, and applying some function $f$ to it, and also some masking $m(Z)$ to it, and only giving $(m(Z), f(Z))$ as the training pairs, so the model has to <em>induct</em> what the original $Z$ is from $m(Z)$.</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041779779.png" width="499" /></p>
+
+<p>Case 1: $f(Z)$ is a one-way function. Then the model just learns to brute force all $2^h$ missing bit combos for $Z$, and the irreducible loss is hence $h$. The epiplexity still grows as $h$ grows because transformers aren’t perfect Turing machines and hence can’t write for loops: the program size to iterate over $2^h$ combos grows as $h$ grows</p>
+
+<p>Case 2: $f(Z)$ is a Markov chain with $h / 8$ of states not having known transitions. Then at $h=0$ it just learns to deterministically apply the rules, and at $h=8$ it learns to just use past empirics on the transitions, but at $0 &lt; h &lt; 8$ it has to combine both which leads to higher epiplexity</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041976949.png" alt="" /></p>
+
+<p>So the point being that epiplexity captures this kind of induction reasoning</p>
+
+<h2 id="532-emergent">5.3.2 “Emergent”</h2>
+
+<p>Conway’s game of life, if you have the compute (like a looped transformer) you can just brute force the computation, if not you need to think about gliders and what happens when they collide to predict the future and you learn more structure, more epiplexity.</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793059303354.png" width="356" /></p>
+
+<ul>
+  <li>at some level of compute, the brute force approach becomes possible and there’s less epiplexity because it just quickly learns that</li>
+</ul>
+
+<h1 id="section-6-higher-epiplexity-predicts-better-ood-generalization">Section 6: higher epiplexity predicts better OOD generalization</h1>
+
+<p>Intuition: epiplexity = learned general structure, irreducible loss is domain specific.</p>
+
+<p>Of the two chess orderings from 5.2, the one with higher epiplexity generalizes better to predicting centipawn accuracy (more OOD than predict the next move puzzles)</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793060627554.png" width="355" /></p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793065408160.png" width="358" /></p>
+
+<ul>
+  <li>They show that language pretraining data has a higher epiplexity content than image pretraining data</li>
 </ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry><entry><title type="html">Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors</title><link href="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/" rel="alternate" type="text/html" title="Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/"><![CDATA[<p>The same motivation as me, be able to look at an example of a student mistake and figure out what their misconception was, and generate similar answers with those same misconceptions</p>
 
 <p>They <strong>jointly train</strong>:</p>

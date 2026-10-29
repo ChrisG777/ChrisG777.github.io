@@ -37,7 +37,7 @@ Examples:
 
 # Section 4: Two methods of calculating Epiplexity on real datasets
 
-Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They're trying to minimize **epiplexity** (program length) + **remaining entropy**
+Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They're trying to minimize **epiplexity** (program length) + **remaining entropy** of the entire test set $X$. Theoretically, the test set $X$ is the entire dataset of interest that we're trying to measure the epiplexity of, but in practice we use a held-out test split and rescale it to the size of the entire dataset.
 
 - **epiplexity**: we're going to approximate programs as trained neural nets. Program length is roughly the number of bits / code that you need to transmit to a student, and the hard thing is how to measure the minimum number of bits that you need. There are two ways to do this:
   - **prequential coding**: you're handing over the actual data over the channel. The decoder maintains their own synchronized copy of the model as the encoder is training it, and on step $i$, the encoder takes the _next_ piece of data $Z$, uses the current model (that the decoder has) to calculate how many bits it is, and then sends that over the channel, and repeats for all the data.
@@ -123,3 +123,11 @@ Of the two chess orderings from 5.2, the one with higher epiplexity generalizes 
 <img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793065408160.png" width="358" />
 
 - They show that language pretraining data has a higher epiplexity content than image pretraining data
+
+Assuming scaling laws, you can solve for the maximum epiplexity of a data set under infinite compute: it turns out to be when you train on exactly one epoch of the full data (past that, you're not decreasing the entropy by enough to justify the increase in program length).
+
+<img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120665194.png" width="348" />
+
+This once again corroborates that language has higher epiplexity than vision
+
+<img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120991771.png" width="325" />

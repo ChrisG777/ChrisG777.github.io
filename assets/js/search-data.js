@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-intelligence",
+        },{id: "post-modular-manifolds",
+        
+          title: "Modular Manifolds",
+        
+        description: "Modular Manifolds",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/modular-manifolds/";
+          
+        },
+      },{id: "post-from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-intelligence",
         
           title: "From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence",
         

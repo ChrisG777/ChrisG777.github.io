@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-27T04:50:10+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence</title><link href="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/" rel="alternate" type="text/html" title="From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence" /><published>2026-10-25T00:00:00+00:00</published><updated>2026-10-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/"><![CDATA[<h1 id="section-2-randomness">Section 2: Randomness</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-10-29T02:33:03+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Modular Manifolds</title><link href="https://chrisg777.github.io/blog/2026/modular-manifolds/" rel="alternate" type="text/html" title="Modular Manifolds" /><published>2026-10-28T00:00:00+00:00</published><updated>2026-10-28T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/modular-manifolds</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/modular-manifolds/"><![CDATA[<p>written by the author of deriving Muon</p>
+
+<p>Instead of forcing the gradient update to be all singular-values 1, what if you instead keep the weights on a manifold of all singular-values 1, and make the update steps tangent to that manifold and project back down to it?</p>
+
+<p><img src="/assets/img/distillations/modular-manifolds/img-1793227072975.png" alt="" /></p>
+
+<p>And modular manifolds is the idea that you can choose a different manifold and norm for each layer, and compose them with the composed manifold just being their cartesian product, and the composed norm being the max of the individual norms, and theoretically figure out what the individual learning rates for each layer should be</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Modular Manifolds]]></summary></entry><entry><title type="html">From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence</title><link href="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/" rel="alternate" type="text/html" title="From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence" /><published>2026-10-25T00:00:00+00:00</published><updated>2026-10-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/"><![CDATA[<h1 id="section-2-randomness">Section 2: Randomness</h1>
 
 <p>1111111… isn’t random because LLN says that random strings should be 50% 0’s and 50% 1’s
 1010101… isn’t random because it’s predictable</p>
@@ -30,7 +36,7 @@
 
 <h1 id="section-4-two-methods-of-calculating-epiplexity-on-real-datasets">Section 4: Two methods of calculating Epiplexity on real datasets</h1>
 
-<p>Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They’re trying to minimize <strong>epiplexity</strong> (program length) + <strong>remaining entropy</strong></p>
+<p>Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They’re trying to minimize <strong>epiplexity</strong> (program length) + <strong>remaining entropy</strong> of the entire test set $X$. Theoretically, the test set $X$ is the entire dataset of interest that we’re trying to measure the epiplexity of, but in practice we use a held-out test split and rescale it to the size of the entire dataset.</p>
 
 <ul>
   <li><strong>epiplexity</strong>: we’re going to approximate programs as trained neural nets. Program length is roughly the number of bits / code that you need to transmit to a student, and the hard thing is how to measure the minimum number of bits that you need. There are two ways to do this:
@@ -140,7 +146,15 @@
 
 <ul>
   <li>They show that language pretraining data has a higher epiplexity content than image pretraining data</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry><entry><title type="html">Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors</title><link href="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/" rel="alternate" type="text/html" title="Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/"><![CDATA[<p>The same motivation as me, be able to look at an example of a student mistake and figure out what their misconception was, and generate similar answers with those same misconceptions</p>
+</ul>
+
+<p>Assuming scaling laws, you can solve for the maximum epiplexity of a data set under infinite compute: it turns out to be when you train on exactly one epoch of the full data (past that, you’re not decreasing the entropy by enough to justify the increase in program length).</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120665194.png" width="348" /></p>
+
+<p>This once again corroborates that language has higher epiplexity than vision</p>
+
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120991771.png" width="325" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry><entry><title type="html">Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors</title><link href="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/" rel="alternate" type="text/html" title="Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/"><![CDATA[<p>The same motivation as me, be able to look at an example of a student mistake and figure out what their misconception was, and generate similar answers with those same misconceptions</p>
 
 <p>They <strong>jointly train</strong>:</p>
 
@@ -720,40 +734,4 @@ On APPS, Tandem RLVR is worse than GRPO on both handoff and solo, and slightly w
   <li>https://arxiv.org/pdf/2603.22446 alibaba qwen shows that RLVR only really drastically changes the token distributions for a sparse set of tokens</li>
   <li>https://arcprize.org/blog/astra Astra created its own compact algebraic notation for solving ARC Agi 3</li>
   <li>https://arxiv.org/pdf/2608.09867 There are apparently some actual examples of obfuscated reasoning in the stolen chain of thoughts here</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Tandem RLVR]]></summary></entry><entry><title type="html">Tandem Training for Language Models</title><link href="https://chrisg777.github.io/blog/2026/tandem-training-for-language-models/" rel="alternate" type="text/html" title="Tandem Training for Language Models" /><published>2026-10-01T00:00:00+00:00</published><updated>2026-10-01T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/tandem-training-for-language-models</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/tandem-training-for-language-models/"><![CDATA[<p><img src="/assets/img/distillations/tandem-training-for-language-models/img-1790891671456.png" alt="" /></p>
-
-<p>Do RL, except on the rollouts, on every word randomly (50%) let a frozen dumber model sample the next word instead of the smarter model actually being trained</p>
-
-<ul>
-  <li>The idea is that this forces the smarter model to reason in a more legible, less jargony manner</li>
-  <li>Having a more understandable reasoning output seems like a good thing. Not sure how this works with chain of thought models though.</li>
-</ul>
-
-<h1 id="experiments">Experiments</h1>
-
-<p>GSM8K, Llama-2-7B</p>
-
-<p>“smarter” <strong>senior</strong> model = fine-tuned on GSM8k</p>
-
-<p>also create some dumber <strong>junior</strong> model variants by prompting them with some few-shot examples to speak in a different language</p>
-
-<p><img src="/assets/img/distillations/tandem-training-for-language-models/img-1790891872690.png" alt="" /></p>
-
-<ul>
-  <li>GSM8k’s solutions involve repeating all arithmetic in « », which they call jargon (only the SFT’d model does it)</li>
-  <li>they also call speaking in a language that the junior model doesn’t speak in “jargon”</li>
-</ul>
-
-<p>For some reason they use REINFORCE (1 epoch) and discard negative rollouts instead of GRPO or something. Not sure why.</p>
-
-<h1 id="results">Results</h1>
-
-<p>Accuracy does fall, but it remains a little higher than the dumber model.</p>
-
-<p>The rate of jargon goes to zero, though, pretty quickly</p>
-
-<p><img src="/assets/img/distillations/tandem-training-for-language-models/img-1790891919376.png" alt="" /></p>
-
-<p>They show that if you do some hyperparameter p-hacking on the reinforcement algorithm, you can keep accuracy up as well</p>
-
-<p>Interestingly, if the senior and junior speak different foreign languages, the senior will try to use English as an intermediate language before giving up and using the junior’s language</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Tandem Training]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Tandem RLVR]]></summary></entry></feed>

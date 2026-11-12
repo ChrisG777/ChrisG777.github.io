@@ -20,6 +20,8 @@ Two main applications: alignment auditing using the J-Lens, and post-training th
 
 vs NLAs: J-space is more mechanistic and actually causal, but limited to single token words in the vocab
 
+**Updated with Jack Lindsey talk**: J-Lens is mostly a philosophy that the direction to verbalize a token is the same as the direction to think about that token. In this way, it lives on even when it becomes obsolete, due to the template lens and the oracle lens
+
 # J-Lens
 
 **"For every word in Claude's vocabulary, the J-lens finds the internal activity pattern that makes Claude more likely to say that word at some point in the future."**
@@ -304,3 +306,18 @@ Idea: If the J space is causal and the J space is just a reflection of what the 
 - during RL, when model has reward hacked or may reward hack, pause, ask it to generate a reflection grounded in Anthropic's constitution, and then train on just the reflection
 
 This results in decreased reward hacking and increased "reflection" "ethical" "honestly" etc in the J-space, and the reward hacking mostly comes back if you ablate these concepts in the J-space.
+
+# Template Lens
+
+You choose a fixed vocabulary, which can consist of multi-token words, and try to find a vector direction for each of them:
+
+1. Have Claude generate 27,000 prompts whose natural continuation is the word or phrase
+2. Average their activations and subtract out the mean of all the other words' activations, then whiten it: <img src="/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1794030314079.png" width="636" />
+
+Readout is just checking which template lens vector has the largest dot product with the activations.
+
+![](/assets/img/distillations/verbalizable-representations-form-a-global-workspace-in-language-models/img-1794030382993.png)
+
+- can find blackmail and photosynthesis
+
+It's a bit weaker than the J-lens on some other evaluations from this paper though

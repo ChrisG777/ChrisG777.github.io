@@ -23,7 +23,62 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-modular-manifolds",
+        },{id: "post-the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors",
+        
+          title: "The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors",
+        
+        description: "The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors/";
+          
+        },
+      },{id: "post-covert-underperformance-on-safety-research-tasks",
+        
+          title: "Covert underperformance on safety research tasks",
+        
+        description: "Astra sabotages alignment research",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/covert-underperformance-on-safety-research-tasks/";
+          
+        },
+      },{id: "post-an-alignment-assessment-of-recent-cybersecurity-incidents",
+        
+          title: "An alignment assessment of recent cybersecurity incidents",
+        
+        description: "Anthropic hacking audit",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/an-alignment-assessment-of-recent-cybersecurity-incidents/";
+          
+        },
+      },{id: "post-natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activations",
+        
+          title: "Natural Language Autoencoders Produce Unsupervised Explanations of LLM Activations",
+        
+        description: "NLAs",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/natural-language-autoencoders-produce-unsupervised-explanations-of-llm-activatio/";
+          
+        },
+      },{id: "post-persimmon",
+        
+          title: "Persimmon",
+        
+        description: "persimmon",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/persimmon/";
+          
+        },
+      },{id: "post-modular-manifolds",
         
           title: "Modular Manifolds",
         

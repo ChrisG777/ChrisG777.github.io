@@ -593,8 +593,13 @@
 
       // Parse math before Markdown can consume TeX underscores and backslashes.
       // Incomplete/invalid equations stay visible while the user is typing.
+      // Like kramdown, $$...$$ inside a paragraph is inline; only a standalone $$ block is display math.
       if (window.katex && window.markedKatex) {
-        marked.use(markedKatex({ throwOnError: false, nonStandard: true }));
+        var katexExt = markedKatex({ throwOnError: false, nonStandard: true });
+        katexExt.extensions[0].renderer = function (token) {
+          return katex.renderToString(token.text, { throwOnError: false, displayMode: false });
+        };
+        marked.use(katexExt);
       }
 
       function togglePreview() {

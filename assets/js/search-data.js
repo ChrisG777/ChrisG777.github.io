@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors",
+        },{id: "post-why-is-ai-generated-language-so-hard-to-understand",
+        
+          title: "Why is AI-generated language so hard to understand?",
+        
+        description: "AI slop linguistic analysis",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/why-is-ai-generated-language-so-hard-to-understand/";
+          
+        },
+      },{id: "post-the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors",
         
           title: "The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors",
         

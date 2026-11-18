@@ -1,5 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-12T00:40:30+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors</title><link href="https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors/" rel="alternate" type="text/html" title="The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors" /><published>2026-11-10T00:00:00+00:00</published><updated>2026-11-10T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors/"><![CDATA[<p>Can you RL models to exhibit motivated/biased reasoning, and then can that lead to fooling CoT monitors?</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-18T06:25:24+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Why is AI-generated language so hard to understand?</title><link href="https://chrisg777.github.io/blog/2026/why-is-ai-generated-language-so-hard-to-understand/" rel="alternate" type="text/html" title="Why is AI-generated language so hard to understand?" /><published>2026-11-17T00:00:00+00:00</published><updated>2026-11-17T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/why-is-ai-generated-language-so-hard-to-understand</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/why-is-ai-generated-language-so-hard-to-understand/"><![CDATA[<p>Tldr so far is just that there’s a bunch of linguistic structures like using animated verbs with inanimate objects “this bug will bite later” that LLMs use a lot more than when their output is sent through an old-school translator to Japanese and back (so that it’s more human writing)</p>
+
+<ul>
+  <li>for normal chat, essay-writing, and coding settings</li>
+</ul>
+
+<p><img src="/assets/img/distillations/why-is-ai-generated-language-so-hard-to-understand/img-1794963760244.png" alt="" /></p>
+
+<p>In aggregate, this is how different models do
+<img src="/assets/img/distillations/why-is-ai-generated-language-so-hard-to-understand/img-1794963777554.png" alt="" /></p>
+
+<p>They have some very toy RL setup where they RL with a length penalty on the output on tasks with these possible linguistic shortenings, and find that the model learns to take the shortenings.</p>
+
+<p>Thomas Hikaru Clark told me that there’s a lot of cognitive science literature on models that approximate humans (like the Centaur model whatever that is), thinks that training with the frozen reader model is an interesting idea. I have his email in my photos</p>]]></content><author><name></name></author><category term="distillation" /><category term="partial-read" /><summary type="html"><![CDATA[AI slop linguistic analysis]]></summary></entry><entry><title type="html">The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors</title><link href="https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors/" rel="alternate" type="text/html" title="The Ends Justify the Thoughts: RL-Induced Motivated Reasoning Fools CoT Monitors" /><published>2026-11-10T00:00:00+00:00</published><updated>2026-11-10T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/the-ends-justify-the-thoughts-rl-induced-motivated-reasoning-fools-cot-monitors/"><![CDATA[<p>Can you RL models to exhibit motivated/biased reasoning, and then can that lead to fooling CoT monitors?</p>
 
 <p>This paper feels like it’s from early 2025 rather than late 2026.</p>
 
@@ -480,31 +493,4 @@
 
 <ul>
   <li>good generalization test, train on a bunch of summarization tasks and it boosts summarization performance for held-out domain, as much as if you trained on it directly. We can do similar generalization tests.</li>
-</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Neural Cheat Sheets]]></summary></entry><entry><title type="html">IdeaLens: Detecting AI Ideas in Long-form Writing</title><link href="https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing/" rel="alternate" type="text/html" title="IdeaLens: Detecting AI Ideas in Long-form Writing" /><published>2026-10-20T00:00:00+00:00</published><updated>2026-10-20T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/idealens-detecting-ai-ideas-in-long-form-writing/"><![CDATA[<p>They differentiate between AI-written vs AI ideas (where ideas is just operationalized as the outline from which the story is continued)</p>
-
-<p>This is something I’ve been thinking about a lot, since I right now it’s somewhat of a negative signal to produce anything ai-sounding because you get lumped together with people who don’t put any thought in. But with something like IdeaLens instead, you could just differentiate out the people who don’t think about what they’re doing</p>
-
-<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511132611.png" alt="" /></p>
-
-<ul>
-  <li>they train on paraphrased outlines to predict whether it came from a human or AI, that way the model is forced to use the ideas (outline) instead of the style (the style is paraphrased by gemini for both AI and humans)</li>
-  <li>don’t know why they don’t paraphrase at test time</li>
-</ul>
-
-<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511094068.png" alt="" /></p>
-
-<ul>
-  <li>results: Pangram and models trained on just the prose can’t differentiate ideas</li>
-  <li>their contribution to the dataset is having AI generate the story outline and the human wrote the rest, upper right quadrant</li>
-</ul>
-
-<h1 id="analysis-of-ai-vs-human-ideas">analysis of AI vs human ideas</h1>
-
-<p>AI ideas are</p>
-
-<ol>
-  <li>they’re overly general</li>
-  <li>they overclaim</li>
-</ol>
-
-<p><img src="/assets/img/distillations/idealens-detecting-ai-ideas-in-long-form-writing/img-1792511390460.png" alt="" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[IdeaLens, detecting AI ideas]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Neural Cheat Sheets]]></summary></entry></feed>

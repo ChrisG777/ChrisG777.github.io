@@ -175,6 +175,7 @@ kramdown:
 include: ["_pages", "_scripts"]
 exclude:
   - bin/
+  - chrisge-resume/
   - CONTRIBUTING.md
   - CUSTOMIZE.md
   - Dockerfile

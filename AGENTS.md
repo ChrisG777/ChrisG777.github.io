@@ -32,13 +32,21 @@ docker compose down
 
 ### Updating the CV
 
-The CV PDF lives at `assets/pdf/chrisge-cv.pdf` and is sourced from the Overleaf-linked git repo at `~/Downloads/chrisge-resume`. To refresh it:
+The CV PDF lives at `assets/pdf/chrisge-cv.pdf` and is sourced from the Overleaf-linked git repo cloned at `chrisge-resume/` (gitignored and excluded from the Jekyll build). To refresh it:
 
 ```bash
 bash scripts/update_cv.sh
 ```
 
-This pulls the latest from Overleaf, copies `main.pdf` over, and stages the change. Review with `git diff --cached --stat`, then commit and push.
+This pulls the latest from Overleaf, rebuilds `main.pdf` with `pdflatex` when `main.tex` is newer, copies it over, and stages the change.
+
+**Every resume edit also updates the site.** After changing `chrisge-resume/main.tex`, do all of these in the same task without asking:
+
+1. Commit and push `main.tex` to Overleaf (`git -C chrisge-resume push`).
+2. Run `bash scripts/update_cv.sh` and check the PDF is still one page.
+3. Commit only `assets/pdf/chrisge-cv.pdf` (`docs: Update CV`) and push `main`.
+
+Edits made in the Overleaf web editor are not detected automatically; run the script at the start of any CV task to pick them up.
 
 ### Pre-Commit Checklist
 

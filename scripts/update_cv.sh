@@ -4,8 +4,8 @@
 #   Override Overleaf repo path with OVERLEAF_REPO env var.
 set -euo pipefail
 
-OVERLEAF_REPO="${OVERLEAF_REPO:-$HOME/Downloads/chrisge-resume}"
 SITE_REPO="$(cd "$(dirname "$0")/.." && pwd)"
+OVERLEAF_REPO="${OVERLEAF_REPO:-$SITE_REPO/chrisge-resume}"
 DEST="$SITE_REPO/assets/pdf/chrisge-cv.pdf"
 
 if [ ! -d "$OVERLEAF_REPO/.git" ]; then
@@ -24,8 +24,12 @@ if [ ! -f "$SRC" ]; then
 fi
 
 # Overleaf auto-commits sometimes ship only main.tex, leaving main.pdf stale.
-# Rebuild locally when the source is newer than the compiled PDF.
-if [ -f "$TEX" ] && [ "$TEX" -nt "$SRC" ]; then
+# Rebuild locally when the source is newer than the compiled PDF, by mtime or by last commit
+# (a checkout can leave a stale committed PDF with a fresh mtime).
+last_commit() { git -C "$OVERLEAF_REPO" log -1 --format=%ct -- "$1"; }
+if [ -f "$TEX" ] && { [ "$TEX" -nt "$SRC" ] ||
+  { git -C "$OVERLEAF_REPO" diff --quiet -- main.pdf &&
+    [ "$(last_commit main.tex)" -gt "$(last_commit main.pdf)" ]; }; }; then
   PDFLATEX="${PDFLATEX:-/Library/TeX/texbin/pdflatex}"
   if [ ! -x "$PDFLATEX" ] && ! PDFLATEX="$(command -v pdflatex)"; then
     echo "Error: main.tex is newer than main.pdf but pdflatex was not found." >&2

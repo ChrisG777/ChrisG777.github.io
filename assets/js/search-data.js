@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-why-is-ai-generated-language-so-hard-to-understand",
+        },{id: "post-breaking-bad-quot-going-badly-quot-activations-drive-reward-hacking",
+        
+          title: "Breaking Bad: &quot;Going Badly&quot; Activations Drive Reward Hacking",
+        
+        description: "direction for reward hacking",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking/";
+          
+        },
+      },{id: "post-why-is-ai-generated-language-so-hard-to-understand",
         
           title: "Why is AI-generated language so hard to understand?",
         

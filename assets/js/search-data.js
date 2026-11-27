@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-breaking-bad-quot-going-badly-quot-activations-drive-reward-hacking",
+        },{id: "post-identifying-introspection-from-the-inside",
+        
+          title: "Identifying Introspection From the Inside",
+        
+        description: "iii",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/identifying-introspection-from-the-inside/";
+          
+        },
+      },{id: "post-breaking-bad-quot-going-badly-quot-activations-drive-reward-hacking",
         
           title: "Breaking Bad: &quot;Going Badly&quot; Activations Drive Reward Hacking",
         

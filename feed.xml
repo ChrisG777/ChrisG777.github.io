@@ -1,5 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-25T08:58:22+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Breaking Bad: “Going Badly” Activations Drive Reward Hacking</title><link href="https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking/" rel="alternate" type="text/html" title="Breaking Bad: “Going Badly” Activations Drive Reward Hacking" /><published>2026-11-24T00:00:00+00:00</published><updated>2026-11-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking/"><![CDATA[<p><img src="/assets/img/distillations/breaking-bad-going-badly-activations-drive-reward-hacking/img-1795591594086.png" alt="" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-27T06:08:06+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Identifying Introspection From the Inside</title><link href="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/" rel="alternate" type="text/html" title="Identifying Introspection From the Inside" /><published>2026-11-26T00:00:00+00:00</published><updated>2026-11-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/"><![CDATA[<p>For larger models, capability seems to come with introspective faithfulness. Some early findings hypothesizing that this might be due to co-location in an early layer of the computation, which gets later used downstream for both self-report verbalization and answering the question.</p>
+
+<p><strong>Setting (extended from Plunkett et al, 2025):</strong></p>
+
+<p><img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795754766394.png" alt="" /></p>
+
+<ul>
+  <li>100 characters, choosing between two options for an item that has 5 fixed attributes.</li>
+  <li>character has a linear utility function over the attributes, with weights in Unif[-100, 100], where the largest weight is forced to magnitude 100</li>
+  <li>Attributes are also generated with uniform random z-score within their [min, max]</li>
+</ul>
+
+<p><strong>metrics</strong>:</p>
+
+<p>They have the ground truth weights $p$. They also can extract out:</p>
+
+<ul>
+  <li>behavioral $\hat{p}$: fit a logistic regression on the model’s predictions to back out the weights</li>
+  <li>self-reported $\tilde{p}$: ask the model for a json of its weights</li>
+</ul>
+
+<p>and then take corr($\hat{p}$, $p$) as performance, and corr($\hat{p}, \tilde{p}$) as faithfulness</p>
+
+<h1 id="experiments">Experiments</h1>
+
+<p>everything is done using Qwen3-0.6 to 32B with LoRA r=8 SFT, non-thinking, on a fixed set of 100 characters (no held-out characters, the adapters are learning the specific characters’ preferences).</p>
+
+<p>Their main interesting result is that Qwen3-32B, at checkpoint 1000, does the task but is not faithful, while at checkpoint 3000, it does the task and is faithful</p>
+
+<p><img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795756847973.png" alt="" /></p>
+
+<p>It seems that faithfulness scales: 4B and 8B aren’t, 14B can be (more later), and 32B is
+<img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795756964731.png" alt="" /></p>
+
+<ul>
+  <li>They very weirdly don’t show up to step 3000. Though apparently the 32B model is from a separately hyperparameter-tuned run</li>
+</ul>
+
+<h1 id="localizing-to-early-layers">Localizing to early layers</h1>
+
+<p>For Qwen3-14B, if you freeze later layers and only update a prefix of layers during SFT, you can actually get some faithfulness surprisingly
+<img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795757678511.png" alt="" /></p>
+
+<p>They think that this is because this causes the same mechanism in the early layers to be used for verbalization and calculation later</p>
+
+<h1 id="attribution-patching-gives-a-signature-of-faithfulness">Attribution patching gives a signature of faithfulness</h1>
+
+<p>Starting from either the faithful checkpoint 3000 or the unfaithful checkpoint 1000, they train a bunch of lightweight LoRA adapters on one additional character. This gives them (after some filtering) one faithful adapter and one unfaithful adapter per character, for 32 pairs.</p>
+
+<p>The <strong>attribution patching</strong>:</p>
+
+<p>They want to measure the effect that each component of the LoRA adapter (i.e. each BA on a linear layer) has on the KL divergence between the base checkpoint and the checkpoint + LoRA, on either (1) the predicted answers or (2) the self-reports. Call this KL loss L.</p>
+
+<p>Then for a given adapter component, if its output vector is $\delta$, you can approximate it as $\delta \cdot \frac{\partial L}{\partial \delta}$</p>
+
+<ul>
+  <li>except this is a secant approximation. You can get closer using integrated-gradients: average the $\delta \cdot \frac{\partial L}{\partial \delta}$ as you add $\beta \cdot \delta$ with $\beta = 0, 0.1, 0.2, … 0.9$ e.g.</li>
+</ul>
+
+<p><img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795758697230.png" alt="" /></p>
+
+<p>This gives you a score per output dimension of each LoRA matrix. Concatenate these across all of the LoRA matrices.</p>
+
+<p><img src="/assets/img/distillations/identifying-introspection-from-the-inside/img-1795759400791.png" alt="" /></p>
+
+<ul>
+  <li>Observation 1: If you just sum these attribution scores for each layer, for the faithful model, both doing the task and self-reporting on the task have the same critical layer. But for the unfaithful model, they differ</li>
+  <li>Observation 2: The cosine similarity between the attribution scores is much higher for the faithful model than it is for the unfaithful model</li>
+</ul>
+
+<p>This implies that</p>
+
+<ol>
+  <li>Without knowing the ground truth, you can somewhat separate out faithful from unfaithful models</li>
+  <li>For faithful models, the same mechanism probably produces the self-reports and the predicted answers</li>
+</ol>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[iii]]></summary></entry><entry><title type="html">Breaking Bad: “Going Badly” Activations Drive Reward Hacking</title><link href="https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking/" rel="alternate" type="text/html" title="Breaking Bad: “Going Badly” Activations Drive Reward Hacking" /><published>2026-11-24T00:00:00+00:00</published><updated>2026-11-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/breaking-bad-going-badly-activations-drive-reward-hacking/"><![CDATA[<p><img src="/assets/img/distillations/breaking-bad-going-badly-activations-drive-reward-hacking/img-1795591594086.png" alt="" /></p>
 
 <p>what a nice overview figure. They found a direction that encodes the model realizing that a task is going badly, which increases before a reward hack and can be steered to reward hack less.</p>
 
@@ -476,36 +551,4 @@ https://www.anthropic.com/research/emotion-concepts-function: take the diff-in-m
 
 <p>This once again corroborates that language has higher epiplexity than vision</p>
 
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120991771.png" width="325" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry><entry><title type="html">Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors</title><link href="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/" rel="alternate" type="text/html" title="Learning to Make MISTAKEs: Modeling Incorrect Student Thinking And Key Errors" /><published>2026-10-24T00:00:00+00:00</published><updated>2026-10-24T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/learning-to-make-mistakes-modeling-incorrect-student-thinking-and-key-errors/"><![CDATA[<p>The same motivation as me, be able to look at an example of a student mistake and figure out what their misconception was, and generate similar answers with those same misconceptions</p>
-
-<p>They <strong>jointly train</strong>:</p>
-
-<ol>
-  <li>a model that takes in the question and the wrong answer and produces the misconception, $M_m$</li>
-  <li>a model that takes in the question and misconception and produces reasonable wrong answers, $M_s$</li>
-</ol>
-
-<p>In a loop they</p>
-
-<ol>
-  <li>Generate wrong answers to questions</li>
-  <li>Use $M_m$ to infer the misconceptions</li>
-  <li>Use $M_s$ to regenerate wrong answers from the misconception, and see if it matches the original wrong answer: this is their second key insight, that <strong>cycle consistency</strong> helps you filter out for good misconception data</li>
-  <li>Fine-tune $M_m$ and $M_s$ on the resulting data</li>
-</ol>
-
-<h1 id="experiments">Experiments</h1>
-
-<p>Llama-3-8B-Instruct, kinda old models.</p>
-
-<p>EEDI Mining Misconceptions in Mathematics dataset: K-12 math, MCQ questions with 4 choices. There’s misconception annotations for each of the wrong answer choices.</p>
-
-<p>Their three metrics are</p>
-
-<ol>
-  <li>Can $M_s$ correctly predict the wrong answer that the student chooses given the misconception (accuracy)</li>
-  <li>How good are the misconceptions (some bs embedding similarity to the actual misconception)</li>
-  <li>How good are the generated distractors after cycle consistency filters (by exact match to the chosen distractors)</li>
-</ol>
-
-<p>Results are basically just that cycle consistency filter is important here, and they boost performance but still less than closed source models.</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[simulating student misconceptions]]></summary></entry></feed>
+<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120991771.png" width="325" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry></feed>

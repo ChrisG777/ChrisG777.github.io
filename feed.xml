@@ -1,5 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-27T06:08:06+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
-</subtitle><entry><title type="html">Identifying Introspection From the Inside</title><link href="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/" rel="alternate" type="text/html" title="Identifying Introspection From the Inside" /><published>2026-11-26T00:00:00+00:00</published><updated>2026-11-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/"><![CDATA[<p>For larger models, capability seems to come with introspective faithfulness. Some early findings hypothesizing that this might be due to co-location in an early layer of the computation, which gets later used downstream for both self-report verbalization and answering the question.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://chrisg777.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://chrisg777.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-11-28T05:47:16+00:00</updated><id>https://chrisg777.github.io/feed.xml</id><title type="html">blank</title><subtitle>CS student at MIT researching mechanistic interpretability.
+</subtitle><entry><title type="html">Reinforcement Learning Teachers of Test Time Scaling</title><link href="https://chrisg777.github.io/blog/2026/reinforcement-learning-teachers-of-test-time-scaling/" rel="alternate" type="text/html" title="Reinforcement Learning Teachers of Test Time Scaling" /><published>2026-11-27T00:00:00+00:00</published><updated>2026-11-27T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/reinforcement-learning-teachers-of-test-time-scaling</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/reinforcement-learning-teachers-of-test-time-scaling/"><![CDATA[<p>Idea: RL a model that’s good at producing thinking traces for the sole purpose of distilling into a student later</p>
+
+<p>You can use the solution (privileged information) to help come up with the thinking trace</p>
+
+<p><img src="/assets/img/distillations/reinforcement-learning-teachers-of-test-time-scaling/img-1795831580428.png" alt="" /></p>
+
+<p><strong>Reward</strong>: $r^{SS} - \alpha r^{KL}$</p>
+
+<ul>
+  <li>$r^{SS}$ is from $\log P_{\text{student}}(\text{solution} \mid \text{question}, \text{RLT thinking}) $. Want the solution to make sense when given the thinking. Maximize avg of this, but also keep min somewhat high over tokens (don’t want any particular token to be shocking).</li>
+  <li>$r^{KL}$ is $KL(P_{\text{teacher}}(\text{RLT thinking} \mid \text{solution}, \text{question})  |$ $P_{\text{student}}(\text{RLT thinking} \mid \text{question})$, keep the max somewhat low. This makes sure that the thinking is understandable to the student, and stops the thinking from coming out of nowhere (e.g. just repeating the solution)</li>
+</ul>
+
+<h1 id="results">Results</h1>
+
+<p>Did this on a bunch of math datasets</p>
+
+<p>seems to do better than other ad-hoc methods of producing good traces for distillation, even for larger (32B) students that it was never trained on</p>
+
+<p><img src="/assets/img/distillations/reinforcement-learning-teachers-of-test-time-scaling/img-1795832040847.png" alt="" /></p>
+
+<p>Useful as a cold-start SFT step before RL
+<img src="/assets/img/distillations/reinforcement-learning-teachers-of-test-time-scaling/img-1795832087288.png" alt="" /></p>
+
+<p>Generalizes to producing thinking traces to distill from on out-of-distribution (Countdown) data
+<img src="/assets/img/distillations/reinforcement-learning-teachers-of-test-time-scaling/img-1795832109234.png" alt="" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[RLT]]></summary></entry><entry><title type="html">Identifying Introspection From the Inside</title><link href="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/" rel="alternate" type="text/html" title="Identifying Introspection From the Inside" /><published>2026-11-26T00:00:00+00:00</published><updated>2026-11-26T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/identifying-introspection-from-the-inside/"><![CDATA[<p>For larger models, capability seems to come with introspective faithfulness. Some early findings hypothesizing that this might be due to co-location in an early layer of the computation, which gets later used downstream for both self-report verbalization and answering the question.</p>
 
 <p><strong>Setting (extended from Plunkett et al, 2025):</strong></p>
 
@@ -402,153 +427,4 @@ https://www.anthropic.com/research/emotion-concepts-function: take the diff-in-m
 
 <p><img src="/assets/img/distillations/modular-manifolds/img-1793227072975.png" alt="" /></p>
 
-<p>And modular manifolds is the idea that you can choose a different manifold and norm for each layer, and compose them with the composed manifold just being their cartesian product, and the composed norm being the max of the individual norms, and theoretically figure out what the individual learning rates for each layer should be</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Modular Manifolds]]></summary></entry><entry><title type="html">From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence</title><link href="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/" rel="alternate" type="text/html" title="From Entropy to Epiplexity: Rethinking Information for Computationally Bounded Intelligence" /><published>2026-10-25T00:00:00+00:00</published><updated>2026-10-25T00:00:00+00:00</updated><id>https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in</id><content type="html" xml:base="https://chrisg777.github.io/blog/2026/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/"><![CDATA[<h1 id="section-2-randomness">Section 2: Randomness</h1>
-
-<p>1111111… isn’t random because LLN says that random strings should be 50% 0’s and 50% 1’s
-1010101… isn’t random because it’s predictable</p>
-
-<p><strong>Martin-Lof randomness / Kolmogorov complexity</strong>: random if no short Turing machine can distinguish from true random</p>
-
-<p><strong>cryptographic randomness</strong> (pseudorandom number generator): no polynomial time alg can distinguish from true random</p>
-
-<ul>
-  <li>good enough in most settings because if you’re doing a polynomial time computation, then if using a PRG instead of a true RG made a difference, that would be a poly time alg to distinguish from true random</li>
-</ul>
-
-<h1 id="section-3-defining-epiplexity">Section 3: Defining epiplexity</h1>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792960377862.png" alt="" /></p>
-
-<ul>
-  <li><strong>MDL</strong> = minimum description length = size of the program + entropy left using the program (think Occam’s razor, simplest program that explains it sufficiently)</li>
-  <li><strong>Epiplexity</strong> is just the length of the program part. The rest of it is the “time-bounded entropy”</li>
-  <li>the time-bounded is from only allowing programs within a certain time complexity</li>
-</ul>
-
-<p>Examples:</p>
-
-<ul>
-  <li>Uniform and Pseudo random number generators are low epiplexity high time-bounded entropy, since you can describe their minimum programs (the generators) pretty easily. Kolmogorov gives a somewhat higher complexity to PRGs; Gemini is telling me that this is mainly because epiplexity is defined on a random variable, while Kolmogorov complexity is defined on a fixed string, so you can hardcode the seed for the latter but not for the former. Hence, epiplexity concludes that there’s no poly-time learnable structure, while Kolmogorov complexity says that there is.</li>
-</ul>
-
-<h1 id="section-4-two-methods-of-calculating-epiplexity-on-real-datasets">Section 4: Two methods of calculating Epiplexity on real datasets</h1>
-
-<p>Info theoretical setup: encoder has access to the test set $X$ and possibly teacher model checkpoints, decoder starts with just the base student model. They’re trying to minimize <strong>epiplexity</strong> (program length) + <strong>remaining entropy</strong> of the entire test set $X$. Theoretically, the test set $X$ is the entire dataset of interest that we’re trying to measure the epiplexity of, but in practice we use a held-out test split and rescale it to the size of the entire dataset.</p>
-
-<ul>
-  <li><strong>epiplexity</strong>: we’re going to approximate programs as trained neural nets. Program length is roughly the number of bits / code that you need to transmit to a student, and the hard thing is how to measure the minimum number of bits that you need. There are two ways to do this:
-    <ul>
-      <li><strong>prequential coding</strong>: you’re handing over the actual data over the channel. The decoder maintains their own synchronized copy of the model as the encoder is training it, and on step $i$, the encoder takes the <em>next</em> piece of data $Z$, uses the current model (that the decoder has) to calculate how many bits it is, and then sends that over the channel, and repeats for all the data.
-        <ul>
-          <li>this is too pessimistic, since it includes the remaining entropy of the data under the final trained model, so you adjust by subtracting the number of bits that you’d still have to send to encode the data if you had the trained model from the start. Note that this doesn’t tell you how to actually achieve the subtracted number of bits through a code, it’s non-constructive</li>
-          <li>this corresponds to area under the training loss curve (see below)</li>
-        </ul>
-      </li>
-      <li><strong>requential coding</strong>: instead of passing over real data, we can pass over synthetic data generated by the teacher checkpoints the encoder has access to.
-        <ul>
-          <li>This somehow takes less bits to encode, and furthermore is an explicit construction of the number of bits passed that we’re claiming.</li>
-          <li>This corresponds to the area between the loss curves</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li><strong>remaining entropy</strong>: after you have the trained model, you can just run a forward pass of the model on the test data $X$ to get the remaining entropy</li>
-</ul>
-
-<p>And note that we’re trying to minimize this at an outer loop to find the MDL. They do this minimization just by trying a bunch of hyperparameters and taking the one with the lowest score.</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792964821796.png" width="532" /></p>
-
-<ul>
-  <li>prequential = area under the training loss curve</li>
-  <li>requential = area between the teacher and student loss curves</li>
-</ul>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792966008044.png" alt="" /></p>
-
-<ul>
-  <li>in practice, prequential and requential seem to agree. Prequential is cheaper since it just requires the one training run</li>
-</ul>
-
-<h1 id="section-5-epiplexity-fixes-3-paradoxes-of-normal-info-theory">Section 5. Epiplexity fixes 3 paradoxes of normal info theory</h1>
-
-<p><strong>The common theme is just that restricting the computation of the observer explains the new information created in all three of these phenomena</strong></p>
-
-<h2 id="51-post-processing-doesnt-give-new-information">5.1: post-processing doesn’t give new information</h2>
-
-<p>This is only true if you assume unlimited computation time. In that sense, run the deterministic AlphaZero RL doesn’t generate new information you didn’t have before. But it does if you don’t have the time to redo that computation</p>
-
-<p>Notably, theoretically you only produce new information even with compute-constrained entropy if the inverse is not efficient. <strong>“some useful guidance for synthetic data: if we want to produce interesting information, we should make sure the functions we use do not have simple and efficiently computable inverses”</strong></p>
-
-<ul>
-  <li>inverses means for instance deriving the original from the generated</li>
-  <li>do I believe this? I feel like this means most data augmentations are useless</li>
-</ul>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792976366378.png" alt="" /></p>
-
-<ul>
-  <li>three types of cellular automata synthetic data generation. Only rule 54 is high epiplexity</li>
-</ul>
-
-<h2 id="52-order-should-matter">5.2 order should matter</h2>
-
-<p>Shannon entropy treats H(X, Y) and H(Y, X) the same, but time-bounded entropy doesn’t have to. Inferring the forward direction of a one-way function ought to be less entropy than the reverse direction</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1792981284381.png" alt="" /></p>
-
-<ul>
-  <li>(a): forward direction of one-way function is easy to learn and approaches the Shannon entropy, the reverse direction doesn’t</li>
-  <li>(b, c): going from board position to chess moves is harder, but provides more structure / epiplexity to learn for larger compute regimes</li>
-</ul>
-
-<h2 id="53-the-cap-on-what-maximum-likelihood-modeling-can-learn-is-just-to-match-the-data-generating-process">5.3 The cap on what maximum likelihood modeling can learn is just to match the data generating process</h2>
-
-<h2 id="531-induction-not-in-the-math-sense-or-in-the-induction-heads-sense">5.3.1 “Induction” (not in the math sense, or in the induction heads sense)</h2>
-
-<p>Intuition for why this should be wrong: guessing the answer to a murder mystery (“induction”), which the model is trained for, is harder than being the author and knowing the murderer and just writing the murder mystery to be consistent with it
-<img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041726778.png" alt="" /></p>
-
-<p>They mimic this by taking some bitstring $Z$, and applying some function $f$ to it, and also some masking $m(Z)$ to it, and only giving $(m(Z), f(Z))$ as the training pairs, so the model has to <em>induct</em> what the original $Z$ is from $m(Z)$.</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041779779.png" width="499" /></p>
-
-<p>Case 1: $f(Z)$ is a one-way function. Then the model just learns to brute force all $2^h$ missing bit combos for $Z$, and the irreducible loss is hence $h$. The epiplexity still grows as $h$ grows because transformers aren’t perfect Turing machines and hence can’t write for loops: the program size to iterate over $2^h$ combos grows as $h$ grows</p>
-
-<p>Case 2: $f(Z)$ is a Markov chain with $h / 8$ of states not having known transitions. Then at $h=0$ it just learns to deterministically apply the rules, and at $h=8$ it learns to just use past empirics on the transitions, but at $0 &lt; h &lt; 8$ it has to combine both which leads to higher epiplexity</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793041976949.png" alt="" /></p>
-
-<p>So the point being that epiplexity captures this kind of induction reasoning</p>
-
-<h2 id="532-emergent">5.3.2 “Emergent”</h2>
-
-<p>Conway’s game of life, if you have the compute (like a looped transformer) you can just brute force the computation, if not you need to think about gliders and what happens when they collide to predict the future and you learn more structure, more epiplexity.</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793059303354.png" width="356" /></p>
-
-<ul>
-  <li>at some level of compute, the brute force approach becomes possible and there’s less epiplexity because it just quickly learns that</li>
-</ul>
-
-<h1 id="section-6-higher-epiplexity-predicts-better-ood-generalization">Section 6: higher epiplexity predicts better OOD generalization</h1>
-
-<p>Intuition: epiplexity = learned general structure, irreducible loss is domain specific.</p>
-
-<p>Of the two chess orderings from 5.2, the one with higher epiplexity generalizes better to predicting centipawn accuracy (more OOD than predict the next move puzzles)</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793060627554.png" width="355" /></p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793065408160.png" width="358" /></p>
-
-<ul>
-  <li>They show that language pretraining data has a higher epiplexity content than image pretraining data</li>
-</ul>
-
-<p>Assuming scaling laws, you can solve for the maximum epiplexity of a data set under infinite compute: it turns out to be when you train on exactly one epoch of the full data (past that, you’re not decreasing the entropy by enough to justify the increase in program length).</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120665194.png" width="348" /></p>
-
-<p>This once again corroborates that language has higher epiplexity than vision</p>
-
-<p><img src="/assets/img/distillations/from-entropy-to-epiplexity-rethinking-information-for-computationally-bounded-in/img-1793120991771.png" width="325" /></p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Epiplexity]]></summary></entry></feed>
+<p>And modular manifolds is the idea that you can choose a different manifold and norm for each layer, and compose them with the composed manifold just being their cartesian product, and the composed norm being the max of the individual norms, and theoretically figure out what the individual learning rates for each layer should be</p>]]></content><author><name></name></author><category term="distillation" /><summary type="html"><![CDATA[Modular Manifolds]]></summary></entry></feed>

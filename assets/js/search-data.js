@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "post-identifying-introspection-from-the-inside",
+        },{id: "post-reinforcement-learning-teachers-of-test-time-scaling",
+        
+          title: "Reinforcement Learning Teachers of Test Time Scaling",
+        
+        description: "RLT",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reinforcement-learning-teachers-of-test-time-scaling/";
+          
+        },
+      },{id: "post-identifying-introspection-from-the-inside",
         
           title: "Identifying Introspection From the Inside",
         
